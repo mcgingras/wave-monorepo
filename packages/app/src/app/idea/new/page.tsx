@@ -25,7 +25,6 @@ const NewIdeaPage = () => {
   });
 
   const { data: hash, writeContract, isPending, error } = useWriteContract();
-  console.log(error);
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({

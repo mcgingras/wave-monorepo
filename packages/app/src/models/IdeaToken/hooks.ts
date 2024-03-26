@@ -28,6 +28,74 @@ export const useIdeaTokens = () => {
   };
 };
 
+export const useIdeaToken = (ideaTokenId: bigint) => {
+  const { error, isLoading, mutate, data } = useSWR(
+    ideaTokenId
+      ? {
+          url: `http://localhost:42069`,
+          args: { ideaTokenId },
+        }
+      : null,
+    SWRGetIdeaToken
+  );
+
+  const ideaToken = data?.ideaToken || null;
+
+  return {
+    isLoading,
+    mutate,
+    error,
+    ideaToken,
+  };
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * SWRGetIdeaToken
+ * -----------------------------------------------------------------------------------------------*/
+
+export async function SWRGetIdeaToken({
+  url,
+  args,
+}: {
+  url: string;
+  args: any;
+}): Promise<{
+  success: boolean;
+  ideaToken: IdeaToken;
+}> {
+  const query = `
+    query GetIdeaToken($ideaTokenId: BigInt!) {
+        ideaToken(id: $ideaTokenId) {
+            id
+            author
+            title
+            description
+            createdAt
+            supporters {
+                balance
+                owner
+            }
+        }
+        }
+     `;
+
+  const graphqlRequest = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      variables: args,
+    }),
+  };
+
+  const data = await fetch(url, graphqlRequest);
+  const json = await data.json();
+  console.log(json);
+  return json.data;
+}
+
 async function SWRGetIdeaTokens({
   url,
   args,

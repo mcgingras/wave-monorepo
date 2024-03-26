@@ -14,6 +14,20 @@ import {
 
 export default function Home() {
   const { ideaTokens, isLoading } = useIdeaTokens();
+  const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
+    const pooledEth = ideaToken.supporters.reduce(
+      (acc, supporter) => acc + parseInt(supporter.balance.toString()),
+      0
+    );
+    return {
+      ...ideaToken,
+      pooledEth,
+    };
+  });
+
+  const sortedIdeaTokens = ideaTokensWithPooledEth.sort(
+    (a, b) => b.pooledEth - a.pooledEth
+  );
 
   const now = new Date();
   const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -38,7 +52,7 @@ export default function Home() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-left">Rank</TableHead>
-              <TableHead className="w-[100px]">Number</TableHead>
+              <TableHead className="w-[100px]">Idea Id</TableHead>
               <TableHead>Created at</TableHead>
               <TableHead>Author</TableHead>
               <TableHead className="text-left">Title</TableHead>
@@ -78,17 +92,9 @@ export default function Home() {
                     </TableRow>
                   );
                 })
-              : ideaTokens.map((ideaToken, idx) => {
-                  const pooledEth = ideaToken.supporters.reduce(
-                    (acc, supporter) =>
-                      acc + parseInt(supporter.balance.toString()),
-                    0
-                  );
+              : sortedIdeaTokens.map((ideaToken, idx) => {
                   return (
-                    <TableRow
-                      key={ideaToken.id.toString()}
-                      className="text-neutral-600"
-                    >
+                    <TableRow className="text-neutral-600">
                       <TableCell className="text-left ">{idx + 1}</TableCell>
                       <TableCell className="font-medium ">
                         {ideaToken.id.toString()}
@@ -104,7 +110,15 @@ export default function Home() {
                         {ideaToken.supporters.length}
                       </TableCell>
                       <TableCell className="text-left font-semibold text-green-500">
-                        +{formatUnits(BigInt(pooledEth), 18)}
+                        {formatUnits(BigInt(ideaToken.pooledEth), 18)}
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          key={ideaToken.id.toString()}
+                          href={`/idea/${ideaToken.id}`}
+                        >
+                          <span className="text-blue-500">View</span>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   );

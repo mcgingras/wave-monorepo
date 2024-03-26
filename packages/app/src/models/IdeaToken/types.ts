@@ -1,3 +1,5 @@
+import { Supporter } from "../Supporter/types";
+
 export type IdeaToken = {
   id: BigInt;
   author: string;
@@ -5,12 +7,4 @@ export type IdeaToken = {
   description: string;
   createdAt: BigInt;
   supporters: Supporter[];
-};
-
-export type Supporter = {
-  id: BigInt;
-  owner: string;
-  tokenId: BigInt;
-  balance: BigInt;
-  isCreator: boolean;
 };

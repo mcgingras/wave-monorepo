@@ -13,7 +13,7 @@ const Nav = () => {
             </Link>
           </li>
           <li>
-            <Link href="/docs">Documentation</Link>
+            <Link href="/#">Documentation</Link>
           </li>
         </ul>
         <div className="flex flex-row items-center space-x-4">
