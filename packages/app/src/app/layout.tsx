@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* <body className="indicate min-h-screen w-full"> */}
-      <body className={`${inter.className} bg-gray-100`}>
+      <body className={`${inter.className}`}>
         <OnChainProvider>
           <>
             <Nav />

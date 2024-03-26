@@ -1,6 +1,4 @@
-import { Context, ponder } from "@/generated";
-import { configAddresses } from "../ponder.config";
-import { Address, isAddressEqual } from "viem";
+import { ponder } from "@/generated";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
   const { IdeaToken } = context.db;
