@@ -7,9 +7,12 @@ import { IdeaToken } from "./types";
 
 export const useIdeaTokens = () => {
   const { error, isLoading, mutate, data } = useSWR(
-    {
-      url: `http://localhost:42069`,
-    },
+    true
+      ? {
+          url: `http://localhost:42069`,
+          args: { nothing: true },
+        }
+      : null,
     SWRGetIdeaTokens
   );
 
@@ -25,22 +28,28 @@ export const useIdeaTokens = () => {
   };
 };
 
-async function SWRGetIdeaTokens({ url }: { url: string }): Promise<{
+async function SWRGetIdeaTokens({
+  url,
+  args,
+}: {
+  url: string;
+  args: any;
+}): Promise<{
   success: boolean;
   ideaTokens: IdeaToken[];
 }> {
   const query = `
-    query GetIdeaTokens() {
-        IdeaToken {
-            id
-            author
-            title
-            description
-            createdAt
-            supporters {
-                balance
-            }
+  query GetIdeaTokens {
+    ideaTokens {
+        id
+        author
+        title
+        description
+        createdAt
+        supporters {
+            balance
         }
+      }
     }
  `;
 
