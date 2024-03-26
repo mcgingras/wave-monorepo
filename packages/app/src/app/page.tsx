@@ -1,3 +1,7 @@
+"use client";
+
+import { formatUnits } from "viem";
+import { useIdeaTokens } from "@/models/IdeaToken/hooks";
 import {
   Table,
   TableBody,
@@ -7,39 +11,10 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { Counter, Countdown } from "@/components/ui/Counter";
-
-type Wave = {
-  id: number;
-  title: string;
-  createdAt: string;
-  author: string;
-  supporters: number;
-  pooledEth: number;
-  rank: number;
-};
+import { format } from "path";
 
 export default function Home() {
-  const invoices = [
-    {
-      id: 1,
-      createdAt: "2024-01-23 10:30PM EST",
-      author: "0x65A3870F48B5237...",
-      title: "Penguins 1",
-      supporters: 10,
-      pooledEth: 10,
-      rank: 1,
-    },
-    {
-      id: 2,
-      createdAt: "2024-01-23 10:30PM EST",
-      author: "0x65A3870F48B5237...",
-      title: "Penguins 2",
-      supporters: 10,
-      pooledEth: 10,
-      rank: 2,
-    },
-  ];
-
+  const { ideaTokens } = useIdeaTokens();
   const now = new Date();
   const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
@@ -71,21 +46,37 @@ export default function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.id} className="text-neutral-600">
-                  <TableCell className="text-left ">{invoice.rank}</TableCell>
-                  <TableCell className="font-medium ">{invoice.id}</TableCell>
-                  <TableCell className="">{invoice.createdAt}</TableCell>
-                  <TableCell className="">{invoice.author}</TableCell>
-                  <TableCell className=" text-left">{invoice.title}</TableCell>
-                  <TableCell className=" text-left">
-                    {invoice.supporters}
-                  </TableCell>
-                  <TableCell className="text-left font-semibold text-green-500">
-                    +{invoice.pooledEth}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {ideaTokens.map((ideaToken, idx) => {
+                const pooledEth = ideaToken.supporters.reduce(
+                  (acc, supporter) =>
+                    acc + parseInt(supporter.balance.toString()),
+                  0
+                );
+                return (
+                  <TableRow
+                    key={ideaToken.id.toString()}
+                    className="text-neutral-600"
+                  >
+                    <TableCell className="text-left ">{idx + 1}</TableCell>
+                    <TableCell className="font-medium ">
+                      {ideaToken.id.toString()}
+                    </TableCell>
+                    <TableCell className="">
+                      {ideaToken.createdAt.toString()}
+                    </TableCell>
+                    <TableCell className="">{ideaToken.author}</TableCell>
+                    <TableCell className=" text-left">
+                      {ideaToken.title}
+                    </TableCell>
+                    <TableCell className=" text-left">
+                      {ideaToken.supporters.length}
+                    </TableCell>
+                    <TableCell className="text-left font-semibold text-green-500">
+                      +{formatUnits(BigInt(pooledEth), 18)}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
