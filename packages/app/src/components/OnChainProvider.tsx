@@ -32,7 +32,7 @@ export const OnChainProvider = ({
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{children}</ConnectKitProvider>
+        <ConnectKitProvider mode="light">{children}</ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

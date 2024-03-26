@@ -1,4 +1,4 @@
-const WaveIcon = () => {
+const WaveIcon = ({ className }: { className?: string }) => {
   return (
     <svg
       width="80"
@@ -6,6 +6,7 @@ const WaveIcon = () => {
       viewBox="0 0 80 56"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <path d="M64.8454 0H53.056V2.94736H64.8454V0Z" fill="#9EB5E1" />
       <path

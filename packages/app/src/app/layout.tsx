@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { OnChainProvider } from "@/components/OnChainProvider";
+import Nav from "@/components/Nav";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,8 +19,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <OnChainProvider>{children}</OnChainProvider>
+      {/* <body className="indicate min-h-screen w-full"> */}
+      <body className={`${inter.className} bg-gray-100`}>
+        <OnChainProvider>
+          <>
+            <Nav />
+            <main className="h-[calc(100vh-200px)]">{children}</main>
+          </>
+        </OnChainProvider>
       </body>
     </html>
   );
