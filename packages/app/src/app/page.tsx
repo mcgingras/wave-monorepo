@@ -1,3 +1,4 @@
+import { useIdeaTokens } from "@/models/IdeaToken/hooks";
 import {
   Table,
   TableBody,
@@ -19,6 +20,8 @@ type Wave = {
 };
 
 export default function Home() {
+  const { ideaTokens } = useIdeaTokens();
+  console.log(ideaTokens); //todo
   const invoices = [
     {
       id: 1,
