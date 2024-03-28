@@ -1,4 +1,6 @@
 import { ponder } from "@/generated";
+import { configAddresses } from "../ponder.config";
+import { NounsTokenABI } from "../abi/NounsToken";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
   const { IdeaToken } = context.db;
@@ -35,4 +37,58 @@ ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
       balance: event.args.params.contributedBalance,
     },
   });
+});
+
+ponder.on("PropLotHarness:DelegateCreated", async ({ event, context }) => {
+  const { DelegateProxy } = context.db;
+  const initVotingPower = await context.client.readContract({
+    address: configAddresses.NounsTokenHarness as `0x${string}`,
+    abi: NounsTokenABI,
+    functionName: "getCurrentVotes",
+    args: [event.args.delegate],
+  });
+  await DelegateProxy.create({
+    id: event.args.delegate,
+    data: {
+      createdAt: event.block.timestamp,
+      votingPower: initVotingPower,
+    },
+  });
+});
+
+ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
+  const { DelegateProxy, Delegator } = context.db;
+  const existingDelegateProxy = await DelegateProxy.findUnique({
+    id: event.args.toDelegate,
+  });
+  if (existingDelegateProxy) {
+    await Delegator.upsert({
+      id: event.args.delegator,
+      create: {
+        delegateProxyId: event.args.toDelegate,
+      },
+      update: {
+        delegateProxyId: event.args.toDelegate,
+      },
+    });
+  } else {
+    await Delegator.delete({
+      id: event.args.fromDelegate,
+    });
+  }
+});
+
+ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
+  const { DelegateProxy } = context.db;
+  const existingDelegateProxy = await DelegateProxy.findUnique({
+    id: event.args.delegate,
+  });
+  if (existingDelegateProxy) {
+    await DelegateProxy.update({
+      id: event.args.delegate,
+      data: {
+        votingPower: event.args.newBalance,
+      },
+    });
+  }
 });
