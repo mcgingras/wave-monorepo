@@ -1,6 +1,7 @@
 import { createConfig } from "@ponder/core";
-import { Address, http } from "viem";
+import { Address, http, parseAbiItem } from "viem";
 import { PropLotHarnessABI } from "./abi/PropLotHarness";
+import { DelegateABI } from "./abi/Delegate";
 import { IdeaTokenHubABI } from "./abi/IdeaTokenHub";
 
 const startBlock = 7853000;
@@ -29,6 +30,18 @@ export default createConfig({
       network: "baseSepolia",
       abi: IdeaTokenHubABI,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
+      startBlock: startBlock,
+    },
+    Delegate: {
+      network: "baseSepolia",
+      abi: DelegateABI,
+      factory: {
+        address: configAddresses.PropLotHarness as `0x${string}`,
+        event: parseAbiItem(
+          "event DelegateCreated(address delegate,uint256 id)"
+        ),
+        parameter: "delegate",
+      },
       startBlock: startBlock,
     },
   },
