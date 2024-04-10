@@ -1,19 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatUnits } from "viem";
 import { useIdeaTokens } from "@/models/IdeaToken/hooks";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/Table";
 import { formatTimeAgo } from "@/lib/utils";
 
 export default function Home() {
+  const router = useRouter();
   const { ideaTokens, isLoading } = useIdeaTokens();
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
     const pooledEth = ideaToken.supporters.reduce(
@@ -53,7 +47,7 @@ export default function Home() {
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
+                <thead className="bg-white">
                   <tr>
                     <th
                       scope="col"
@@ -95,12 +89,18 @@ export default function Home() {
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {sortedIdeaTokens.map((idea, idx) => (
-                    <tr key={idea.id.toString()}>
+                    <tr
+                      className="cursor-pointer hover:bg-gray-50"
+                      key={idea.id.toString()}
+                      onClick={() => {
+                        router.push(`/idea/${idea.id}`);
+                      }}
+                    >
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                         {idx + 1}
                       </td>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {idea.createdAt.toString()}
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                        {formatTimeAgo(parseInt(idea.createdAt.toString()))}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {idea.author}
@@ -111,8 +111,8 @@ export default function Home() {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {idea.supporters.length}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {idea.pooledEth}
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-green-500">
+                        {formatUnits(BigInt(idea.pooledEth), 18)}
                       </td>
                     </tr>
                   ))}

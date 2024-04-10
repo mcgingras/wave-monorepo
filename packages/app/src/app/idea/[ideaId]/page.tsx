@@ -37,7 +37,9 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
 
   return (
     <section className="mt-24 w-[1200px] mx-auto">
-      <h1 className="text-2xl text-neutral-700">{ideaToken?.title}</h1>
+      <h1 className="text-2xl text-neutral-700 font-bold">
+        {ideaToken?.title}
+      </h1>
       <p className="text-neutral-500 mt-2">{ideaToken?.description}</p>
 
       <div className="w-full flex flex-row items-center justify-between mb-2 mt-12">
