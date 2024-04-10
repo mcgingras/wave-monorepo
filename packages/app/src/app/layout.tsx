@@ -20,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* <body className="indicate min-h-screen w-full"> */}
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} wave`}>
         <OnChainProvider>
           <>
-            <Nav />
-            <main className="h-[calc(100vh-200px)]">{children}</main>
+            <main className="w-[1200px] mx-auto h-[calc(100vh-200px)]">
+              <Nav />
+              {children}
+            </main>
           </>
         </OnChainProvider>
       </body>

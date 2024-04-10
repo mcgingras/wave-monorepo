@@ -4,8 +4,8 @@ import Link from "next/link";
 
 const Nav = () => {
   return (
-    <div className="w-full p-2">
-      <nav className="px-4 py-2 flex flex-row justify-between items-center bg-white text-neutral-600 min-h-[56px]">
+    <div className="w-full">
+      <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
         <ul className="flex flex-row space-x-6">
           <li>
             <Link href="/" className="text-blue-500 font-bold">

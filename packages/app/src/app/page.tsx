@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import { formatTimeAgo } from "@/lib/utils";
 
 export default function Home() {
   const { ideaTokens, isLoading } = useIdeaTokens();
@@ -33,98 +34,93 @@ export default function Home() {
   const sevenDays = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   return (
-    <section className="mt-24 w-[1200px] mx-auto">
-      <div className="w-full flex flex-row items-center justify-between mb-2">
+    <section className="mt-24">
+      <div className="w-full flex flex-row items-end justify-between mb-4">
         <div className="flex flex-row space-x-4 items-center">
-          <h1 className="text-2xl text-neutral-700">Leaderboard</h1>
+          <h1 className="text-2xl text-neutral-800 font-bold">Leaderboard</h1>
           {/* <h1 className="text-2xl text-neutral-500">Delegates</h1> */}
         </div>
         <div className="space-x-2">
           <Link href="/idea/new">
-            <button className="bg-white px-2 py-1 rounded-lg border text-sm text-gray-700">
+            <button className="px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white">
               + New idea
             </button>
           </Link>
         </div>
       </div>
-      <div className="border bg-white">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-left">Rank</TableHead>
-              <TableHead className="w-[100px]">Idea Id</TableHead>
-              <TableHead>Created at</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead className="text-left">Title</TableHead>
-              <TableHead className="text-left">Supporters</TableHead>
-              <TableHead className="text-left">Pooled ETH</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading
-              ? [1, 2, 3].map((idx) => {
-                  return (
-                    <TableRow
-                      key={`loading-${idx}`}
-                      className="text-neutral-600"
+      <div className="flow-root">
+        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[200px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[150px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              : sortedIdeaTokens.map((ideaToken, idx) => {
-                  return (
-                    <TableRow className="text-neutral-600">
-                      <TableCell className="text-left ">{idx + 1}</TableCell>
-                      <TableCell className="font-medium ">
-                        {ideaToken.id.toString()}
-                      </TableCell>
-                      <TableCell className="">
-                        {ideaToken.createdAt.toString()}
-                      </TableCell>
-                      <TableCell className="">{ideaToken.author}</TableCell>
-                      <TableCell className=" text-left">
-                        {ideaToken.title}
-                      </TableCell>
-                      <TableCell className=" text-left">
-                        {ideaToken.supporters.length}
-                      </TableCell>
-                      <TableCell className="text-left font-semibold text-green-500">
-                        {formatUnits(BigInt(ideaToken.pooledEth), 18)}
-                      </TableCell>
-                      <TableCell>
-                        <Link
-                          key={ideaToken.id.toString()}
-                          href={`/idea/${ideaToken.id}`}
-                        >
-                          <span className="text-blue-500">View</span>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-          </TableBody>
-        </Table>
+                      Rank
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Created
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Author
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Title
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Supporters
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Pooled ETH
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {sortedIdeaTokens.map((idea, idx) => (
+                    <tr key={idea.id.toString()}>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                        {idx + 1}
+                      </td>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                        {idea.createdAt.toString()}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {idea.author}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {idea.title}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {idea.supporters.length}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {idea.pooledEth}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

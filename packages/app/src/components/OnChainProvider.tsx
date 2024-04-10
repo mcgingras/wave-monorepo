@@ -33,7 +33,17 @@ export const OnChainProvider = ({
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider mode="light">{children}</ConnectKitProvider>
+        <ConnectKitProvider
+          mode="light"
+          customTheme={{
+            "--ck-connectbutton-background": "#ffffff",
+            "--ck-connectbutton-border-radius": "32px",
+            "--ck-connectbutton-font-size": "15px",
+            "--ck-connectbutton-box-shadow": "0px 0px 0px 2px #F0F2F5",
+          }}
+        >
+          {children}
+        </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
