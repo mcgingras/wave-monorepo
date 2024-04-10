@@ -13,7 +13,9 @@ const Nav = () => {
             </Link>
           </li>
           <li>
-            <Link href="/#">Documentation</Link>
+            <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+              Documentation
+            </Link>
           </li>
         </ul>
         <div className="flex flex-row items-center space-x-4">
