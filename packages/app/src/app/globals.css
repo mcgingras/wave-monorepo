@@ -85,12 +85,22 @@
     src: url('/IndicateMono-Regular.otf') format('opentype');
 }
 
+@font-face {
+    font-family: 'Polymath';
+    src: url('/PolymathDemo-Regular.otf') format('opentype');
+}
+
+
 .fictional {
     font-family: 'Fictional', sans-serif;
 }
 
 .indicate {
     font-family: 'Indicate', 'monospace';
+}
+
+.polymath {
+    font-family: 'Polymath', 'serif';
 }
 
 

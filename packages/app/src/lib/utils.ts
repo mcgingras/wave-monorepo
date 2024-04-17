@@ -32,3 +32,10 @@ export function formatTimeAgo(timestamp: number) {
   // If the timestamp is in the future, return 'just now'
   return "just now";
 }
+
+export function truncateEthAddress(address: string) {
+  var truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
+  var match = address.match(truncateRegex);
+  if (!match) return address;
+  return match[1] + "\u2026" + match[2];
+}

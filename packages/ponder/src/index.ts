@@ -3,12 +3,17 @@ import { ponder } from "@/generated";
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
   const { IdeaToken } = context.db;
   const [title, description] = event.args.idea.description.split(`\n\n`);
-  console.log(event.args);
+
+  const actions = JSON.stringify(event.args.idea.ideaTxs, (_, v) =>
+    typeof v === "bigint" ? parseInt(v.toString()) : v
+  );
+
   await IdeaToken.create({
     id: event.args.ideaId,
     data: {
       author: event.args.creator,
       title: title || "",
+      actions,
       description: description || "",
       createdAt: event.block.timestamp,
     },

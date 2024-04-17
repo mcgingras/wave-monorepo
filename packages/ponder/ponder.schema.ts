@@ -9,6 +9,7 @@ export default createSchema((p) => ({
     author: p.string(),
     title: p.string(),
     description: p.string(),
+    actions: p.string(), // JSON.stringified array of actions
     createdAt: p.bigint(),
     supporters: p.many("Supporter.tokenId"),
   }),

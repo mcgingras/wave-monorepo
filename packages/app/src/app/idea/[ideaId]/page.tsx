@@ -4,15 +4,9 @@ import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { configAddresses } from "@/lib/constants";
 import { parseEther } from "viem";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/Table";
+import { TableCell, TableRow } from "@/components/ui/Table";
 import { formatUnits } from "viem";
+import { truncateEthAddress } from "@/lib/utils";
 
 const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaToken, isLoading } = useIdeaToken(params.ideaId);
@@ -37,68 +31,94 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
 
   return (
     <section className="mt-24 w-[1200px] mx-auto">
-      <h1 className="text-2xl text-neutral-700 font-bold">
-        {ideaToken?.title}
-      </h1>
-      <p className="text-neutral-500 mt-2">{ideaToken?.description}</p>
-
-      <div className="w-full flex flex-row items-center justify-between mb-2 mt-12">
-        <div className="flex flex-row space-x-4 items-center">
-          <h1 className="text-2xl text-neutral-700">Supporters</h1>
-          {/* <h1 className="text-2xl text-neutral-500">Delegates</h1> */}
+      <div className="grid grid-cols-5 gap-12">
+        <div className="col-span-3">
+          <h1 className="text-2xl text-neutral-700 font-bold">
+            {ideaToken?.title}
+          </h1>
+          <p className="text-neutral-500 mt-2 bg-white p-4 border rounded-lg">
+            {ideaToken?.description}
+          </p>
+          <h1 className="text-2xl text-neutral-700 font-bold mt-6 mb-2">
+            Actions
+          </h1>
+          <p className="text-neutral-500 mt-2 bg-white p-4 border rounded-lg">
+            {ideaToken?.actions.targets.map((target, idx) => (
+              <div key={`target-${idx}`} className="flex items-center">
+                <span className="text-neutral-700 font-bold">{target}</span>
+                <span className="text-neutral-500 ml-2">
+                  {ideaToken?.actions.values[idx]} ETH
+                </span>
+              </div>
+            ))}
+          </p>
         </div>
-        <div className="space-x-2">
-          <button
-            onClick={supportIdea}
-            disabled={isPending}
-            className="bg-white px-2 py-1 rounded-lg border text-sm text-gray-700"
-          >
+        <div className="col-span-2">
+          <div className="flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div className="overflow-hidden border sm:rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-white">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          Supporter
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          Contributed
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white">
+                      {isLoading
+                        ? [1, 2, 3].map((idx) => {
+                            return (
+                              <TableRow
+                                key={`loading-${idx}`}
+                                className="text-neutral-600"
+                              >
+                                <TableCell className="">
+                                  <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[200px]"></span>
+                                </TableCell>
+                                <TableCell className="">
+                                  <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                        : ideaToken?.supporters.map((supporter, idx) => (
+                            <tr
+                              className="cursor-pointer hover:bg-gray-50"
+                              key={`supporter-${idx}`}
+                            >
+                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
+                                {truncateEthAddress(supporter.owner)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-green-500">
+                                {formatUnits(
+                                  BigInt(supporter.balance.toString()),
+                                  18
+                                )}{" "}
+                                ETH
+                              </td>
+                            </tr>
+                          ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button className="w-full px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white mt-4">
             Support
           </button>
         </div>
-      </div>
-      <div className="border bg-white">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>#</TableHead>
-              <TableHead>Supporter</TableHead>
-              <TableHead className="text-left">Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading
-              ? [1, 2, 3].map((idx) => {
-                  return (
-                    <TableRow
-                      key={`loading-${idx}`}
-                      className="text-neutral-600"
-                    >
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                      <TableCell className="">
-                        <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              : ideaToken?.supporters.map((supporter, idx) => {
-                  return (
-                    <TableRow className="text-neutral-600">
-                      <TableCell className="text-left ">{idx + 1}</TableCell>
-                      <TableCell className="">{supporter.owner}</TableCell>
-                      <TableCell className="text-left font-semibold text-green-500">
-                        +{formatUnits(BigInt(supporter.balance.toString()), 18)}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-          </TableBody>
-        </Table>
       </div>
     </section>
   );

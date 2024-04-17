@@ -41,6 +41,10 @@ export const useIdeaToken = (ideaTokenId: bigint) => {
 
   const ideaToken = data?.ideaToken || null;
 
+  if (ideaToken && typeof ideaToken.actions === "string") {
+    ideaToken.actions = JSON.parse(ideaToken.actions);
+  }
+
   return {
     isLoading,
     mutate,
@@ -71,6 +75,7 @@ export async function SWRGetIdeaToken({
             title
             description
             createdAt
+            actions
             supporters {
                 balance
                 owner

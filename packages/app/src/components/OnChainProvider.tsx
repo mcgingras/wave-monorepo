@@ -39,7 +39,7 @@ export const OnChainProvider = ({
             "--ck-connectbutton-background": "#ffffff",
             "--ck-connectbutton-border-radius": "32px",
             "--ck-connectbutton-font-size": "15px",
-            "--ck-connectbutton-box-shadow": "0px 0px 0px 2px #F0F2F5",
+            "--ck-connectbutton-box-shadow": "0px 0px 0px 1px #E5E7EB",
           }}
         >
           {children}
