@@ -20,4 +20,14 @@ export default createSchema((p) => ({
     balance: p.bigint(),
     isCreator: p.boolean(),
   }),
+  DelegateProxy: p.createTable({
+    id: p.string(), // delegate address string
+    createdAt: p.bigint(),
+    delegators: p.many("Delegator.delegateProxyId"),
+    votingPower: p.bigint(),
+  }),
+  Delegator: p.createTable({
+    id: p.string(), // delegator (nouns token holder) address string
+    delegateProxyId: p.string().references("DelegateProxy.id"),
+  }),
 }));
