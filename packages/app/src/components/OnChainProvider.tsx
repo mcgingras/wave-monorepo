@@ -3,7 +3,11 @@
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, baseSepolia } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import {
+  ConnectKitProvider,
+  getDefaultConfig,
+  ConnectKitButton,
+} from "connectkit";
 
 const config = createConfig(
   getDefaultConfig({
@@ -37,7 +41,7 @@ export const OnChainProvider = ({
           mode="light"
           customTheme={{
             "--ck-connectbutton-background": "#ffffff",
-            "--ck-connectbutton-border-radius": "32px",
+            "--ck-connectbutton-border-radius": "8px",
             "--ck-connectbutton-font-size": "15px",
             "--ck-connectbutton-box-shadow": "0px 0px 0px 1px #E5E7EB",
           }}

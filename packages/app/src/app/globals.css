@@ -77,17 +77,33 @@
 
 @font-face {
     font-family: 'Fictional';
-    src: url('/FictionalTrial-Variable.ttf') format('truetype');
+    src: url('/fonts/FictionalTrial-Variable.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'Indicate';
-    src: url('/IndicateMono-Regular.otf') format('opentype');
+    src: url('/fonts/IndicateMono-Regular.otf') format('opentype');
+}
+
+
+/* polymath display: headers */
+@font-face {
+    font-family: 'Polymath-Display';
+    src: url('/fonts/Polymath-Display/PolymathDispDemo-Regular.otf') format('opentype');
+    weight: 400;
 }
 
 @font-face {
-    font-family: 'Polymath';
-    src: url('/PolymathDemo-Regular.otf') format('opentype');
+    font-family: 'Polymath-Display';
+    src: url('/fonts/Polymath-Display/PolymathDispDemo-Bold.otf') format('opentype');
+    weight: 700;
+}
+
+/* polymath text: text */
+@font-face {
+    font-family: 'Polymath-Text';
+    src: url('/fonts/Polymath-Text/PolymathTextDemo-Regular.otf') format('opentype');
+    weight: 400;
 }
 
 
@@ -99,10 +115,13 @@
     font-family: 'Indicate', 'monospace';
 }
 
-.polymath {
-    font-family: 'Polymath', 'serif';
+.polymath-disp {
+    font-family: 'Polymath-Display', 'serif';
 }
 
+.polymath-text {
+    font-family: 'Polymath-Text', 'serif';
+}
 
 .wave {
     background-color: #fafafa;

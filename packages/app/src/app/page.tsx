@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatUnits } from "viem";
 import { useReadContract, useBlockNumber, useAccount } from "wagmi";
-import { formatTimeAgo } from "@/lib/utils";
+import { formatTimeAgo, truncateEthAddress } from "@/lib/utils";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { useIdeaTokens } from "@/models/IdeaToken/hooks";
 import { useDelegateProxies } from "@/models/DelegateProxy/hooks";
@@ -16,12 +16,15 @@ import CreateDelegateProxyForm from "@/components/CreateDelegateProxyForm";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { useFinalizeWave } from "@/hooks/useFinalizeWave";
+import { ClockIcon } from "@heroicons/react/24/solid";
+import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
+import { LightBulbIcon } from "@heroicons/react/24/solid";
+import { UserGroupIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
   const { address } = useAccount();
   const data = useTokenHubData();
   const { finalizeWave, error } = useFinalizeWave();
-  console.log(error);
   const { estimatedYield } = useEstimatedYield(address);
 
   const router = useRouter();
@@ -67,208 +70,152 @@ export default function Home() {
   );
 
   return (
-    <div className="pb-24">
+    <div>
       <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
         <CreateDelegateProxyForm />
       </Modal>
-      <section className="mt-12">
-        {/* <Countdown endDate={remainingTime} /> */}
-        <div className="bg-white p-12 border mb-12 text-center">
-          {remainingSeconds > 0 ? (
-            <Countdown endDate={remainingTime} />
-          ) : (
-            <>
-              <p className="mb-4 font-bold">Wave has ended!</p>
-              <p>Winners: {data.numWinners}</p>
-              <p>Eligible delegates: {data.eligibleProposerIds}</p>
-              <button
-                className="bg-neutral-700 py-2 px-4 text-white rounded-full mt-4"
-                onClick={async () => await finalizeWave()}
-              >
-                Finalize wave
-              </button>
-            </>
-          )}
-        </div>
-        <div className="w-full flex flex-row items-end justify-between mb-4">
-          <div className="flex flex-row space-x-4 items-center">
-            <h1 className="text-2xl text-neutral-800 font-bold">Leaderboard</h1>
+      <section className="w-[600px] mx-auto mt-12 pb-12">
+        <h1 className="polymath-disp text-xl text-neutral-800">Wave 1</h1>
+        <div className="grid grid-cols-2 gap-8 w-full mt-4">
+          <div className="flex flex-row space-x-4 col-span-1 w-full">
+            <span className="bg-blue-100 p-2 rounded-full">
+              <ClockIcon className="text-blue-500 h-6 w-6" />
+            </span>
+            <div className="flex flex-col grow">
+              <div className="flex flex-row justify-between text-blue-500">
+                <span>Time</span>
+                <span>{remainingTime.toLocaleTimeString()}</span>
+              </div>
+              <div className="w-full h-3 rounded-full bg-blue-100 relative">
+                <div className="h-3 rounded-full bg-blue-500 absolute top-0 left-0 w-1/2"></div>
+              </div>
+            </div>
           </div>
-          <div className="space-x-2">
-            <Link href="/idea/new">
-              <button className="px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white">
-                + New idea
-              </button>
-            </Link>
+          <div className="flex flex-row space-x-4 col-span-1 w-full">
+            <span className="bg-blue-100 p-2 rounded-full">
+              <CurrencyDollarIcon className="text-blue-500 h-6 w-6" />
+            </span>
+            <div className="flex flex-col grow">
+              <div className="flex flex-row justify-between text-blue-500">
+                <span>Total yield</span>
+                <span>.004 ETH</span>
+              </div>
+              <div className="w-full h-3 rounded-full bg-blue-100 relative">
+                <div className="h-3 rounded-full bg-blue-500 absolute top-0 left-0 w-1/2"></div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <thead className="bg-white">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Rank
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Created
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Author
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Title
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Supporters
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Pooled ETH
-                      </th>
-                    </tr>
-                  </thead>
-                  {sortedIdeaTokens.length > 0 ? (
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      {sortedIdeaTokens.map((idea, idx) => (
-                        <tr
-                          className={`cursor-pointer hover:bg-gray-50 ${
-                            data.winningIdeaIds?.includes(
-                              parseInt(idea.id.toString())
-                            )
-                              ? "bg-green-50"
-                              : ""
-                          }`}
-                          key={idea.id.toString()}
-                          onClick={() => {
-                            router.push(`/idea/${idea.id}`);
-                          }}
-                        >
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {idx + 1}
-                          </td>
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
-                            {formatTimeAgo(parseInt(idea.createdAt.toString()))}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {idea.author}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {idea.title}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {idea.supporters.length}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-green-500">
-                            {formatUnits(BigInt(idea.pooledEth), 18)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  ) : (
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      <tr>
-                        <td
-                          colSpan={6}
-                          className="text-center py-4 text-sm text-gray-500"
-                        >
-                          No ideas found
-                        </td>
-                      </tr>
-                    </tbody>
-                  )}
-                </table>
+          <div className="flex flex-row space-x-4">
+            <span className="bg-neutral-100 p-2 rounded-full">
+              <UserGroupIcon className="text-neutral-400 h-6 w-6" />
+            </span>
+            <div className="flex flex-col grow">
+              <div className="flex flex-row justify-between text-neutral-400">
+                <span>Total delegates</span>
+                <span>4</span>
+              </div>
+              <div className="w-full h-3 rounded-full bg-neutral-100 relative">
+                <div className="h-3 rounded-full bg-neutral-400 absolute top-0 left-0 w-1/2"></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row space-x-4">
+            <span className="bg-neutral-100 p-2 rounded-full">
+              <LightBulbIcon className="text-neutral-400 h-6 w-6" />
+            </span>
+            <div className="flex flex-col grow">
+              <div className="flex flex-row justify-between text-neutral-400">
+                <span>Total ideas</span>
+                <span>{ideaTokens.length}</span>
+              </div>
+              <div className="w-full h-3 rounded-full bg-neutral-100 relative">
+                <div className="h-3 rounded-full bg-neutral-400 absolute top-0 left-0 w-1/2"></div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section className="mt-12">
-        <div className="w-full flex flex-row items-end justify-between mb-4">
-          <div className="flex flex-row space-x-4 items-center">
-            <h1 className="text-2xl text-neutral-800 font-bold">Delegates</h1>
-          </div>
-          <div className="space-x-2">
-            <button
-              className="px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white"
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            >
-              + Add voting power
-            </button>
-          </div>
-        </div>
-        <div className="flow-root">
-          <div className="grid grid-cols-3 gap-4">
-            {delegateProxies.map((delegateProxy, idx) => (
-              <div
-                key={delegateProxy.id.toString()}
-                className="bg-white p-4 rounded-lg ring-1 ring-black ring-opacity-5 shadow flex flex-col"
-              >
-                <h3 className="text-center font-semibold">Proxy {idx + 1}</h3>
-                <h4 className="text-sm text-neutral-500">{delegateProxy.id}</h4>
-                <div className="mt-8 flex items-center justify-center">
-                  {delegateProxy.delegators.map((delegate, idx) => (
-                    <div
-                      key={delegate.id.toString()}
-                      className="flex flex-row items-center space-x-2"
-                    >
-                      {/* <span>{delegate.id}</span> */}
-                      <span className="bg-gray-300 h-8 w-8 rounded-full"></span>
+      <section className="bg-neutral-100 py-8">
+        <div className="w-[600px] mx-auto space-y-8">
+          {sortedIdeaTokens.map((ideaToken, idx) => {
+            return (
+              <div className="bg-white rounded-2xl flex flex-col border border-transparent hover:border-neutral-200 hover:translate-y-[-2px] cursor-pointer transition-all">
+                <div className="flex flex-row justify-between items-center border-b border-neutral-100 p-4">
+                  <div className="flex flex-col space-y-1">
+                    <h2 className="text-lg text-neutral-800 polymath-disp tracking-wide">
+                      {ideaToken.title}
+                    </h2>
+                    <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full">
+                      {truncateEthAddress(ideaToken.author)}
+                    </p>
+                  </div>
+                  <button className="self-start bg-blue-100 text-blue-500 rounded-md px-2 py-1 hover:scale-105 transition-all">
+                    Support
+                  </button>
+                </div>
+                <div className="flex flex-row p-4 border-b border-neutral-100">
+                  <p className="text-neutral-500">{ideaToken.description}</p>
+                </div>
+                <div className="flex flex-col p-4">
+                  <h3 className="text-xs uppercase text-neutral-400 font-bold polymath-disp tracking-wider">
+                    Supporters
+                  </h3>
+                  <div className="mt-2 grid grid-cols-3 gap-4">
+                    <div className="space-x-2 flex flex-row items-center">
+                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                      <p>lilfrog.eth</p>
+                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                        1
+                      </p>
                     </div>
-                  ))}
-                </div>
-                <div className="flex flex-col space-y-2">
-                  <span className="text-sm text-neutral-500">
-                    {delegateProxy.votingPower?.toString()} votes
-                  </span>
-                  <span className="text-sm text-neutral-500">
-                    {minRequiredVotes?.toString()} votes required
-                  </span>
-                </div>
-                <div className="mt-2 flex justify-end">
-                  {/* <button
-                    className="bg-neutral-700 py-1 px-2 text-white text-sm rounded-full"
-                    disabled={
-                      delegateProxy.delegators.length >
-                      parseInt(minRequiredVotes?.toString() ?? "0")
-                    }
-                    onClick={() => {
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    delegate
-                  </button> */}
+                    <div className="space-x-2 flex flex-row items-center">
+                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                      <p>lilfrog.eth</p>
+                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                        1
+                      </p>
+                    </div>
+                    <div className="space-x-2 flex flex-row items-center">
+                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                      <p>lilfrog.eth</p>
+                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                        1
+                      </p>
+                    </div>
+                    <div className="space-x-2 flex flex-row items-center">
+                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                      <p>lilfrog.eth</p>
+                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                        1
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            ))}
-            <div className="bg-white p-4 rounded-lg ring-1 ring-black ring-opacity-5 hover:shadow flex flex-col transition-shadow">
-              <h3 className="text-center font-semibold">Your yield</h3>
-              <h4 className="text-center text-sm text-neutral-500">
-                {estimatedYield && formatUnits(BigInt(estimatedYield), 18)} ETH
-              </h4>
-            </div>
-          </div>
+            );
+          })}
+        </div>
+      </section>
+      <section className="bg-neutral-200">
+        <div className="w-[600px] mx-auto py-8 text-xs text-neutral-500">
+          <h4 className="text-center">Created by Frog, Adel, and Robriks</h4>
+          <ul className="mt-1 flex flex-row items-center justify-center space-x-2">
+            <li className="hover:text-neutral-600 transition-colors">
+              <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+                Github
+              </Link>
+            </li>
+            <li className="hover:text-neutral-600 transition-colors">
+              <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+                Warpcast
+              </Link>
+            </li>
+            <li className="hover:text-neutral-600 transition-colors">
+              <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+                Discord
+              </Link>
+            </li>
+          </ul>
         </div>
       </section>
     </div>

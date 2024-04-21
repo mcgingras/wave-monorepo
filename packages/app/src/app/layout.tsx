@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Inter } from "next/font/google";
 import { OnChainProvider } from "@/components/OnChainProvider";
 import Nav from "@/components/Nav";
@@ -19,11 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <body className="indicate min-h-screen w-full"> */}
-      <body className={`${inter.className} wave`}>
+      <body className={`polymath-text`}>
         <OnChainProvider>
           <>
-            <main className="w-[1200px] mx-auto h-[calc(100vh-200px)]">
+            <main className="h-[calc(100vh-65px)]">
               <Nav />
               {children}
             </main>

@@ -5,6 +5,7 @@ import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import TransferActionForm from "./TransferActionForm";
 import StreamActionForm from "./StreamActionForm";
 import CustomActionForm from "./CustomActionForm";
+import Button from "./ui/Button";
 
 const AddActionForm = ({
   closeModal,
@@ -84,16 +85,8 @@ const AddActionForm = ({
             {renderFormForActionType(actionType)}
           </div>
           <div className="mt-4 flex justify-end space-x-2">
-            <button
-              type="button"
-              className="px-3 py-1 rounded-full border-2 border-neutral-800 hover:bg-neutral-100 transition-colors text-sm"
-              onClick={closeModal}
-            >
-              Cancel
-            </button>
-            <button className="px-3 py-1 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white text-sm">
-              Add
-            </button>
+            <Button onClick={closeModal} type="secondary" title="Cancel" />
+            <Button isSubmit={true} type="primary" title="Add" />
           </div>
         </form>
       </FormProvider>
