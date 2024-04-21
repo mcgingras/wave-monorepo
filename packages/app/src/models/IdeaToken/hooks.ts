@@ -7,12 +7,11 @@ import { IdeaToken } from "./types";
 
 export const useIdeaTokens = () => {
   const { error, isLoading, mutate, data } = useSWR(
-    true
-      ? {
-          url: `http://localhost:42069`,
-          args: { nothing: true },
-        }
-      : null,
+    {
+      key: "GetIdeaTokens",
+      url: `http://localhost:42069`,
+      args: { nothing: true },
+    },
     SWRGetIdeaTokens
   );
 
@@ -32,6 +31,7 @@ export const useIdeaToken = (ideaTokenId: bigint) => {
   const { error, isLoading, mutate, data } = useSWR(
     ideaTokenId
       ? {
+          key: "GetIdeaToken",
           url: `http://localhost:42069`,
           args: { ideaTokenId },
         }
@@ -97,7 +97,6 @@ export async function SWRGetIdeaToken({
 
   const data = await fetch(url, graphqlRequest);
   const json = await data.json();
-  console.log(json);
   return json.data;
 }
 

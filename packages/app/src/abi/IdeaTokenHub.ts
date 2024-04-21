@@ -1,16 +1,5 @@
 export const IdeaTokenHubABI = [
-  {
-    type: "constructor",
-    inputs: [
-      {
-        name: "nounsGovernor_",
-        type: "address",
-        internalType: "contract INounsDAOLogicV3",
-      },
-      { name: "uri_", type: "string", internalType: "string" },
-    ],
-    stateMutability: "nonpayable",
-  },
+  { type: "constructor", inputs: [], stateMutability: "nonpayable" },
   {
     type: "function",
     name: "balanceOf",
@@ -78,7 +67,18 @@ export const IdeaTokenHubABI = [
   {
     type: "function",
     name: "finalizeWave",
-    inputs: [],
+    inputs: [
+      {
+        name: "offchainWinningIds",
+        type: "uint96[]",
+        internalType: "uint96[]",
+      },
+      {
+        name: "offchainDescriptions",
+        type: "string[]",
+        internalType: "string[]",
+      },
+    ],
     outputs: [
       {
         name: "delegations",
@@ -91,7 +91,6 @@ export const IdeaTokenHubABI = [
           { name: "delegateId", type: "uint16", internalType: "uint16" },
         ],
       },
-      { name: "winningIds", type: "uint96[]", internalType: "uint96[]" },
       {
         name: "nounsProposalIds",
         type: "uint256[]",
@@ -121,38 +120,18 @@ export const IdeaTokenHubABI = [
           { name: "blockCreated", type: "uint32", internalType: "uint32" },
           { name: "isProposed", type: "bool", internalType: "bool" },
           {
-            name: "proposal",
+            name: "proposalTxs",
             type: "tuple",
-            internalType: "struct IPropLot.Proposal",
+            internalType: "struct NounsDAOV3Proposals.ProposalTxs",
             components: [
+              { name: "targets", type: "address[]", internalType: "address[]" },
+              { name: "values", type: "uint256[]", internalType: "uint256[]" },
               {
-                name: "ideaTxs",
-                type: "tuple",
-                internalType: "struct NounsDAOV3Proposals.ProposalTxs",
-                components: [
-                  {
-                    name: "targets",
-                    type: "address[]",
-                    internalType: "address[]",
-                  },
-                  {
-                    name: "values",
-                    type: "uint256[]",
-                    internalType: "uint256[]",
-                  },
-                  {
-                    name: "signatures",
-                    type: "string[]",
-                    internalType: "string[]",
-                  },
-                  {
-                    name: "calldatas",
-                    type: "bytes[]",
-                    internalType: "bytes[]",
-                  },
-                ],
+                name: "signatures",
+                type: "string[]",
+                internalType: "string[]",
               },
-              { name: "description", type: "string", internalType: "string" },
+              { name: "calldatas", type: "bytes[]", internalType: "bytes[]" },
             ],
           },
         ],
@@ -165,6 +144,15 @@ export const IdeaTokenHubABI = [
     name: "getNextIdeaId",
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getOptimisticYieldEstimate",
+    inputs: [{ name: "nounder", type: "address", internalType: "address" }],
+    outputs: [
+      { name: "yieldEstimate", type: "uint256", internalType: "uint256" },
+    ],
     stateMutability: "view",
   },
   {
@@ -219,6 +207,38 @@ export const IdeaTokenHubABI = [
   },
   {
     type: "function",
+    name: "getWinningIdeaIds",
+    inputs: [],
+    outputs: [
+      { name: "minRequiredVotes", type: "uint256", internalType: "uint256" },
+      {
+        name: "numEligibleProposers",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      { name: "winningIds", type: "uint96[]", internalType: "uint96[]" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "initialize",
+    inputs: [
+      { name: "owner_", type: "address", internalType: "address" },
+      { name: "nounsGovernor_", type: "address", internalType: "address" },
+      {
+        name: "minSponsorshipAmount_",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      { name: "waveLength_", type: "uint256", internalType: "uint256" },
+      { name: "uri_", type: "string", internalType: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "isApprovedForAll",
     inputs: [
       { name: "account", type: "address", internalType: "address" },
@@ -233,6 +253,27 @@ export const IdeaTokenHubABI = [
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "proxiableUUID",
+    inputs: [],
+    outputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "renounceOwnership",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -272,6 +313,28 @@ export const IdeaTokenHubABI = [
   },
   {
     type: "function",
+    name: "setMinSponsorshipAmount",
+    inputs: [
+      {
+        name: "newMinSponsorshipAmount",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setWaveLength",
+    inputs: [
+      { name: "newWavelength", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "sponsorIdea",
     inputs: [{ name: "ideaId", type: "uint256", internalType: "uint256" }],
     outputs: [],
@@ -286,6 +349,32 @@ export const IdeaTokenHubABI = [
   },
   {
     type: "function",
+    name: "transferOwnership",
+    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "upgradeTo",
+    inputs: [
+      { name: "newImplementation", type: "address", internalType: "address" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "upgradeToAndCall",
+    inputs: [
+      { name: "newImplementation", type: "address", internalType: "address" },
+      { name: "data", type: "bytes", internalType: "bytes" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
     name: "uri",
     inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     outputs: [{ name: "", type: "string", internalType: "string" }],
@@ -297,6 +386,25 @@ export const IdeaTokenHubABI = [
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
+  },
+  {
+    type: "event",
+    name: "AdminChanged",
+    inputs: [
+      {
+        name: "previousAdmin",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "newAdmin",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
   },
   {
     type: "event",
@@ -315,6 +423,19 @@ export const IdeaTokenHubABI = [
         internalType: "address",
       },
       { name: "approved", type: "bool", indexed: false, internalType: "bool" },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "BeaconUpgraded",
+    inputs: [
+      {
+        name: "beacon",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
     ],
     anonymous: false,
   },
@@ -389,41 +510,48 @@ export const IdeaTokenHubABI = [
           { name: "blockCreated", type: "uint32", internalType: "uint32" },
           { name: "isProposed", type: "bool", internalType: "bool" },
           {
-            name: "proposal",
+            name: "proposalTxs",
             type: "tuple",
-            internalType: "struct IPropLot.Proposal",
+            internalType: "struct NounsDAOV3Proposals.ProposalTxs",
             components: [
+              { name: "targets", type: "address[]", internalType: "address[]" },
+              { name: "values", type: "uint256[]", internalType: "uint256[]" },
               {
-                name: "ideaTxs",
-                type: "tuple",
-                internalType: "struct NounsDAOV3Proposals.ProposalTxs",
-                components: [
-                  {
-                    name: "targets",
-                    type: "address[]",
-                    internalType: "address[]",
-                  },
-                  {
-                    name: "values",
-                    type: "uint256[]",
-                    internalType: "uint256[]",
-                  },
-                  {
-                    name: "signatures",
-                    type: "string[]",
-                    internalType: "string[]",
-                  },
-                  {
-                    name: "calldatas",
-                    type: "bytes[]",
-                    internalType: "bytes[]",
-                  },
-                ],
+                name: "signatures",
+                type: "string[]",
+                internalType: "string[]",
               },
-              { name: "description", type: "string", internalType: "string" },
+              { name: "calldatas", type: "bytes[]", internalType: "bytes[]" },
             ],
           },
         ],
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "Initialized",
+    inputs: [
+      { name: "version", type: "uint8", indexed: false, internalType: "uint8" },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipTransferred",
+    inputs: [
+      {
+        name: "previousOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "newOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
       },
     ],
     anonymous: false,
@@ -520,6 +648,19 @@ export const IdeaTokenHubABI = [
     anonymous: false,
   },
   {
+    type: "event",
+    name: "Upgraded",
+    inputs: [
+      {
+        name: "implementation",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
     type: "error",
     name: "AlreadyProposed",
     inputs: [{ name: "ideaId", type: "uint256", internalType: "uint256" }],
@@ -536,6 +677,7 @@ export const IdeaTokenHubABI = [
     inputs: [{ name: "count", type: "uint256", internalType: "uint256" }],
   },
   { type: "error", name: "InvalidDescription", inputs: [] },
+  { type: "error", name: "InvalidOffchainDataProvided", inputs: [] },
   {
     type: "error",
     name: "NonexistentIdeaId",
@@ -543,5 +685,6 @@ export const IdeaTokenHubABI = [
   },
   { type: "error", name: "ProposalInfoArityMismatch", inputs: [] },
   { type: "error", name: "Soulbound", inputs: [] },
+  { type: "error", name: "Unauthorized", inputs: [] },
   { type: "error", name: "WaveIncomplete", inputs: [] },
 ] as const;

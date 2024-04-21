@@ -2,10 +2,9 @@
 import { useIdeaToken } from "@/models/IdeaToken/hooks";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { configAddresses } from "@/lib/constants";
-import { parseEther } from "viem";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { TableCell, TableRow } from "@/components/ui/Table";
-import { formatUnits } from "viem";
+import { parseEther, formatUnits } from "viem";
 import { truncateEthAddress } from "@/lib/utils";
 
 const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
@@ -30,7 +29,7 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
   };
 
   return (
-    <section className="mt-24 w-[1200px] mx-auto">
+    <section className="mt-12 w-[1200px] mx-auto">
       <div className="grid grid-cols-5 gap-12">
         <div className="col-span-3">
           <h1 className="text-2xl text-neutral-700 font-bold">
@@ -115,7 +114,10 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
               </div>
             </div>
           </div>
-          <button className="w-full px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white mt-4">
+          <button
+            className="w-full px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white mt-4"
+            onClick={() => supportIdea?.()}
+          >
             Support
           </button>
         </div>

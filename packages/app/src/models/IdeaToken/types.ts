@@ -1,8 +1,15 @@
 import { Supporter } from "../Supporter/types";
 
+export type Action = {
+  target: `0x${string}`;
+  value: string;
+  signature: string;
+  calldata: `0x${string}`;
+};
+
 type ActionObject = {
   targets: `0x${string}`[];
-  values: `0x${string}`[];
+  values: string[];
   signatures: string[];
   calldatas: `0x${string}`[];
 };
