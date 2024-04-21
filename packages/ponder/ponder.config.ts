@@ -8,9 +8,9 @@ import { NounsTokenABI } from "./abi/NounsToken";
 const startBlock = 7853000;
 
 export const configAddresses = {
-  PropLotHarness: "0x92bc9f0D42A3194Df2C5AB55c3bbDD82e6Fb2F92",
-  IdeaTokenHub: "0x114Bb2c1b74E931fC4bF77754c4f684958ac2099",
-  NounsTokenHarness: "0x9B786579B3d4372d54DFA212cc8B1589Aaf6DcF3",
+  PropLotHarness: "0xD49c56d08D3c40854c0543bA5B1747f2Ad1c7b89",
+  IdeaTokenHub: "0xaB626b93B3f98d79ae1FBf6c76Bf678F83E7faf3",
+  NounsTokenHarness: "0x1B8D11880fe221B51FC814fF4C41366a91A59DEB",
 };
 
 export default createConfig({
