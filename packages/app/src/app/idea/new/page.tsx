@@ -191,11 +191,18 @@ const NewIdeaPage = () => {
               </section>
             </div>
 
-            <section className="p-4 flex items-center justify-end">
+            <section className="p-4 flex items-center justify-end space-x-2">
+              <Button
+                title="Cancel"
+                type="undefined"
+                onClick={() => {
+                  window.history.back();
+                }}
+              />
               <Button title="Save" type="primary" isSubmit={true} />
-              {isConfirming && <div>Waiting for confirmation...</div>}
-              {isConfirmed && <div>Transaction confirmed.</div>}
             </section>
+            {isConfirming && <div>Waiting for confirmation...</div>}
+            {isConfirmed && <div>Transaction confirmed.</div>}
           </form>
         </FormProvider>
       </div>

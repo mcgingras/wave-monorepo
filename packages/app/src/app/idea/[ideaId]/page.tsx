@@ -6,6 +6,7 @@ import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { TableCell, TableRow } from "@/components/ui/Table";
 import { parseEther, formatUnits } from "viem";
 import { truncateEthAddress } from "@/lib/utils";
+import Button from "@/components/ui/Button";
 
 const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaToken, isLoading } = useIdeaToken(params.ideaId);
@@ -29,12 +30,19 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
   };
 
   return (
-    <section className="mt-12 w-[1200px] mx-auto">
-      <div className="grid grid-cols-5 gap-12">
+    <div className="h-full flex flex-col">
+      <section className="mt-12 w-[600px] mx-auto">
         <div className="col-span-3">
-          <h1 className="text-2xl text-neutral-700 font-bold">
-            {ideaToken?.title}
-          </h1>
+          <div className="flex flex-row justify-between">
+            <h1 className="text-2xl text-neutral-700 font-bold polymath-disp tracking-wide">
+              {ideaToken?.title}
+            </h1>
+            <Button
+              type="primary"
+              title="Support"
+              onClick={() => supportIdea?.()}
+            />
+          </div>
           <p className="text-neutral-500 mt-2 bg-white p-4 border rounded-lg">
             {ideaToken?.description}
           </p>
@@ -52,11 +60,13 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
             ))}
           </p>
         </div>
-        <div className="col-span-2">
+      </section>
+      <section className="bg-neutral-100 grow pt-8">
+        <div className="col-span-2 w-[600px] mx-auto">
           <div className="flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div className="overflow-hidden border sm:rounded-lg">
+                <div className="overflow-hidden sm:rounded-lg">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-white">
                       <tr>
@@ -114,15 +124,9 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
               </div>
             </div>
           </div>
-          <button
-            className="w-full px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white mt-4"
-            onClick={() => supportIdea?.()}
-          >
-            Support
-          </button>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

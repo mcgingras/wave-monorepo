@@ -7,6 +7,52 @@ const fontSize = 16;
 const padding = 12;
 const height = fontSize + padding;
 
+export const StaticCountdown = ({
+  endDate,
+  className,
+}: {
+  endDate: Date;
+  className?: string;
+}) => {
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = endDate.getTime() - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        setDays(0);
+        setHours(0);
+        setMinutes(0);
+        setSeconds(0);
+        return;
+      }
+
+      setDays(Math.floor(distance / (1000 * 60 * 60 * 24)));
+      setHours(
+        Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      );
+      setMinutes(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+      setSeconds(Math.floor((distance % (1000 * 60)) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [endDate]);
+
+  return (
+    <div className={className}>
+      <span>{days}d</span>
+      <span>{hours}h</span>
+      <span>{minutes}m</span>
+      <span>{seconds}s</span>
+    </div>
+  );
+};
+
 export const Countdown = ({ endDate }: { endDate: Date }) => {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);

@@ -11,7 +11,7 @@ import { useIdeaTokens } from "@/models/IdeaToken/hooks";
 import { useDelegateProxies } from "@/models/DelegateProxy/hooks";
 import { useTokenHubData, useEstimatedYield } from "@/models/TokenHub/hooks";
 import Modal from "@/components/ui/Modal";
-import { Countdown } from "@/components/ui/Counter";
+import { Countdown, StaticCountdown } from "@/components/ui/Counter";
 import CreateDelegateProxyForm from "@/components/CreateDelegateProxyForm";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { PropLotHarnessABI } from "@/abi/PropLotHarness";
@@ -41,6 +41,11 @@ export default function Home() {
       pooledEth,
     };
   });
+
+  const totalPooledEth = ideaTokensWithPooledEth.reduce(
+    (acc, ideaToken) => acc + ideaToken.pooledEth,
+    0
+  );
 
   const sortedIdeaTokens = ideaTokensWithPooledEth.sort(
     (a, b) => b.pooledEth - a.pooledEth
@@ -75,7 +80,7 @@ export default function Home() {
         <CreateDelegateProxyForm />
       </Modal>
       <section className="w-[600px] mx-auto mt-12 pb-12">
-        <h1 className="polymath-disp text-xl text-neutral-800">Wave 1</h1>
+        <h1 className="polymath-disp text-2xl text-neutral-800">Wave 1</h1>
         <div className="grid grid-cols-2 gap-8 w-full mt-4">
           <div className="flex flex-row space-x-4 col-span-1 w-full">
             <span className="bg-blue-100 p-2 rounded-full">
@@ -84,7 +89,10 @@ export default function Home() {
             <div className="flex flex-col grow">
               <div className="flex flex-row justify-between text-blue-500">
                 <span>Time</span>
-                <span>{remainingTime.toLocaleTimeString()}</span>
+                <StaticCountdown
+                  endDate={remainingTime}
+                  className="space-x-1"
+                />
               </div>
               <div className="w-full h-3 rounded-full bg-blue-100 relative">
                 <div className="h-3 rounded-full bg-blue-500 absolute top-0 left-0 w-1/2"></div>
@@ -98,7 +106,7 @@ export default function Home() {
             <div className="flex flex-col grow">
               <div className="flex flex-row justify-between text-blue-500">
                 <span>Total yield</span>
-                <span>.004 ETH</span>
+                <span>{formatUnits(BigInt(totalPooledEth), 18)} ETH</span>
               </div>
               <div className="w-full h-3 rounded-full bg-blue-100 relative">
                 <div className="h-3 rounded-full bg-blue-500 absolute top-0 left-0 w-1/2"></div>
@@ -112,7 +120,7 @@ export default function Home() {
             <div className="flex flex-col grow">
               <div className="flex flex-row justify-between text-neutral-400">
                 <span>Total delegates</span>
-                <span>4</span>
+                <span>{delegateProxies.length}</span>
               </div>
               <div className="w-full h-3 rounded-full bg-neutral-100 relative">
                 <div className="h-3 rounded-full bg-neutral-400 absolute top-0 left-0 w-1/2"></div>
@@ -139,58 +147,64 @@ export default function Home() {
         <div className="w-[600px] mx-auto space-y-8">
           {sortedIdeaTokens.map((ideaToken, idx) => {
             return (
-              <div className="bg-white rounded-2xl flex flex-col border border-transparent hover:border-neutral-200 hover:translate-y-[-2px] cursor-pointer transition-all">
-                <div className="flex flex-row justify-between items-center border-b border-neutral-100 p-4">
-                  <div className="flex flex-col space-y-1">
-                    <h2 className="text-lg text-neutral-800 polymath-disp tracking-wide">
-                      {ideaToken.title}
-                    </h2>
-                    <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full">
-                      {truncateEthAddress(ideaToken.author)}
-                    </p>
+              <div>
+                <Link href={`/idea/${ideaToken.id}`}>
+                  <div className="bg-white rounded-2xl flex flex-col border border-transparent hover:border-neutral-200 hover:translate-y-[-2px] cursor-pointer transition-all">
+                    <div className="flex flex-row justify-between items-center border-b border-neutral-100 p-4">
+                      <div className="flex flex-col space-y-1">
+                        <h2 className="text-lg text-neutral-800 polymath-disp tracking-wide">
+                          {ideaToken.title}
+                        </h2>
+                        <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full">
+                          {truncateEthAddress(ideaToken.author)}
+                        </p>
+                      </div>
+                      <button className="self-start bg-blue-100 text-blue-500 rounded-md px-2 py-1 hover:scale-105 transition-all">
+                        Support
+                      </button>
+                    </div>
+                    <div className="flex flex-row p-4 border-b border-neutral-100">
+                      <p className="text-neutral-500">
+                        {ideaToken.description}
+                      </p>
+                    </div>
+                    <div className="flex flex-col p-4">
+                      <h3 className="text-xs uppercase text-neutral-400 font-bold polymath-disp tracking-wider">
+                        Supporters
+                      </h3>
+                      <div className="mt-2 grid grid-cols-3 gap-4">
+                        <div className="space-x-2 flex flex-row items-center">
+                          <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                          <p>lilfrog.eth</p>
+                          <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                            1
+                          </p>
+                        </div>
+                        <div className="space-x-2 flex flex-row items-center">
+                          <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                          <p>lilfrog.eth</p>
+                          <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                            1
+                          </p>
+                        </div>
+                        <div className="space-x-2 flex flex-row items-center">
+                          <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                          <p>lilfrog.eth</p>
+                          <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                            1
+                          </p>
+                        </div>
+                        <div className="space-x-2 flex flex-row items-center">
+                          <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
+                          <p>lilfrog.eth</p>
+                          <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+                            1
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button className="self-start bg-blue-100 text-blue-500 rounded-md px-2 py-1 hover:scale-105 transition-all">
-                    Support
-                  </button>
-                </div>
-                <div className="flex flex-row p-4 border-b border-neutral-100">
-                  <p className="text-neutral-500">{ideaToken.description}</p>
-                </div>
-                <div className="flex flex-col p-4">
-                  <h3 className="text-xs uppercase text-neutral-400 font-bold polymath-disp tracking-wider">
-                    Supporters
-                  </h3>
-                  <div className="mt-2 grid grid-cols-3 gap-4">
-                    <div className="space-x-2 flex flex-row items-center">
-                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
-                      <p>lilfrog.eth</p>
-                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
-                        1
-                      </p>
-                    </div>
-                    <div className="space-x-2 flex flex-row items-center">
-                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
-                      <p>lilfrog.eth</p>
-                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
-                        1
-                      </p>
-                    </div>
-                    <div className="space-x-2 flex flex-row items-center">
-                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
-                      <p>lilfrog.eth</p>
-                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
-                        1
-                      </p>
-                    </div>
-                    <div className="space-x-2 flex flex-row items-center">
-                      <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
-                      <p>lilfrog.eth</p>
-                      <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
-                        1
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                </Link>
               </div>
             );
           })}

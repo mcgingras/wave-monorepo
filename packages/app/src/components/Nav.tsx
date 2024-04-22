@@ -1,6 +1,7 @@
 "use client";
 import { ConnectKitButton } from "connectkit";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 const Nav = () => {
   return (
@@ -16,14 +17,10 @@ const Nav = () => {
           </ul>
           <div className="flex flex-row items-center space-x-2">
             <Link href="/idea/new">
-              <button className="bg-blue-100 text-blue-500 rounded-md px-2 py-1 hover:scale-105 transition-all">
-                Add idea
-              </button>
+              <Button title="Add idea" type="secondary" />
             </Link>
             <Link href="/delegates">
-              <button className="bg-blue-100 text-blue-500 rounded-md px-2 py-1 hover:scale-105 transition-all">
-                Delegate
-              </button>
+              <Button title="Delegate" type="secondary" />
             </Link>
             <ConnectKitButton.Custom>
               {({ isConnected, show, truncatedAddress, ensName }) => {
@@ -32,9 +29,9 @@ const Nav = () => {
                     onClick={show}
                     className={`${
                       !isConnected
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-neutral-600 border"
-                    } rounded-md px-2 py-1 hover:scale-105 transition-all`}
+                        ? "bg-blue-500 text-white hover:shadow-[0_0_0_2px_rgba(59,130,246,1)]"
+                        : "bg-white text-neutral-600 border border-neutral-200 hover:shadow-[0_0_0_2px_rgba(229,229,229,1)]"
+                    } rounded-md px-2 py-1 transition-all`}
                   >
                     {isConnected ? ensName ?? truncatedAddress : "Connect"}
                   </button>
