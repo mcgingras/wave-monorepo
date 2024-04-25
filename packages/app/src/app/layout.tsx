@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Inter } from "next/font/google";
 import { OnChainProvider } from "@/components/OnChainProvider";
 import Nav from "@/components/Nav";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PropLot",
@@ -19,14 +16,14 @@ export default function RootLayout({
   children: React.ReactElement;
 }>) {
   return (
-    <html lang="en">
-      <body className={`polymath-text`}>
+    <html lang="en" className="h-full">
+      <body className="polymath-text h-full min-h-screen">
         <OnChainProvider>
           <>
-            <main className="h-[calc(100vh-65px)]">
+            <div className="h-full flex flex-col">
               <Nav />
-              {children}
-            </main>
+              <main className="grow min-h-[calc(100vh-65px)]">{children}</main>
+            </div>
           </>
         </OnChainProvider>
       </body>

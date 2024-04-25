@@ -2,16 +2,22 @@
 import { ConnectKitButton } from "connectkit";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import WaveIcon from "@/components/icons/Wave";
 
 const Nav = () => {
   return (
     <div className="border-b">
       <div className="w-[600px] mx-auto">
         <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
-          <ul className="flex flex-row space-x-6">
+          <ul className="flex flex-row items-center space-x-3">
             <li>
               <Link href="/" className="text-blue-500 font-bold">
-                Wave protocol
+                <WaveIcon className="h-10 w-10" />
+              </Link>
+            </li>
+            <li>
+              <Link href="/" className="text-blue-500">
+                wave protocol
               </Link>
             </li>
           </ul>

@@ -90,20 +90,26 @@
 @font-face {
     font-family: 'Polymath-Display';
     src: url('/fonts/Polymath-Display/PolymathDispDemo-Regular.otf') format('opentype');
-    weight: 400;
+    font-weight: 400;
 }
 
 @font-face {
     font-family: 'Polymath-Display';
     src: url('/fonts/Polymath-Display/PolymathDispDemo-Bold.otf') format('opentype');
-    weight: 700;
+    font-weight: 700;
 }
 
 /* polymath text: text */
 @font-face {
     font-family: 'Polymath-Text';
     src: url('/fonts/Polymath-Text/PolymathTextDemo-Regular.otf') format('opentype');
-    weight: 400;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Polymath-Text';
+    src: url('/fonts/Polymath-Text/PolymathTextDemo-Bold.otf') format('opentype');
+    font-weight: 700;
 }
 
 

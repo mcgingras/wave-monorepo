@@ -95,7 +95,7 @@ const NewIdeaPage = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="">
-              <h2 className="text-lg text-neutral-800 polymath-disp text-center py-4 border-b border-neutral-100 tracking-wide">
+              <h2 className="text-xl text-neutral-800 polymath-disp text-center py-4 border-b border-neutral-100 tracking-wide">
                 New idea
               </h2>
               <section className="p-4 border-b border-neutral-100">
@@ -154,8 +154,8 @@ const NewIdeaPage = () => {
                     )}
                     {actions.map((action, index) => (
                       <>
-                        <pre>
-                          {action.target} - {action.value}
+                        <pre className="text-neutral-500 text-sm">
+                          transfer {action.value} ETH to {action.target}
                         </pre>
                         <input
                           key={`action-target-${index}`}
