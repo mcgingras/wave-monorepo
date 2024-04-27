@@ -19,8 +19,9 @@ import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import { LightBulbIcon } from "@heroicons/react/24/solid";
 import { UserGroupIcon } from "@heroicons/react/24/solid";
 import Button from "@/components/ui/Button";
-import IdeaCard from "@/components/IdeaCard";
+import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
 import AbridgedList from "@/components/IdeaCard/AbridgedList";
+import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
 
 export default function Home() {
   const { address } = useAccount();
@@ -78,7 +79,7 @@ export default function Home() {
       <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
         <CreateDelegateProxyForm />
       </Modal>
-      <div className="h-full pt-12 flex flex-col">
+      <div className="min-h-[calc(100vh-65px)] mt-[65px] pt-12 flex flex-col">
         <section className="w-[600px] mx-auto pb-12">
           <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
             Wave {waveInfo?.[0]}
@@ -160,37 +161,19 @@ export default function Home() {
         </section>
         <section className="bg-neutral-100 py-8 grow flex-1">
           <div className="w-[600px] mx-auto space-y-8">
-            {sortedIdeaTokens.map((ideaToken, idx) => {
-              return (
-                <div>
-                  <Link href={`/idea/${ideaToken.id}`}>
-                    <IdeaCard ideaToken={ideaToken} />
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-        <section className="bg-neutral-200">
-          <div className="w-[600px] mx-auto py-8 text-xs text-neutral-500">
-            <h4 className="text-center">Created by Frog, Adel, and Robriks</h4>
-            <ul className="mt-1 flex flex-row items-center justify-center space-x-2">
-              <li className="hover:text-neutral-600 transition-colors">
-                <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-                  Github
-                </Link>
-              </li>
-              <li className="hover:text-neutral-600 transition-colors">
-                <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-                  Warpcast
-                </Link>
-              </li>
-              <li className="hover:text-neutral-600 transition-colors">
-                <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-                  Discord
-                </Link>
-              </li>
-            </ul>
+            {isLoading
+              ? [1, 2, 3].map(() => {
+                  return <IdeaCardSkeleton />;
+                })
+              : sortedIdeaTokens.map((ideaToken, idx) => {
+                  return (
+                    <div>
+                      <Link href={`/idea/${ideaToken.id}`}>
+                        <ExpandableIdeaCard ideaToken={ideaToken} />
+                      </Link>
+                    </div>
+                  );
+                })}
           </div>
         </section>
       </div>

@@ -1,5 +1,6 @@
 import { truncateEthAddress } from "@/lib/utils";
 import { IdeaToken } from "@/models/IdeaToken/types";
+import SupportButton from "./SupportButton";
 
 const IdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   return (
@@ -9,13 +10,13 @@ const IdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
           <h2 className="text-lg text-neutral-800 polymath-disp font-bold tracking-wide">
             {ideaToken.title}
           </h2>
-          <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
+          <span className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
             {truncateEthAddress(ideaToken.author)}
-          </p>
+          </span>
         </div>
-        <button className="self-start bg-blue-100 text-blue-500 rounded-md px-2 py-1 hover:scale-105 transition-all">
-          Support
-        </button>
+        <div className="self-start">
+          <SupportButton ideaId={ideaToken.id} />
+        </div>
       </div>
       <div className="flex flex-col p-4 border-b border-neutral-100">
         <h3 className="text-xs uppercase text-neutral-400 font-bold polymath-disp tracking-wider">

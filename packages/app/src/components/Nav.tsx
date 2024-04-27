@@ -6,7 +6,7 @@ import WaveIcon from "@/components/icons/Wave";
 
 const Nav = () => {
   return (
-    <div className="border-b">
+    <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
       <div className="w-[600px] mx-auto">
         <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
           <ul className="flex flex-row items-center space-x-3">
@@ -44,7 +44,6 @@ const Nav = () => {
                 );
               }}
             </ConnectKitButton.Custom>
-            {/* <ConnectKitButton /> */}
           </div>
         </nav>
       </div>

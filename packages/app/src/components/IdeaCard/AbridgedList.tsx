@@ -6,9 +6,7 @@ const AbridgedList = ({ ideas }: { ideas: IdeaToken[] }) => {
   return (
     <div className="flex flex-col">
       {ideas.map((idea) => (
-        <Link href={`/idea/${idea.id}`} key={idea.id.toString()}>
-          <AbridgedIdeaCard ideaToken={idea} />
-        </Link>
+        <AbridgedIdeaCard ideaToken={idea} key={idea.id.toString()} />
       ))}
     </div>
   );

@@ -9,7 +9,7 @@ const DelegatePage = () => {
   console.log(delegateProxies);
 
   return (
-    <section className="bg-neutral-100 min-h-[calc(100vh-65px)] relative">
+    <section className="bg-neutral-100 min-h-[calc(100vh-165px)] mt-[65px]">
       <div className="w-[600px] mx-auto pt-12">
         <div className="flex flex-row justify-between items-center">
           <h1 className="text-2xl polymath-disp font-bold text-neutral-800 tracking-wide">

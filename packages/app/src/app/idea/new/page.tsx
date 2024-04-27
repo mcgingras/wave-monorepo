@@ -78,7 +78,7 @@ const NewIdeaPage = () => {
   };
 
   return (
-    <section className="bg-neutral-100 min-h-[calc(100vh-65px)] relative">
+    <section className="bg-neutral-100 min-h-[calc(100vh-165px)] mt-[65px]">
       <div className="w-[600px] mx-auto pt-12">
         <FormProvider {...methods}>
           <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
@@ -95,7 +95,7 @@ const NewIdeaPage = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="">
-              <h2 className="text-xl text-neutral-800 polymath-disp text-center py-4 border-b border-neutral-100 tracking-wide">
+              <h2 className="text-xl text-neutral-800 polymath-disp font-bold text-center py-4 border-b border-neutral-100 tracking-wide">
                 New idea
               </h2>
               <section className="p-4 border-b border-neutral-100">
@@ -206,28 +206,6 @@ const NewIdeaPage = () => {
           </form>
         </FormProvider>
       </div>
-      <section className="bg-neutral-200 w-full absolute bottom-0">
-        <div className="w-[600px] mx-auto py-8 text-xs text-neutral-500">
-          <h4 className="text-center">Created by Frog, Adel, and Robriks</h4>
-          <ul className="mt-1 flex flex-row items-center justify-center space-x-2">
-            <li className="hover:text-neutral-600 transition-colors">
-              <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-                Github
-              </Link>
-            </li>
-            <li className="hover:text-neutral-600 transition-colors">
-              <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-                Warpcast
-              </Link>
-            </li>
-            <li className="hover:text-neutral-600 transition-colors">
-              <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-                Discord
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </section>
     </section>
   );
 };
