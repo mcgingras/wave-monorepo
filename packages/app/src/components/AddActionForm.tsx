@@ -1,11 +1,15 @@
 import { useForm, FormProvider } from "react-hook-form";
-import { useReadContract, useAccount } from "wagmi";
-import { configAddresses } from "@/lib/constants";
-import { PropLotHarnessABI } from "@/abi/PropLotHarness";
+import { useAccount } from "wagmi";
+import { encodeFunctionData } from "viem";
 import TransferActionForm from "./TransferActionForm";
 import StreamActionForm from "./StreamActionForm";
 import CustomActionForm from "./CustomActionForm";
 import Button from "./ui/Button";
+
+// const createSignature = (functionAbiItem) =>
+//   `${functionAbiItem.name}(${
+//     functionAbiItem.inputs?.map((i) => i.type).join(",") ?? ""
+//   })`;
 
 const AddActionForm = ({
   closeModal,
@@ -30,13 +34,6 @@ const AddActionForm = ({
   } = methods;
 
   const { address } = useAccount();
-  const { data: suitableDelegateForAddress, error } = useReadContract({
-    address: configAddresses.PropLotHarness as `0x${string}`,
-    abi: PropLotHarnessABI,
-    functionName: "getSuitableDelegateFor",
-    args: [address as `0x${string}`],
-  });
-
   const actionType = watch("type");
 
   const renderFormForActionType = (type: string) => {
@@ -50,18 +47,79 @@ const AddActionForm = ({
     return null;
   };
 
+  const processTransactionData = (type: string, data: any) => {
+    switch (type) {
+      case "transfer":
+        const { amount, receiver, currency } = data;
+        if (currency === "ETH") {
+          return {
+            target: receiver,
+            value: amount,
+            signature: "",
+            calldata: "",
+          };
+        } else {
+          return {
+            target: receiver,
+            value: 0,
+            signature: "transfer(address,uint256)",
+            calldata: `0x${receiver.slice(2)}`,
+          };
+        }
+      case "stream":
+        // const fetchPredictedStreamContractAddress =
+        //   useFetchPredictedStreamContractAddress();
+
+        // const canPredictStreamContractAddress =
+        //   isAddress(state.receiverAddress) &&
+        //   state.amount > 0 &&
+        //   state.dateRange?.start != null &&
+        //   state.dateRange?.end != null &&
+        //   state.dateRange.start < state.dateRange.end;
+
+        return {
+          target: data.receiver,
+          value: data.amount,
+          signature: "",
+          calldata: "",
+        };
+      case "custom":
+        const { abi: serializedABI, function: functionName, args } = data;
+        const abi = JSON.parse(serializedABI);
+        const calldata = encodeFunctionData({
+          abi: [abi],
+          functionName,
+          args: args.slice(0, abi.inputs.length),
+        });
+        return {
+          target: data.target,
+          value: 0,
+          signature: "",
+          calldata: calldata,
+        };
+      default:
+        return {
+          target: data.receiver,
+          value: data.amount,
+          signature: "",
+          calldata: "",
+        };
+    }
+  };
+
   const onSubmit = (data: any) => {
+    const transactionData = processTransactionData(data.type, data);
     onSubmitCallback({
-      target: data["active--target"],
-      value: data["active--value"],
-      signature: data["active--signature"],
-      calldata: data["active--calldata"],
+      target: transactionData.target,
+      value: transactionData.value,
+      signature: transactionData.signature,
+      calldata: transactionData.calldata,
     });
   };
 
   return (
     <div>
-      <h1 className="font-bold">Add action</h1>
+      <h2 className="font-bold text-center">Add action</h2>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="col-span-full mt-4">
@@ -74,7 +132,7 @@ const AddActionForm = ({
             <div className="mt-1">
               <select
                 {...register("type")}
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
               >
                 <option value="transfer">Transfer</option>
                 <option value="stream">Stream</option>

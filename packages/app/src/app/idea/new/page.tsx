@@ -47,6 +47,8 @@ const NewIdeaPage = () => {
     name: "actions",
   });
 
+  console.log(actions);
+
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   console.log(error);
 

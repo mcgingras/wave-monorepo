@@ -12,6 +12,9 @@ export default createSchema((p) => ({
     actions: p.string(), // JSON.stringified array of actions
     createdAt: p.bigint(),
     supporters: p.many("Supporter.tokenId"),
+    waveId: p.int().references("Wave.id").optional(),
+    nounsProposalId: p.bigint().optional(),
+    totalFunding: p.bigint().optional(),
   }),
   Supporter: p.createTable({
     id: p.string(), // string.concat(<address>, "-", <tokenId>)
@@ -29,5 +32,12 @@ export default createSchema((p) => ({
   Delegator: p.createTable({
     id: p.string(), // delegator (nouns token holder) address string
     delegateProxyId: p.string().references("DelegateProxy.id"),
+  }),
+  // --------------------------------
+  // Wave -- marks each wave and the winners
+  // --------------------------------
+  Wave: p.createTable({
+    id: p.int(),
+    winningIdeas: p.many("IdeaToken.waveId"),
   }),
 }));

@@ -8,6 +8,20 @@ import { IdeaToken } from "@/models/IdeaToken/types";
 import SupportButton from "./SupportButton";
 import ActionDisplay from "./ActionDisplay";
 
+const SupporterAvatar = ({ address }: { address: `0x${string}` }) => {
+  const ensName = useEnsName({ address, chainId: 1 });
+  const ensAvatar = useEnsAvatar({
+    name: ensName.data ? ensName.data : "",
+    chainId: 1,
+  });
+
+  if (ensAvatar.data) {
+    return <img src={ensAvatar.data} className="h-6 w-6 rounded-full" />;
+  } else {
+    return <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>;
+  }
+};
+
 const SupporterItem = ({ supporter }: { supporter: any }) => {
   const ensName = useEnsName({ address: supporter.owner, chainId: 1 });
   const ensAvatar = useEnsAvatar({
@@ -23,7 +37,7 @@ const SupporterItem = ({ supporter }: { supporter: any }) => {
         <span className="bg-neutral-200 h-6 w-6 rounded-full block"></span>
       )}
       <p className="text-sm">
-        {ensName.data ? ensName.data : truncateEthAddress(supporter.owner)}
+        {ensName.data ? ensName.data : truncateEthAddress(supporter?.owner)}
       </p>
       <p className="text-xs px-2 py-1 bg-neutral-100 text-neutral-400 rounded-full self-start">
         {formatUnits(BigInt(supporter.balance.toString()), 18)}
@@ -36,15 +50,22 @@ const ExpandableIdeaCard = ({
   ideaToken,
   expandable = true,
   clickable = true,
+  archived = false,
 }: {
   ideaToken: IdeaToken;
   expandable?: boolean;
   clickable?: boolean;
+  archived?: boolean;
 }) => {
   const [isActionExpanded, setIsActionExpanded] = useState(!expandable);
   const [isSupportersExpanded, setIsSupportersExpanded] = useState(!expandable);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(
     !expandable
+  );
+
+  const totalYield = ideaToken.supporters.reduce(
+    (acc, supporter) => acc + BigInt(parseInt(supporter.balance.toString())),
+    BigInt(0)
   );
 
   return (
@@ -63,12 +84,16 @@ const ExpandableIdeaCard = ({
               {truncateEthAddress(ideaToken.author)}
             </p>
           </div>
-          <p className="text-sm text-neutral-500 self-start">Yield: 1.1 ETH</p>
+          <p className="text-sm text-neutral-500 self-start">
+            Yield: {formatUnits(totalYield, 18)} ETH
+          </p>
         </div>
 
-        <div className="self-start">
-          <SupportButton ideaId={ideaToken.id} />
-        </div>
+        {!archived && (
+          <div className="self-start">
+            <SupportButton ideaId={ideaToken.id} />
+          </div>
+        )}
       </div>
       <div className="flex flex-col p-4 border-b border-neutral-100">
         <h3
@@ -116,15 +141,27 @@ const ExpandableIdeaCard = ({
           <h3 className="text-xs uppercase text-neutral-400 font-bold polymath-disp tracking-wider">
             Supporters
           </h3>
-          <div className="flex flex-row items-center space-x-[-8px]">
-            <span className="h-6 w-6 rounded-full border bg-white"></span>
-            <span className="h-6 w-6 rounded-full border bg-white"></span>
-            <span className="h-6 w-6 rounded-full border bg-white"></span>
-            <span className="h-6 px-2 rounded-full border border-white text-xs text-neutral-400 bg-neutral-100 flex items-center">
-              +28
-            </span>
-          </div>
+          {ideaToken.supporters.length > 0 ? (
+            <div className="flex flex-row items-center space-x-[-8px]">
+              {ideaToken.supporters.slice(0, 3).map((supporter, idx) => {
+                return (
+                  <SupporterAvatar
+                    key={idx}
+                    address={supporter.owner as `0x${string}`}
+                  />
+                );
+              })}
+              {ideaToken.supporters.length > 3 && (
+                <span className="h-6 px-2 rounded-full border border-white text-xs text-neutral-400 bg-neutral-100 flex items-center">
+                  +{ideaToken.supporters.length - 3}
+                </span>
+              )}
+            </div>
+          ) : (
+            <p className="text-neutral-500">No supporters yet</p>
+          )}
         </div>
+
         {isSupportersExpanded && (
           <div className="mt-2 grid grid-cols-2 gap-4">
             {ideaToken.supporters.map((supporter, idx) => {

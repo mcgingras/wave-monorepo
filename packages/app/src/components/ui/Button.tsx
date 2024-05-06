@@ -7,7 +7,7 @@ const Button = ({
 }: {
   title: string;
   type: string;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
   fullWidth?: boolean;
   isSubmit?: boolean;
 }) => {
@@ -21,7 +21,9 @@ const Button = ({
           : type === "secondary"
           ? "bg-blue-100 text-blue-500 hover:shadow-[0_0_0_2px_rgba(219,234,254,1)]"
           : "bg-neutral-100 text-neutral-400 hover:shadow-[0_0_0_2px_rgba(245,245,245,1)]"
-      } rounded-md px-2 py-1 transition-all ${fullWidth ? "w-full" : ""}`}
+      } rounded-md px-2 py-1 cursor-pointer transition-all ${
+        fullWidth ? "w-full" : ""
+      }`}
     >
       {title}
     </button>

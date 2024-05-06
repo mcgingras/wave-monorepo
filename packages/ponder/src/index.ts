@@ -1,6 +1,8 @@
 import { ponder } from "@/generated";
 import { configAddresses } from "../ponder.config";
 import { NounsTokenABI } from "../abi/NounsToken";
+import publicClient from "../lib/viem";
+import { IdeaTokenHubABI } from "../abi/IdeaTokenHub";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
   const { IdeaToken } = context.db;
@@ -39,7 +41,7 @@ ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
   });
 });
 
-ponder.on("PropLotHarness:DelegateCreated", async ({ event, context }) => {
+ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
   const { DelegateProxy } = context.db;
   const initVotingPower = await context.client.readContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
@@ -88,6 +90,42 @@ ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
       id: event.args.delegate,
       data: {
         votingPower: event.args.newBalance,
+      },
+    });
+  }
+});
+
+ponder.on("IdeaTokenHub:ProposedIdeas", async ({ event, context }) => {
+  const { Wave, IdeaToken } = context.db;
+
+  const [currentWaveId, _] = await publicClient.readContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "currentWaveInfo",
+    blockNumber: event.block.number,
+  });
+
+  const winningIdeas = event.args.proposedIdeas;
+
+  // create the wave
+  // todo -- make sure that once the round ends, current wave is actually the current one
+  // and not the previous one?
+  // the other problem is that we only create waves when we hear this event and we only
+  // hear this event when there are proposals to push on-chain. If a wave is finalized
+  // with no winning proposals (no delegates or no ideas) then there will be no event
+  // marking the wave. We could "back fill" -- get the most recent wave, get the current wave
+  // for all intermediate waves, create them with no ideas. "endsAt" wont be accurate though.
+  await Wave.create({
+    id: currentWaveId,
+  });
+
+  for (const idea of winningIdeas) {
+    await IdeaToken.update({
+      id: idea.waveIdeaId,
+      data: {
+        waveId: currentWaveId,
+        nounsProposalId: idea.nounsProposalId,
+        totalFunding: idea.totalFunding,
       },
     });
   }

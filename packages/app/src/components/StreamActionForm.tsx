@@ -35,7 +35,7 @@ const StreamActionForm = () => {
       <div className="mt-4">
         <label
           htmlFor="startDate"
-          className="block text-sm font-medium leading-6 text-gray-900"
+          className="block text-sm font-medium leading-6 text-neutral-900"
         >
           Start date
         </label>
@@ -43,14 +43,14 @@ const StreamActionForm = () => {
           <input
             type="date"
             {...register("startDate")}
-            className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
           />
         </div>
       </div>
       <div className="mt-4">
         <label
           htmlFor="startDate"
-          className="block text-sm font-medium leading-6 text-gray-900"
+          className="block text-sm font-medium leading-6 text-neutral-900"
         >
           End date
         </label>
@@ -58,26 +58,26 @@ const StreamActionForm = () => {
           <input
             type="date"
             {...register("endDate")}
-            className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
           />
         </div>
       </div>
       <div className="mt-4">
         <label
           htmlFor="amount"
-          className="block text-sm font-medium leading-6 text-gray-900"
+          className="block text-sm font-medium leading-6 text-neutral-900"
         >
           Amount
         </label>
         <div className="flex flex-row space-x-2">
           <input
             {...register("amount")}
-            className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
             placeholder="0"
           />
           <select
             {...register("currency")}
-            className="p-1.5 ring-1 ring-inset ring-gray-300 rounded-md text-sm"
+            className="block w-24 rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
           >
             <option value="WETH">WETH</option>
             <option value="USDC">USDC</option>
@@ -87,7 +87,7 @@ const StreamActionForm = () => {
       <div className="mt-4">
         <label
           htmlFor="receiver"
-          className="block text-sm font-medium leading-6 text-gray-900"
+          className="block text-sm font-medium leading-6 text-neutral-900"
         >
           Receiver
         </label>

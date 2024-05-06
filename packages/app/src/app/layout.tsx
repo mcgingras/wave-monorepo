@@ -5,9 +5,9 @@ import Nav from "@/components/Nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PropLot",
+  title: "The Wave Protocol",
   description:
-    "PropLot protocol is a protocol for submitting ideas to the PropLot DAO in a permissionless way.",
+    "The Wave protocol is a protocol for submitting ideas to the Nouns DAO in a permissionless way.",
 };
 
 export default function RootLayout({

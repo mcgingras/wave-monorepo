@@ -1,7 +1,7 @@
 export const configAddresses = {
-  PropLotHarness: "0xD49c56d08D3c40854c0543bA5B1747f2Ad1c7b89",
-  IdeaTokenHub: "0xaB626b93B3f98d79ae1FBf6c76Bf678F83E7faf3",
-  NounsTokenHarness: "0x1B8D11880fe221B51FC814fF4C41366a91A59DEB",
+  Wave: "0x55C7c4ADEd315FF29a336cAE5671a4B0A69ae348",
+  IdeaTokenHub: "0x54a488958D1f7e90aC1a9C7eE5a450d1E2170789",
+  NounsTokenHarness: "0xa28Fb072290d6d731cA08EFb8f79bF4dB1D13e67",
 };
 
 export const WAVELENGTH = 300;

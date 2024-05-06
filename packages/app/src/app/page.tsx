@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { formatUnits } from "viem";
 import { useReadContract, useBlockNumber, useAccount } from "wagmi";
@@ -8,9 +7,7 @@ import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { useIdeaTokens } from "@/models/IdeaToken/hooks";
 import { useDelegateProxies } from "@/models/DelegateProxy/hooks";
 import { useTokenHubData, useEstimatedYield } from "@/models/TokenHub/hooks";
-import Modal from "@/components/ui/Modal";
 import { StaticCountdown } from "@/components/ui/Counter";
-import CreateDelegateProxyForm from "@/components/CreateDelegateProxyForm";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { useFinalizeWave } from "@/hooks/useFinalizeWave";
@@ -18,17 +15,16 @@ import { ClockIcon } from "@heroicons/react/24/solid";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 import { LightBulbIcon } from "@heroicons/react/24/solid";
 import { UserGroupIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import Button from "@/components/ui/Button";
 import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
-import AbridgedList from "@/components/IdeaCard/AbridgedList";
 import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
 
 export default function Home() {
   const { address } = useAccount();
   const data = useTokenHubData();
   const { finalizeWave, error } = useFinalizeWave();
-  const { estimatedYield } = useEstimatedYield(address);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { ideaTokens, isLoading } = useIdeaTokens();
   const { delegateProxies } = useDelegateProxies();
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
@@ -41,6 +37,8 @@ export default function Home() {
       pooledEth,
     };
   });
+
+  console.log(error);
 
   const totalPooledEth = ideaTokensWithPooledEth.reduce(
     (acc, ideaToken) => acc + ideaToken.pooledEth,
@@ -59,7 +57,7 @@ export default function Home() {
   });
 
   const { data: minRequiredVotes } = useReadContract({
-    address: configAddresses.PropLotHarness as `0x${string}`,
+    address: configAddresses.Wave as `0x${string}`,
     abi: PropLotHarnessABI,
     functionName: "getCurrentMinRequiredVotes",
   });
@@ -76,14 +74,25 @@ export default function Home() {
 
   return (
     <>
-      <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
-        <CreateDelegateProxyForm />
-      </Modal>
       <div className="min-h-[calc(100vh-65px)] mt-[65px] pt-12 flex flex-col">
         <section className="w-[600px] mx-auto pb-12">
-          <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
-            Wave {waveInfo?.[0]}
-          </h1>
+          <div className="flex flex-row items-center justify-between">
+            <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
+              Wave {waveInfo?.[0]}
+            </h1>
+            <div className="flex flex-row divide-x-2 divide-white">
+              <Link
+                // @ts-ignore
+                href={`/wave/${waveInfo?.[0] - 1}`}
+                className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
+              >
+                <ArrowLeftIcon className="text-neutral-500 h-5 w-5" />
+              </Link>
+              <span className="rounded-r-lg bg-neutral-100 transition-colors p-2">
+                <ArrowRightIcon className="text-neutral-300 h-5 w-5" />
+              </span>
+            </div>
+          </div>
           {remainingSeconds <= 0 ? (
             <div className="border border-neutral-200 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 mt-4">
               <p className="text-neutral-500 text-center">
