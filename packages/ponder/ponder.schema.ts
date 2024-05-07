@@ -15,6 +15,7 @@ export default createSchema((p) => ({
     waveId: p.int().references("Wave.id").optional(),
     nounsProposalId: p.bigint().optional(),
     totalFunding: p.bigint().optional(),
+    isArchived: p.boolean(),
   }),
   Supporter: p.createTable({
     id: p.string(), // string.concat(<address>, "-", <tokenId>)

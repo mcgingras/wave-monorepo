@@ -1,32 +1,72 @@
-"use client";
-
 import Link from "next/link";
-import { formatUnits } from "viem";
-import { useReadContract, useBlockNumber, useAccount } from "wagmi";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
-import { useIdeaTokens } from "@/models/IdeaToken/hooks";
-import { useDelegateProxies } from "@/models/DelegateProxy/hooks";
-import { useTokenHubData, useEstimatedYield } from "@/models/TokenHub/hooks";
-import { StaticCountdown } from "@/components/ui/Counter";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
-import { PropLotHarnessABI } from "@/abi/PropLotHarness";
-import { useFinalizeWave } from "@/hooks/useFinalizeWave";
-import { ClockIcon } from "@heroicons/react/24/solid";
-import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
-import { LightBulbIcon } from "@heroicons/react/24/solid";
-import { UserGroupIcon } from "@heroicons/react/24/solid";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import Button from "@/components/ui/Button";
 import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
-import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
+import CurrentWaveStats from "@/components/CurrentWaveStats";
+import { IdeaToken } from "@/models/IdeaToken/types";
+import FinalizeWaveCard from "@/components/FinalizeWaveCard";
+import { client } from "@/lib/viem";
 
-export default function Home() {
-  const { address } = useAccount();
-  const data = useTokenHubData();
-  const { finalizeWave, error } = useFinalizeWave();
-  const { ideaTokens, isLoading } = useIdeaTokens();
-  const { delegateProxies } = useDelegateProxies();
+const getIdeas = async () => {
+  const url = "http://localhost:42069";
+  const query = `
+  query GetIdeaTokens {
+    ideaTokens(where: { isArchived: false }) {
+        id
+        author
+        title
+        description
+        createdAt
+        supporters {
+            balance
+        }
+      }
+    }
+ `;
+
+  const graphqlRequest = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      variables: {},
+    }),
+  };
+
+  const data = await fetch(url, graphqlRequest);
+  const json = await data.json();
+  return json.data.ideaTokens;
+};
+
+const getCurrentWaveInfo = async () => {
+  const waveInfo = await client.readContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "currentWaveInfo",
+  });
+
+  return waveInfo;
+};
+
+const getRemainingTime = async (endingBlock: number) => {
+  const blockNumber = await client.getBlockNumber();
+  const difference = parseInt(blockNumber?.toString()) - endingBlock;
+  const remainingBlocks = WAVELENGTH - difference;
+  const remainingSeconds = remainingBlocks * 2;
+  const now = new Date();
+  const remainingTime = new Date(
+    now.getTime() + (remainingSeconds > 0 ? remainingSeconds : 0) * 1000
+  );
+
+  return { remainingTime, remainingSeconds };
+};
+
+export default async function Home() {
+  const ideaTokens = (await getIdeas()) as IdeaToken[];
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
     const pooledEth = ideaToken.supporters.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
@@ -38,38 +78,13 @@ export default function Home() {
     };
   });
 
-  console.log(error);
-
-  const totalPooledEth = ideaTokensWithPooledEth.reduce(
-    (acc, ideaToken) => acc + ideaToken.pooledEth,
-    0
-  );
-
   const sortedIdeaTokens = ideaTokensWithPooledEth.sort(
     (a, b) => b.pooledEth - a.pooledEth
   );
 
-  const { data: blockNumber } = useBlockNumber();
-  const { data: waveInfo } = useReadContract({
-    address: configAddresses.IdeaTokenHub as `0x${string}`,
-    abi: IdeaTokenHubABI,
-    functionName: "currentWaveInfo",
-  });
-
-  const { data: minRequiredVotes } = useReadContract({
-    address: configAddresses.Wave as `0x${string}`,
-    abi: PropLotHarnessABI,
-    functionName: "getCurrentMinRequiredVotes",
-  });
-
-  // @ts-ignore
-  const difference = parseInt(blockNumber?.toString()) - waveInfo?.[1];
-  const remainingBlocks = WAVELENGTH - difference;
-  const remainingSeconds = remainingBlocks * 2;
-
-  const now = new Date();
-  const remainingTime = new Date(
-    now.getTime() + (remainingSeconds > 0 ? remainingSeconds : 0) * 1000
+  const [currentWave, endingBlock] = await getCurrentWaveInfo();
+  const { remainingSeconds, remainingTime } = await getRemainingTime(
+    endingBlock
   );
 
   return (
@@ -78,12 +93,11 @@ export default function Home() {
         <section className="w-[600px] mx-auto pb-12">
           <div className="flex flex-row items-center justify-between">
             <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
-              Wave {waveInfo?.[0]}
+              Wave {currentWave}
             </h1>
             <div className="flex flex-row divide-x-2 divide-white">
               <Link
-                // @ts-ignore
-                href={`/wave/${waveInfo?.[0] - 1}`}
+                href={`/wave/${currentWave - 1}`}
                 className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
               >
                 <ArrowLeftIcon className="text-neutral-500 h-5 w-5" />
@@ -93,96 +107,27 @@ export default function Home() {
               </span>
             </div>
           </div>
-          {remainingSeconds <= 0 ? (
-            <div className="border border-neutral-200 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 mt-4">
-              <p className="text-neutral-500 text-center">
-                This wave has ended!
-              </p>
-              <Button
-                title="Finalize wave"
-                type="primary"
-                onClick={() => finalizeWave()}
-              />
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-8 w-full mt-4">
-              <div className="flex flex-row space-x-4 col-span-1 w-full">
-                <span className="bg-blue-100 p-2 rounded-full">
-                  <ClockIcon className="text-blue-500 h-6 w-6" />
-                </span>
-                <div className="flex flex-col grow">
-                  <div className="flex flex-row justify-between text-blue-500">
-                    <span>Time</span>
-                    <StaticCountdown
-                      endDate={remainingTime}
-                      className="space-x-1"
-                    />
-                  </div>
-                  <div className="w-full h-3 rounded-full bg-blue-100 relative">
-                    <div className="h-3 rounded-full bg-blue-500 absolute top-0 left-0 w-full"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-row space-x-4 col-span-1 w-full">
-                <span className="bg-blue-100 p-2 rounded-full">
-                  <CurrencyDollarIcon className="text-blue-500 h-6 w-6" />
-                </span>
-                <div className="flex flex-col grow">
-                  <div className="flex flex-row justify-between text-blue-500">
-                    <span>Total yield</span>
-                    <span>{formatUnits(BigInt(totalPooledEth), 18)} ETH</span>
-                  </div>
-                  <div className="w-full h-3 rounded-full bg-blue-100 relative">
-                    <div className="h-3 rounded-full bg-blue-500 absolute top-0 left-0 w-1/2"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-row space-x-4">
-                <span className="bg-neutral-100 p-2 rounded-full">
-                  <UserGroupIcon className="text-neutral-400 h-6 w-6" />
-                </span>
-                <div className="flex flex-col grow">
-                  <div className="flex flex-row justify-between text-neutral-400">
-                    <span>Total delegates</span>
-                    <span>{delegateProxies.length}</span>
-                  </div>
-                  <div className="w-full h-3 rounded-full bg-neutral-100 relative">
-                    <div className="h-3 rounded-full bg-neutral-400 absolute top-0 left-0 w-1/2"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-row space-x-4">
-                <span className="bg-neutral-100 p-2 rounded-full">
-                  <LightBulbIcon className="text-neutral-400 h-6 w-6" />
-                </span>
-                <div className="flex flex-col grow">
-                  <div className="flex flex-row justify-between text-neutral-400">
-                    <span>Total ideas</span>
-                    <span>{ideaTokens.length}</span>
-                  </div>
-                  <div className="w-full h-3 rounded-full bg-neutral-100 relative">
-                    <div className="h-3 rounded-full bg-neutral-400 absolute top-0 left-0 w-1/2"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {remainingSeconds <= 0 ? <FinalizeWaveCard /> : <></>}
         </section>
         <section className="bg-neutral-100 py-8 grow flex-1">
           <div className="w-[600px] mx-auto space-y-8">
-            {isLoading
-              ? [1, 2, 3].map(() => {
-                  return <IdeaCardSkeleton />;
-                })
-              : sortedIdeaTokens.map((ideaToken, idx) => {
-                  return (
-                    <div>
-                      <Link href={`/idea/${ideaToken.id}`}>
-                        <ExpandableIdeaCard ideaToken={ideaToken} />
-                      </Link>
-                    </div>
-                  );
-                })}
+            {sortedIdeaTokens.length > 0 ? (
+              sortedIdeaTokens.map((ideaToken, idx) => {
+                return (
+                  <div>
+                    <Link href={`/idea/${ideaToken.id}`}>
+                      <ExpandableIdeaCard ideaToken={ideaToken} />
+                    </Link>
+                  </div>
+                );
+              })
+            ) : (
+              <div>
+                <p className="text-neutral-500 text-center">
+                  No ideas submitted yet.
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </div>

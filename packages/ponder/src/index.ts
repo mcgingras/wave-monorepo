@@ -20,6 +20,7 @@ ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
       actions,
       description: description || "",
       createdAt: event.block.timestamp,
+      isArchived: false,
     },
   });
 });
@@ -102,22 +103,25 @@ ponder.on("IdeaTokenHub:ProposedIdeas", async ({ event, context }) => {
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
     functionName: "currentWaveInfo",
-    blockNumber: event.block.number,
+    // get the block before this to ensure we are getting the currentWave before we closed it
+    blockNumber: BigInt(event.block.number) - BigInt(1),
   });
+
+  // The point of this is the ensure we are back-filling waves
+  // If they have not been created for whatever reason
+  const mostRecentWave = await Wave.findMany({
+    orderBy: { id: "desc" },
+    take: 1,
+  });
+
+  const mostRecentWaveId = mostRecentWave[0] ? mostRecentWave[0].id : 0;
+  for (let i = mostRecentWaveId + 1; i <= currentWaveId; i++) {
+    await Wave.create({
+      id: i,
+    });
+  }
 
   const winningIdeas = event.args.proposedIdeas;
-
-  // create the wave
-  // todo -- make sure that once the round ends, current wave is actually the current one
-  // and not the previous one?
-  // the other problem is that we only create waves when we hear this event and we only
-  // hear this event when there are proposals to push on-chain. If a wave is finalized
-  // with no winning proposals (no delegates or no ideas) then there will be no event
-  // marking the wave. We could "back fill" -- get the most recent wave, get the current wave
-  // for all intermediate waves, create them with no ideas. "endsAt" wont be accurate though.
-  await Wave.create({
-    id: currentWaveId,
-  });
 
   for (const idea of winningIdeas) {
     await IdeaToken.update({
@@ -126,6 +130,7 @@ ponder.on("IdeaTokenHub:ProposedIdeas", async ({ event, context }) => {
         waveId: currentWaveId,
         nounsProposalId: idea.nounsProposalId,
         totalFunding: idea.totalFunding,
+        isArchived: true,
       },
     });
   }
