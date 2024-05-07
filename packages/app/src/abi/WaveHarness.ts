@@ -125,6 +125,13 @@ export const WaveHarnessABI = [
   },
   {
     type: "function",
+    name: "getDelegateId",
+    inputs: [{ name: "delegate", type: "address", internalType: "address" }],
+    outputs: [{ name: "delegateId", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getDelegateIdByType",
     inputs: [
       { name: "minRequiredVotes", type: "uint256", internalType: "uint256" },
@@ -525,6 +532,11 @@ export const WaveHarnessABI = [
     type: "error",
     name: "InsufficientVotingPower",
     inputs: [{ name: "nounder", type: "address", internalType: "address" }],
+  },
+  {
+    type: "error",
+    name: "InvalidDelegateAddress",
+    inputs: [{ name: "delegate", type: "address", internalType: "address" }],
   },
   {
     type: "error",
