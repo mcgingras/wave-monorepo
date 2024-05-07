@@ -83,9 +83,7 @@ export default async function Home() {
   );
 
   const [currentWave, endingBlock] = await getCurrentWaveInfo();
-  const { remainingSeconds, remainingTime } = await getRemainingTime(
-    endingBlock
-  );
+  const { remainingSeconds } = await getRemainingTime(endingBlock);
 
   return (
     <>
@@ -107,7 +105,7 @@ export default async function Home() {
               </span>
             </div>
           </div>
-          {remainingSeconds <= 0 ? <FinalizeWaveCard /> : <></>}
+          {remainingSeconds <= 0 ? <FinalizeWaveCard /> : <CurrentWaveStats />}
         </section>
         <section className="bg-neutral-100 py-8 grow flex-1">
           <div className="w-[600px] mx-auto space-y-8">
