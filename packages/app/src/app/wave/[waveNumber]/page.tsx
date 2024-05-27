@@ -9,6 +9,11 @@ import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { IdeaToken } from "@/models/IdeaToken/types";
 
+// clears out next-js cache for viem calls
+// this might not be the "best" way but at least it's not storing stale data
+// TODO: review next's caching strategies and decide on best one.
+export const dynamic = "force-dynamic";
+
 const getCurrentWaveInfo = async () => {
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
@@ -151,7 +156,7 @@ const WavePage = async ({
             })
           ) : (
             <div className="text-center text-neutral-500">
-              No winning ideas this wave.
+              There were no winning ideas in this wave.
             </div>
           )}
         </div>

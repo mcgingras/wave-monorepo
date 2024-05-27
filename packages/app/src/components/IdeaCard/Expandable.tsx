@@ -7,6 +7,7 @@ import { truncateEthAddress } from "@/lib/utils";
 import { IdeaToken } from "@/models/IdeaToken/types";
 import SupportButton from "./SupportButton";
 import ActionDisplay from "./ActionDisplay";
+import Button from "../ui/Button";
 
 const SupporterAvatar = ({ address }: { address: `0x${string}` }) => {
   const ensName = useEnsName({ address, chainId: 1 });
@@ -89,9 +90,20 @@ const ExpandableIdeaCard = ({
           </p>
         </div>
 
-        {!archived && (
+        {!archived ? (
           <div className="self-start">
             <SupportButton ideaId={ideaToken.id} />
+          </div>
+        ) : (
+          <div className="self-start">
+            <Button
+              type="primary"
+              title="View onchain"
+              fullWidth={true}
+              onClick={() => {
+                // redirect to hash
+              }}
+            />
           </div>
         )}
       </div>

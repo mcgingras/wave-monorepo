@@ -13,8 +13,9 @@ const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
         {ideaToken ? (
           <ExpandableIdeaCard
             ideaToken={ideaToken}
-            expandable={false}
+            expandable={true}
             clickable={false}
+            archived={ideaToken.isArchived}
           />
         ) : (
           <IdeaCardSkeleton />

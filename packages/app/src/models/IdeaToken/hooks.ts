@@ -95,6 +95,7 @@ export async function SWRGetIdeaToken({
             description
             createdAt
             actions
+            isArchived
             supporters {
                 balance
                 owner

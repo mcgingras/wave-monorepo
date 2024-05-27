@@ -8,6 +8,7 @@ const BASE_SEPOLIA_RPC = process.env.PONDER_RPC_URL_84532!;
 const publicClient = createPublicClient({
   chain: isProd ? mainnet : baseSepolia,
   transport: http(isProd ? BASE_RPC : BASE_SEPOLIA_RPC),
+  cacheTime: 0,
 });
 
 export default publicClient;

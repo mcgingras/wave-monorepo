@@ -4,4 +4,4 @@ export const configAddresses = {
   NounsTokenHarness: "0xa28Fb072290d6d731cA08EFb8f79bF4dB1D13e67",
 };
 
-export const WAVELENGTH = 300;
+export const WAVELENGTH = 150;

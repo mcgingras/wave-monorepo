@@ -2,7 +2,28 @@ import { useReadContract, useAccount, useWriteContract } from "wagmi";
 import { configAddresses } from "@/lib/constants";
 import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { NounsTokenABI } from "@/abi/NounsToken";
+import { WaveHarnessABI } from "@/abi/WaveHarness";
 import Button from "./ui/Button";
+import { client } from "@/lib/viem";
+import { CheckIcon } from "@heroicons/react/24/solid";
+
+const copy = {
+  1: {
+    title: "Delegate",
+    description:
+      "The wave protocol is designed to suggest the best proxy for you to delegate your voting power to based on your current voting power and the current state of the protocol.",
+  },
+  2: {
+    title: "Register",
+    description:
+      "You have delegated your voting power to a proxy. Now you need to register your voting power with the wave protocol. More information about registration can be found here.",
+  },
+  3: {
+    title: "Registered",
+    description:
+      "You have registered your voting power with the wave protocol. Thanks!",
+  },
+};
 
 /**
  * TODO:
@@ -17,12 +38,24 @@ const CreateDelegateProxyForm = ({
   closeModal: () => void;
 }) => {
   const { address } = useAccount();
-  const { data: suitableDelegateForAddress, error } = useReadContract({
+
+  const {
+    data: optimisticDelegations,
+    error: optimisticDelegationError,
+    refetch: refetchOptimisticDelegations,
+  } = useReadContract({
     address: configAddresses.Wave as `0x${string}`,
-    abi: PropLotHarnessABI,
-    functionName: "getSuitableDelegateFor",
-    args: [address as `0x${string}`],
+    abi: WaveHarnessABI,
+    functionName: "getOptimisticDelegations",
   });
+
+  const { data: suitableDelegateForAddress, error: suitableDelegateError } =
+    useReadContract({
+      address: configAddresses.Wave as `0x${string}`,
+      abi: PropLotHarnessABI,
+      functionName: "getSuitableDelegateFor",
+      args: [address as `0x${string}`],
+    });
 
   const { data: nounsBalance } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
@@ -31,134 +64,158 @@ const CreateDelegateProxyForm = ({
     args: [address as `0x${string}`],
   });
 
-  const { data: delegatedTo } = useReadContract({
+  const { data: delegatedTo, refetch: refetchDelegateTo } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
     functionName: "delegates",
     args: [address as `0x${string}`],
   });
 
-  const { data: delegateToData, writeContract: delegateTo } =
+  const { writeContractAsync: delegateTo, isPending: isDelegateWritePending } =
     useWriteContract();
-  const { data: registerDelegateData, writeContract: registerDelegate } =
-    useWriteContract();
+  const {
+    writeContractAsync: registerDelegate,
+    isPending: isRegisterWritePending,
+  } = useWriteContract();
 
-  const isDelegated = delegatedTo !== address;
+  const delegateHelper = async () => {
+    await delegateTo(
+      {
+        chainId: 84532,
+        address: configAddresses.NounsTokenHarness as `0x${string}`,
+        abi: NounsTokenABI,
+        functionName: "delegate",
+        args: [suitableDelegateForAddress?.[0] as `0x${string}`],
+      },
+      {
+        onSuccess: () => {
+          refetchDelegateTo();
+          refetchOptimisticDelegations();
+        },
+      }
+    );
+  };
+  const registerHelper = async () => {
+    const delegateId = await client.readContract({
+      address: configAddresses.Wave as `0x${string}`,
+      abi: WaveHarnessABI,
+      functionName: "getDelegateId",
+      args: [delegatedTo as `0x${string}`],
+    });
+
+    await registerDelegate(
+      {
+        chainId: 84532,
+        address: configAddresses.Wave as `0x${string}`,
+        abi: PropLotHarnessABI,
+        functionName: "registerDelegation",
+        args: [address as `0x${string}`, delegateId],
+      },
+      {
+        onSuccess: () => {
+          refetchDelegateTo();
+          refetchOptimisticDelegations();
+        },
+      }
+    );
+  };
+
+  const isDelegated = delegatedTo && delegatedTo !== address;
+  const isRegistered = optimisticDelegations?.some((proxy) => {
+    return proxy.delegator === address;
+  });
+
+  console.log({ delegatedTo, address });
+  console.log({ isDelegated, isRegistered });
+
+  const stage = !isDelegated ? 1 : isRegistered ? 3 : 2;
 
   return (
     <div>
-      <div>
-        <h2 className="font-bold text-center">Add voting power</h2>
-        <p className="text-neutral-700 text-xs text-center">
-          {/* Wave protocol can support as many delegates as it has voting power.
-          The more voting power the protocol has, the more ideas it can push on
-          chain in parallel. */}
-          The wave protocol is designed to suggest to best proxy for you to
-          delegate your voting power to based on your current voting power and
-          the current state of the protocol.
-        </p>
-
-        <div className="col-span-full mt-4">
-          <label
-            htmlFor="type"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Voting power
-          </label>
-          <div className="mt-1">
-            <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500">
-              {nounsBalance?.toString()}
+      <h2 className="font-bold text-center">Add voting power</h2>
+      <p className="text-neutral-700 text-xs text-center mt-2">
+        {copy[stage].description}
+      </p>
+      <div className="relative w-[calc(100%-64px)] mx-auto mt-8">
+        <div className="flex flex-row w-full items-center justify-between">
+          <div className="flex flex-col items-center relative z-20">
+            <span
+              className={`h-8 w-8 rounded-full flex items-center justify-center border-2 border-blue-500 ${
+                isDelegated ? "bg-blue-500" : "bg-white"
+              }`}
+            >
+              {isDelegated && <CheckIcon className="h-5 w-5 text-white" />}
             </span>
+            <p className="text-xs text-neutral-500 mt-1">Delegate</p>
+          </div>
+          <div className="flex flex-col items-center relative z-20">
+            <span
+              className={`h-8 w-8 rounded-full flex items-center justify-center border-2 border-blue-500 ${
+                isRegistered ? "bg-blue-500" : "bg-white"
+              }`}
+            >
+              {isRegistered && <CheckIcon className="h-5 w-5 text-white" />}
+            </span>
+            <p className="text-xs text-neutral-500 mt-1">Register</p>
           </div>
         </div>
+        <span className="w-[calc(100%-30px)] h-1 border-b block absolute top-[14px] left-[20px] z-10"></span>
+      </div>
 
-        <div className="col-span-full mt-4">
-          <label
-            htmlFor="type"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Proxy
-          </label>
-          <div className="mt-1">
-            <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500">
-              {suitableDelegateForAddress && suitableDelegateForAddress[0]}
-            </span>
+      {stage !== 3 && (
+        <div className="border rounded mt-6">
+          <div className="p-4 border-b">
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium leading-6 text-neutral-700"
+            >
+              Voting power
+            </label>
+            <div className="mt-1">
+              <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500">
+                {nounsBalance?.toString()}
+              </span>
+            </div>
+          </div>
+
+          <div className="p-4">
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium leading-6 text-neutral-700"
+            >
+              Proxy
+            </label>
+            <div className="mt-1">
+              <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500">
+                {suitableDelegateForAddress && suitableDelegateForAddress[0]}
+              </span>
+            </div>
           </div>
         </div>
-        {isDelegated ? "Time to register" : "Delegate"}
-        <div className="mt-6 flex justify-end space-x-2">
-          <Button onClick={closeModal} type="secondary" title="Cancel" />
+      )}
+      <div className="mt-8 flex justify-end space-x-2">
+        <Button
+          onClick={closeModal}
+          type="secondary"
+          title={stage === 3 ? "Close" : "Cancel"}
+        />
+
+        {stage !== 3 && (
           <Button
             type="primary"
-            title="Add"
+            title={
+              isDelegateWritePending || isRegisterWritePending
+                ? "Pending..."
+                : isDelegated
+                ? "Register"
+                : "Delegate"
+            }
             onClick={() => {
-              isDelegated
-                ? registerDelegate({
-                    chainId: 84532,
-                    address: configAddresses.Wave as `0x${string}`,
-                    abi: PropLotHarnessABI,
-                    functionName: "registerDelegation",
-                    args: [address as `0x${string}`, BigInt(1)],
-                  })
-                : delegateTo({
-                    chainId: 84532,
-                    address: configAddresses.NounsTokenHarness as `0x${string}`,
-                    abi: NounsTokenABI,
-                    functionName: "delegate",
-                    args: [suitableDelegateForAddress?.[0] as `0x${string}`],
-                  });
+              isDelegated ? registerHelper() : delegateHelper();
             }}
           />
-        </div>
+        )}
       </div>
-      {/* <h2 className="font-bold mb-2">Add voting power</h2>
-      <div className="flex flex-col space-y-2 text-sm">
-        <div className="flex flex-col space-y-1">
-          <span className="font-semibold">Your voting power:</span>
-          <span>{nounsBalance?.toString()}</span>
-        </div>
-        <div className="flex flex-col space-y-1">
-          <span className="font-semibold">Best proxy:</span>
-          <span>
-            {suitableDelegateForAddress && suitableDelegateForAddress[0]}
-          </span>
-        </div>
-        <div className="mt-4">
-          {isDelegated ? (
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-full"
-              onClick={() => {
-                // todo -- need to get delegateId from delegateAddress
-                // todo -- need to figure out if we should register entire delegate balance? (does this matter?)
-                registerDelegate({
-                  chainId: 84532,
-                  address: configAddresses.Wave as `0x${string}`,
-                  abi: PropLotHarnessABI,
-                  functionName: "registerDelegation",
-                  args: [address as `0x${string}`, BigInt(1)],
-                });
-              }}
-            >
-              Register
-            </button>
-          ) : (
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-full"
-              onClick={() => {
-                delegateTo({
-                  chainId: 84532,
-                  address: configAddresses.NounsTokenHarness as `0x${string}`,
-                  abi: NounsTokenABI,
-                  functionName: "delegate",
-                  args: [suitableDelegateForAddress?.[0] as `0x${string}`],
-                });
-              }}
-            >
-              Delegate
-            </button>
-          )}
-        </div>
-      </div> */}
     </div>
   );
 };

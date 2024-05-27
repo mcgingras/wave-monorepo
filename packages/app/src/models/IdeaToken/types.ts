@@ -20,6 +20,7 @@ export type IdeaToken = {
   title: string;
   description: string;
   createdAt: BigInt;
+  isArchived: boolean;
   supporters: Supporter[];
   actions: ActionObject;
 };

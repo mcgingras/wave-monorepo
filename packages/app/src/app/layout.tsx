@@ -3,6 +3,7 @@ import Link from "next/link";
 import { OnChainProvider } from "@/components/OnChainProvider";
 import Nav from "@/components/Nav";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "The Wave Protocol",
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body className="polymath-text">
         <OnChainProvider>
           <>
+            <Toaster />
             <div className="flex flex-col min-h-screen">
               <Nav />
               {children}

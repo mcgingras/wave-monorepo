@@ -17,6 +17,8 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
       hash,
     });
 
+  console.log(error);
+
   const supportIdea = async (amount: number) => {
     writeContract({
       chainId: 84532,

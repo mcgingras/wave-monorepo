@@ -9,8 +9,13 @@ import { IdeaToken } from "@/models/IdeaToken/types";
 import FinalizeWaveCard from "@/components/FinalizeWaveCard";
 import { client } from "@/lib/viem";
 
+// clears out next-js cache for viem calls
+// this might not be the "best" way but at least it's not storing stale data
+// TODO: review next's caching strategies and decide on best one.
+export const dynamic = "force-dynamic";
+
 const getIdeas = async () => {
-  const url = "http://localhost:42069";
+  const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
   const query = `
   query GetIdeaTokens {
     ideaTokens(where: { isArchived: false }) {
@@ -34,6 +39,7 @@ const getIdeas = async () => {
     body: JSON.stringify({
       query,
       variables: {},
+      cache: "no-cache",
     }),
   };
 
@@ -87,12 +93,13 @@ export default async function Home() {
 
   return (
     <>
-      <div className="min-h-[calc(100vh-65px)] mt-[65px] pt-12 flex flex-col">
+      <div className="min-h-[calc(100vh-165px)] mt-[65px] pt-12 flex flex-col">
         <section className="w-[600px] mx-auto pb-12">
           <div className="flex flex-row items-center justify-between">
             <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
               Wave {currentWave}
             </h1>
+
             <div className="flex flex-row divide-x-2 divide-white">
               <Link
                 href={`/wave/${currentWave - 1}`}

@@ -2,9 +2,15 @@ import { useWriteContract } from "wagmi";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { configAddresses } from "@/lib/constants";
 import { client } from "@/lib/viem";
+import revalidate from "@/actions/revalidatePath";
 
 export const useFinalizeWave = () => {
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const {
+    data: hash,
+    writeContractAsync,
+    isPending,
+    error,
+  } = useWriteContract();
 
   const finalizeWave = async () => {
     const [, , winningIds] = await client.readContract({
@@ -16,21 +22,34 @@ export const useFinalizeWave = () => {
     const winningIdeaDescriptionsResponse = await getIdeaDescriptions(
       winningIds
     );
+
     const winningIdeaDescriptions =
       winningIdeaDescriptionsResponse.ideaTokens.map(
         (idea: any) => idea.description
       );
 
-    writeContract({
-      chainId: 84532,
-      address: configAddresses.IdeaTokenHub as `0x${string}`,
-      abi: IdeaTokenHubABI,
-      functionName: "finalizeWave",
-      // args --
-      // winningIds
-      // descriptions
-      args: [winningIds, winningIdeaDescriptions],
-    });
+    const r = await writeContractAsync(
+      {
+        chainId: 84532,
+        address: configAddresses.IdeaTokenHub as `0x${string}`,
+        abi: IdeaTokenHubABI,
+        functionName: "finalizeWave",
+        // args --
+        // winningIds
+        // descriptions
+        args: [winningIds, winningIdeaDescriptions],
+      },
+      {
+        onSuccess: (_hash: string) => {
+          //   setTimeout(() => {
+          //     revalidate("/");
+          //   }, 3000);
+        },
+      }
+    );
+
+    console.log("response is", r);
+    return { ok: true };
   };
 
   return { finalizeWave, hash, isPending, error };
@@ -53,6 +72,7 @@ const getIdeaDescriptions = async (ids: readonly bigint[]) => {
     body: JSON.stringify({
       query,
       variables: { ideaTokenIds: ids.map((id) => id.toString()) },
+      cache: "no-cache",
     }),
   };
 

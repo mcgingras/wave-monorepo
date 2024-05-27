@@ -24,7 +24,7 @@ const DelegatePage = () => {
           </h1>
           <Button
             type="primary"
-            title="Add delegate"
+            title="Add voting power"
             onClick={() => {
               setIsModalOpen(true);
             }}
@@ -44,8 +44,20 @@ const DelegatePage = () => {
                       {truncateEthAddress(proxy.id)}
                     </span>
                   </div>
-                  <span className="bg-green-100 h-4 w-4 rounded-full flex items-center justify-center">
-                    <span className="rounded-full h-2 w-2 bg-green-500"></span>
+                  <span
+                    className={`h-4 w-4 rounded-full flex items-center justify-center ${
+                      parseInt(proxy.votingPower.toString()) > 0
+                        ? "bg-green-100"
+                        : "bg-red-100"
+                    }`}
+                  >
+                    <span
+                      className={`rounded-full h-2 w-2 ${
+                        parseInt(proxy.votingPower.toString()) > 0
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }`}
+                    ></span>
                   </span>
                 </div>
                 <div className="text-neutral-500 text-sm">

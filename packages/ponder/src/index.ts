@@ -44,12 +44,16 @@ ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
 
 ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
   const { DelegateProxy } = context.db;
+
+  // TODO: this might be wrong -- we shouldn't add the voting power to the delegate until it is registered?
+  // Can we assume that it has the "full power" of the votes delegated to it if they are not registered?
   const initVotingPower = await context.client.readContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
     functionName: "getCurrentVotes",
     args: [event.args.delegate],
   });
+
   await DelegateProxy.create({
     id: event.args.delegate,
     data: {
