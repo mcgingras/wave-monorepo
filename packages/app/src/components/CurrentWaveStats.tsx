@@ -88,7 +88,7 @@ const CurrentWaveStats = async () => {
   const { remainingTime } = await getRemainingTime(endingBlock);
   const delegateProxies = await getDelegates();
 
-  console.log("dp", delegateProxies);
+  console.log("dp", delegateProxies.delegateProxys.length);
 
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
     const pooledEth = ideaToken.supporters.reduce(

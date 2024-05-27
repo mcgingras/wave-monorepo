@@ -3,9 +3,6 @@
 todo:
 - figure out weird caching issues with data fetching...
 - make sure delegating is actually clear
-- figure out why adding new ideas wasn't working
-    - (wave is ending too soon?)
-- clean transtion of data after finalizing wave
 - make sure supporting waves works out okay + optimistic data
 - figure out NFT rendering?
 - figure out yield claiming

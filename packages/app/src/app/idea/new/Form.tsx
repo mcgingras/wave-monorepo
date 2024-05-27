@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "@/components/ui/Modal";
 import AddActionForm from "@/components/AddActionForm";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
@@ -14,6 +14,9 @@ import { configAddresses } from "@/lib/constants";
 import { parseEther } from "viem";
 import { Action } from "@/models/IdeaToken/types";
 import Button from "@/components/ui/Button";
+import toast from "react-hot-toast";
+import { parseEventLogs } from "viem";
+import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
 
 const NewIdeaForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,13 +55,37 @@ const NewIdeaForm = () => {
     isPending,
     error,
   } = useWriteContract();
-  const { isLoading: isConfirming } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const { data: transactionData, isLoading: isConfirming } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  useEffect(() => {
+    if (transactionData) {
+      const logs = parseEventLogs({
+        abi: IdeaTokenHubABI,
+        logs: transactionData.logs,
+      });
+
+      const transferSingleLog = logs.find(
+        (log) => log.eventName === "TransferSingle"
+      );
+
+      if (transferSingleLog) {
+        // @ts-ignore
+        const id = transferSingleLog.args?.id;
+        toast.success(`Idea created!`);
+        redirectAndRevalidate(`/idea/${id}`);
+      }
+    }
+  }, [transactionData]);
 
   const onSubmit = async (data: { title: string; description: string }) => {
     // throw error or something... make them log in
-    if (!address) return;
+    if (!address) {
+      toast.error("You need to connect your wallet to submit an idea.");
+      return;
+    }
 
     const id = await writeContractAsync({
       chainId: 84532,
@@ -66,6 +93,7 @@ const NewIdeaForm = () => {
       abi: IdeaTokenHubABI,
       functionName: "createIdea",
       value: parseEther(".001"),
+      // TODO: replace with real args
       args: [
         {
           targets: [address] as `0x${string}`[],
@@ -76,12 +104,6 @@ const NewIdeaForm = () => {
         `${data.title}\n\n${data.description}`,
       ],
     });
-
-    // this is the transaction hash
-    // so we probably need to get the logs
-    console.log("id is", id);
-
-    // redirect to /idea/[id]
   };
 
   return (
@@ -206,7 +228,7 @@ const NewIdeaForm = () => {
               }}
             />
             <Button
-              title={isConfirming ? "Loading..." : "Save"}
+              title={isConfirming ? "Loading..." : "Create"}
               type="primary"
               isSubmit={true}
             />

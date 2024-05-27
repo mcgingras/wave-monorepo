@@ -1,6 +1,7 @@
 import NewIdeaForm from "./Form";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
+import FinalizeWaveCard from "@/components/FinalizeWaveCard";
 import { client } from "@/lib/viem";
 
 export const dynamic = "force-dynamic";
@@ -32,21 +33,15 @@ const NewIdeaPage = async () => {
   const [_, endingBlock] = await getCurrentWaveInfo();
   const { remainingSeconds } = await getRemainingTime(endingBlock);
 
-  if (remainingSeconds <= 0) {
-    return (
-      <section className="bg-neutral-100 min-h-[calc(100vh-165px)] mt-[65px]">
-        <div className="text-center p-8">
-          <p className="text-neutral-600">
-            The wave has ended and no new ideas can be proposed.
-          </p>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="bg-neutral-100 min-h-[calc(100vh-165px)] mt-[65px]">
-      <NewIdeaForm />
+      {remainingSeconds <= 0 ? (
+        <div className="w-[600px] mx-auto pt-12 pb-12">
+          <FinalizeWaveCard />
+        </div>
+      ) : (
+        <NewIdeaForm />
+      )}
     </section>
   );
 };

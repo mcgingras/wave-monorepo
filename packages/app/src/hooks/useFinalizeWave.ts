@@ -1,16 +1,10 @@
-import { useWriteContract } from "wagmi";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { configAddresses } from "@/lib/constants";
 import { client } from "@/lib/viem";
-import revalidate from "@/actions/revalidatePath";
 
 export const useFinalizeWave = () => {
-  const {
-    data: hash,
-    writeContractAsync,
-    isPending,
-    error,
-  } = useWriteContract();
+  const { data: hash, writeContractAsync, error } = useWriteContract();
 
   const finalizeWave = async () => {
     const [, , winningIds] = await client.readContract({
@@ -28,31 +22,26 @@ export const useFinalizeWave = () => {
         (idea: any) => idea.description
       );
 
-    const r = await writeContractAsync(
-      {
-        chainId: 84532,
-        address: configAddresses.IdeaTokenHub as `0x${string}`,
-        abi: IdeaTokenHubABI,
-        functionName: "finalizeWave",
-        // args --
-        // winningIds
-        // descriptions
-        args: [winningIds, winningIdeaDescriptions],
-      },
-      {
-        onSuccess: (_hash: string) => {
-          //   setTimeout(() => {
-          //     revalidate("/");
-          //   }, 3000);
-        },
-      }
-    );
+    const r = await writeContractAsync({
+      chainId: 84532,
+      address: configAddresses.IdeaTokenHub as `0x${string}`,
+      abi: IdeaTokenHubABI,
+      functionName: "finalizeWave",
+      // args --
+      // winningIds
+      // descriptions
+      args: [winningIds, winningIdeaDescriptions],
+    });
 
-    console.log("response is", r);
     return { ok: true };
   };
 
-  return { finalizeWave, hash, isPending, error };
+  const { data: transactionData, isLoading: isConfirming } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  return { finalizeWave, hash, isConfirming, error, data: transactionData };
 };
 
 const getIdeaDescriptions = async (ids: readonly bigint[]) => {

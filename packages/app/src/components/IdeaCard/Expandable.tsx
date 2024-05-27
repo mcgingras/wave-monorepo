@@ -170,7 +170,7 @@ const ExpandableIdeaCard = ({
               )}
             </div>
           ) : (
-            <p className="text-neutral-500">No supporters yet</p>
+            <p className="text-neutral-500 text-sm">No supporters yet</p>
           )}
         </div>
 
