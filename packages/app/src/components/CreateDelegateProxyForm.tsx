@@ -125,9 +125,6 @@ const CreateDelegateProxyForm = ({
     return proxy.delegator === address;
   });
 
-  console.log({ delegatedTo, address });
-  console.log({ isDelegated, isRegistered });
-
   const stage = !isDelegated ? 1 : isRegistered ? 3 : 2;
 
   return (

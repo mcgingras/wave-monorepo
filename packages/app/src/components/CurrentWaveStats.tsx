@@ -88,8 +88,6 @@ const CurrentWaveStats = async () => {
   const { remainingTime } = await getRemainingTime(endingBlock);
   const delegateProxies = await getDelegates();
 
-  console.log("dp", delegateProxies.delegateProxys.length);
-
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
     const pooledEth = ideaToken.supporters.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
@@ -121,7 +119,7 @@ const CurrentWaveStats = async () => {
       <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
         <span>Total delegates</span>
         <span className="h-1 border-b border-dotted border-neutral-400 flex-grow"></span>
-        <span>{delegateProxies.length}</span>
+        <span>{delegateProxies.delegateProxys.length}</span>
       </div>
       <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
         <span>Total ideas</span>

@@ -6,10 +6,13 @@ import StreamActionForm from "./StreamActionForm";
 import CustomActionForm from "./CustomActionForm";
 import Button from "./ui/Button";
 
-// const createSignature = (functionAbiItem) =>
-//   `${functionAbiItem.name}(${
-//     functionAbiItem.inputs?.map((i) => i.type).join(",") ?? ""
-//   })`;
+const createSignature = (functionAbiItem: {
+  name: string;
+  inputs: { type: string }[];
+}) =>
+  `${functionAbiItem.name}(${
+    functionAbiItem.inputs?.map((i) => i.type).join(",") ?? ""
+  })`;
 
 const AddActionForm = ({
   closeModal,
@@ -47,7 +50,8 @@ const AddActionForm = ({
     return null;
   };
 
-  const processTransactionData = (type: string, data: any) => {
+  const processTransactionData = (data: any) => {
+    const { type } = data;
     switch (type) {
       case "transfer":
         const { amount, receiver, currency } = data;
@@ -86,6 +90,7 @@ const AddActionForm = ({
       case "custom":
         const { abi: serializedABI, function: functionName, args } = data;
         const abi = JSON.parse(serializedABI);
+        const signature = createSignature(abi);
         const calldata = encodeFunctionData({
           abi: [abi],
           functionName,
@@ -94,7 +99,7 @@ const AddActionForm = ({
         return {
           target: data.target,
           value: 0,
-          signature: "",
+          signature: signature,
           calldata: calldata,
         };
       default:
@@ -108,7 +113,7 @@ const AddActionForm = ({
   };
 
   const onSubmit = (data: any) => {
-    const transactionData = processTransactionData(data.type, data);
+    const transactionData = processTransactionData(data);
     onSubmitCallback({
       target: transactionData.target,
       value: transactionData.value,

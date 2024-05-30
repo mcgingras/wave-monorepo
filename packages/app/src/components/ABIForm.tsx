@@ -75,7 +75,7 @@ const ABIFunctionForm = ({ func }: { func: ABIFunction }) => {
 };
 
 const ABIForm = ({ abi }: { abi: any }) => {
-  const { register, control } = useFormContext();
+  const { register, control, setValue } = useFormContext();
 
   const functions = abi.filter(
     (item: any) => item.type === "function" && !item.constant
@@ -98,9 +98,11 @@ const ABIForm = ({ abi }: { abi: any }) => {
             {...register("function")}
             onChange={(e) => {
               onChange(e);
-              setSelectedFunction(
-                functions.find((func: any) => func.name === e.target.value)
+              const newSelectedFunction = functions.find(
+                (func: any) => func.name === e.target.value
               );
+              setSelectedFunction(newSelectedFunction);
+              setValue("abi", JSON.stringify(newSelectedFunction));
             }}
             className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
           >
@@ -114,11 +116,11 @@ const ABIForm = ({ abi }: { abi: any }) => {
       />
 
       <ABIFunctionForm func={selectedFunction} />
-      <input
+      {/* <input
         type="hidden"
         {...register("abi")}
         value={JSON.stringify(selectedFunction)}
-      />
+      /> */}
       {/* {functions.map((func: any, index: number) => (
         <ABIFunctionForm key={index} func={func} />
       ))} */}

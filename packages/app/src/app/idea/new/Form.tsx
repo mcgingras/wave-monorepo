@@ -17,6 +17,7 @@ import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { parseEventLogs } from "viem";
 import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
+import ParsedAction from "./ParsedAction";
 
 const NewIdeaForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -106,6 +107,8 @@ const NewIdeaForm = () => {
     });
   };
 
+  console.log(actions);
+
   return (
     <div className="w-[600px] mx-auto pt-12 pb-12">
       <FormProvider {...methods}>
@@ -182,9 +185,7 @@ const NewIdeaForm = () => {
                   )}
                   {actions.map((action, index) => (
                     <>
-                      <pre className="text-neutral-500 text-sm">
-                        transfer {action.value} ETH to {action.target}
-                      </pre>
+                      <ParsedAction action={action} />
                       <input
                         key={`action-target-${index}`}
                         {...register(`actions.${index}.target`)}

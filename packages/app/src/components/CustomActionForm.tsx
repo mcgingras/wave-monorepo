@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import ABIForm from "./ABIForm";
+import { isAddress } from "viem";
 
 const FAKE_RESPONSE = {
   ok: true,
@@ -500,7 +501,7 @@ const CustomActionForm = () => {
     setContractABI(FAKE_RESPONSE.abi);
   };
 
-  const { register } = useFormContext();
+  const { register, control } = useFormContext();
 
   return (
     <>
@@ -512,15 +513,24 @@ const CustomActionForm = () => {
           Target contract
         </label>
 
-        <input
-          {...register("target")}
-          className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-          placeholder="0xf5ac35838d2d58158e2487ed5b5e47879c519397"
-          onChange={(e) => {
-            // if is a valid address
-            fetchContractABI(e.target.value);
-          }}
+        <Controller
+          control={control}
+          name="target"
+          render={({ field: { onChange } }) => (
+            <input
+              {...register("target")}
+              className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
+              placeholder="0xf5ac35838d2d58158e2487ed5b5e47879c519397"
+              onChange={(e) => {
+                onChange(e);
+                if (isAddress(e.target.value)) {
+                  fetchContractABI(e.target.value);
+                }
+              }}
+            />
+          )}
         />
+
         {contractABI.length > 0 && <ABIForm abi={contractABI} />}
       </div>
     </>
