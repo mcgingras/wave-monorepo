@@ -1,8 +1,8 @@
 "use client";
-import { ConnectKitButton } from "connectkit";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import WaveIcon from "@/components/icons/Wave";
+import CustomConnectKit from "./CustomConnectKit";
 
 const Nav = () => {
   return (
@@ -28,22 +28,7 @@ const Nav = () => {
             <Link href="/delegates">
               <Button title="Delegate" type="secondary" />
             </Link>
-            <ConnectKitButton.Custom>
-              {({ isConnected, show, truncatedAddress, ensName }) => {
-                return (
-                  <button
-                    onClick={show}
-                    className={`${
-                      !isConnected
-                        ? "bg-blue-500 text-white hover:shadow-[0_0_0_2px_rgba(59,130,246,1)]"
-                        : "bg-white text-neutral-600 border border-neutral-200 hover:shadow-[0_0_0_2px_rgba(229,229,229,1)]"
-                    } rounded-md px-2 py-1 transition-all`}
-                  >
-                    {isConnected ? ensName ?? truncatedAddress : "Connect"}
-                  </button>
-                );
-              }}
-            </ConnectKitButton.Custom>
+            <CustomConnectKit />
           </div>
         </nav>
       </div>
