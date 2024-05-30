@@ -2,14 +2,15 @@
 import { useState, useEffect, useRef } from "react";
 import { ConnectKitButton } from "connectkit";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
+import { useDisconnect } from "wagmi";
+import { useRouter } from "next/navigation";
 
 const CustomConnectKit = () => {
+  const router = useRouter();
+  const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-
-  const handleToggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
 
   const handleClickOutside = (event: any) => {
     // @ts-ignore
@@ -28,7 +29,7 @@ const CustomConnectKit = () => {
 
   return (
     <ConnectKitButton.Custom>
-      {({ isConnected, show, truncatedAddress, ensName }) => {
+      {({ isConnected, show, truncatedAddress, ensName, address }) => {
         return (
           <div className="relative">
             <button
@@ -58,13 +59,30 @@ const CustomConnectKit = () => {
                 ref={dropdownRef}
               >
                 <ul>
-                  <li className="hover:text-neutral-500 cursor-pointer transition-colors">
+                  <li
+                    className="hover:text-neutral-500 cursor-pointer transition-colors"
+                    onClick={() => {
+                      router.push(`/scout/${address}`);
+                      setShowDropdown(false);
+                    }}
+                  >
                     Profile
                   </li>
-                  <li className="hover:text-neutral-500 cursor-pointer transition-colors">
-                    Docs
-                  </li>
-                  <li className="hover:text-neutral-500 cursor-pointer transition-colors">
+
+                  <Link href="/">
+                    <li className="hover:text-neutral-500 cursor-pointer transition-colors">
+                      Docs
+                    </li>
+                  </Link>
+
+                  <li
+                    className="hover:text-neutral-500 cursor-pointer transition-colors"
+                    onClick={() => {
+                      // trigger wagmi disconnect?
+                      disconnect();
+                      setShowDropdown(false);
+                    }}
+                  >
                     Disconnect
                   </li>
                 </ul>
