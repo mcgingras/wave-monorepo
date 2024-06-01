@@ -13,8 +13,10 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "lerna": "^8.0.2"
+  },
+  "dependencies": {
+    "@ponder/core": "^0.4.33"
   }
 }
