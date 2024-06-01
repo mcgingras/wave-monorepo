@@ -11,9 +11,11 @@ const getIdeas = async () => {
   const query = `
     query GetIdeaTokens {
       ideaTokens(where: { isArchived: false }) {
-          id
-          supporters {
-            balance
+        items {
+           id
+           supporters {
+             balance
+            }
           }
         }
       }

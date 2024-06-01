@@ -89,6 +89,7 @@ export async function SWRGetIdeaToken({
   const query = `
     query GetIdeaToken($ideaTokenId: BigInt!) {
         ideaToken(id: $ideaTokenId) {
+            items {
             id
             author
             title
@@ -100,7 +101,8 @@ export async function SWRGetIdeaToken({
                 balance
                 owner
             }
-        }
+          }
+         }
         }
      `;
 
@@ -127,6 +129,7 @@ async function SWRGetIdeaTokens({ url }: { url: string }): Promise<{
   const query = `
   query GetIdeaTokens {
     ideaTokens(where: { isArchived: false }) {
+        items {
         id
         author
         title
@@ -136,6 +139,7 @@ async function SWRGetIdeaTokens({ url }: { url: string }): Promise<{
             balance
         }
       }
+     }
     }
  `;
 
@@ -167,6 +171,7 @@ async function SWRGetIdeaTokensForWave({
   const query = `
   query GetIdeaTokensForWave($waveId: BigInt!) {
     ideaTokens(where: { waveId: $waveId }) {
+        items {
         id
         author
         title
@@ -176,6 +181,7 @@ async function SWRGetIdeaTokensForWave({
             balance
         }
       }
+     }
     }
  `;
 

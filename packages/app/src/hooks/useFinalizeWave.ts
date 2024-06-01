@@ -48,7 +48,9 @@ const getIdeaDescriptions = async (ids: readonly bigint[]) => {
   const query = `
      query GetIdeaTokensByIds($ideaTokenIds: [BigInt]!) {
             ideaTokens(where: {id_in: $ideaTokenIds}) {
-                description
+                items {
+                  description
+               }
             }
         }
     `;

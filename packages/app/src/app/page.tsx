@@ -19,13 +19,15 @@ const getIdeas = async () => {
   const query = `
   query GetIdeaTokens {
     ideaTokens(where: { isArchived: false }) {
-        id
-        author
-        title
-        description
-        createdAt
-        supporters {
-            balance
+        items {
+            id
+            author
+            title
+            description
+            createdAt
+            supporters {
+                balance
+          }
         }
       }
     }

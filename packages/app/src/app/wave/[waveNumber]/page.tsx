@@ -29,13 +29,15 @@ const getWinningIdeasForWave = async (waveId: bigint) => {
   const query = `
   query GetIdeaTokensForWave($waveId: Int!) {
     ideaTokens(where: { waveId: $waveId }) {
-        id
-        author
-        title
-        description
-        createdAt
-        supporters {
-            balance
+        items {
+            id
+            author
+            title
+            description
+            createdAt
+            supporters {
+                balance
+            }
         }
       }
     }

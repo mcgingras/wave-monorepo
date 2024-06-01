@@ -44,11 +44,13 @@ async function SWRGetDelegateProxies({
   const query = `
   query GetDelegateProxies {
     delegateProxys {
+        items {
         id
         votingPower
         delegators {
           id
         }
+       }
       }
     }
  `;
