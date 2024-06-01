@@ -115,10 +115,12 @@ ponder.on("IdeaTokenHub:ProposedIdeas", async ({ event, context }) => {
   // If they have not been created for whatever reason
   const mostRecentWave = await Wave.findMany({
     orderBy: { id: "desc" },
-    take: 1,
+    limit: 1,
   });
 
-  const mostRecentWaveId = mostRecentWave[0] ? mostRecentWave[0].id : 0;
+  const mostRecentWaveId = mostRecentWave.items[0]
+    ? mostRecentWave.items[0].id
+    : 0;
   for (let i = mostRecentWaveId + 1; i <= currentWaveId; i++) {
     await Wave.create({
       id: i,
