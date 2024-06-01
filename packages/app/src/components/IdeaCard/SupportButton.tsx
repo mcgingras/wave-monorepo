@@ -10,14 +10,13 @@ import Modal from "../ui/Modal";
 
 const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
   const [amount, setAmount] = useState<number>(0);
+  const [reason, setReason] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: hash, writeContract, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
     });
-
-  console.log(error);
 
   const supportIdea = async (amount: number) => {
     writeContract({
@@ -38,7 +37,7 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
           Supporting the idea blah blah this is a description...
         </p>
         <section className="mt-4">
-          <div className="h-80 w-3/4 border rounded mx-auto"></div>
+          <div className="h-48 w-full border rounded mx-auto"></div>
         </section>
         <div className="col-span-full my-4">
           <label
@@ -58,6 +57,25 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
               type="number"
               min={0.001}
               step={0.001}
+            />
+          </div>
+        </div>
+        <div className="col-span-full my-4">
+          <label
+            htmlFor="type"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Reason
+          </label>
+          <div className="mt-1">
+            <input
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              id="reason"
+              name="reason"
+              className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+              placeholder="I support this idea because..."
+              type="text"
             />
           </div>
         </div>

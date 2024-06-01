@@ -83,7 +83,7 @@ const getRemainingTime = async (endingBlock: number) => {
 export default async function Home() {
   const ideaTokens = (await getIdeas()) as IdeaToken[];
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.reduce(
+    const pooledEth = ideaToken.supporters.items.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
       0
     );
