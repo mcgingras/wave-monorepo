@@ -65,7 +65,10 @@ const getIdeaDescriptions = async (ids: readonly bigint[]) => {
     }),
   };
 
-  const data = await fetch("http://localhost:42069", graphqlRequest);
+  const data = await fetch(
+    process.env.NEXT_PUBLIC_GRAPHQL_URL!,
+    graphqlRequest
+  );
   const json = await data.json();
   return json.data;
 };

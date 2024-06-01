@@ -25,7 +25,7 @@ const getCurrentWaveInfo = async () => {
 };
 
 const getWinningIdeasForWave = async (waveId: bigint) => {
-  const url = "http://localhost:42069";
+  const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
   const query = `
   query GetIdeaTokensForWave($waveId: Int!) {
     ideaTokens(where: { waveId: $waveId }) {

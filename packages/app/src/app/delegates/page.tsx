@@ -24,6 +24,8 @@ const DelegatePage = () => {
     args: [address as `0x${string}`],
   });
 
+  console.log(nounsBalance, address);
+
   const { data: delegatedTo, refetch: refetchDelegateTo } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,

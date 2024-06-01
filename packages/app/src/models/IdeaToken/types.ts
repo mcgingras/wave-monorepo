@@ -22,5 +22,5 @@ export type IdeaToken = {
   createdAt: BigInt;
   isArchived: boolean;
   supporters: Supporter[];
-  actions: ActionObject;
+  actions: string; // JSON.stringified array of ActionObject
 };

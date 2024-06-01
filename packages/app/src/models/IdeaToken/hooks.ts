@@ -9,7 +9,7 @@ export const useIdeaTokens = () => {
   const { error, isLoading, mutate, data } = useSWR(
     {
       key: "GetIdeaTokens",
-      url: `http://localhost:42069`,
+      url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
     },
     SWRGetIdeaTokens
   );
@@ -31,7 +31,7 @@ export const useIdeaToken = (ideaTokenId: bigint) => {
     ideaTokenId
       ? {
           key: "GetIdeaToken",
-          url: `http://localhost:42069`,
+          url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
           args: { ideaTokenId },
         }
       : null,
@@ -56,7 +56,7 @@ export const useIdeaTokensForWave = (waveId: bigint) => {
   const { error, isLoading, mutate, data } = useSWR(
     {
       key: "GetIdeaTokensForWave",
-      url: `http://localhost:42069`,
+      url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
       args: { waveId },
     },
     SWRGetIdeaTokensForWave

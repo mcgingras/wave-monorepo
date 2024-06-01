@@ -5,7 +5,7 @@ import { formatUnits } from "viem";
 import { client } from "@/lib/viem";
 import { IdeaToken } from "@/models/IdeaToken/types";
 
-const url = "http://localhost:42069";
+const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
 
 const getIdeas = async () => {
   const query = `

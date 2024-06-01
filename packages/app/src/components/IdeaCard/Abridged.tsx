@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const AbridgedIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   return (
-    <div className="bg-white flex flex-col cursor-pointer transition-all first:rounded-t-2xl border-x border-x-transparent last:rounded-b-2xl [&:not(:last-child)]:border-b border-neutral-100 hover:border-neutral-200 hover:border-t">
+    <div className="bg-white flex flex-col cursor-pointer transition-all first:rounded-t-2xl border-x border-x-transparent last:rounded-b-2xl [&:not(:last-child)]:border-b border-neutral-100">
       <Link href={`/idea/${ideaToken.id}`} key={ideaToken.id.toString()}>
         <div className="flex flex-row justify-between items-center p-4">
           <div className="flex flex-col space-y-1">
