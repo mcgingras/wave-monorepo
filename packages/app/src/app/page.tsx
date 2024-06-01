@@ -119,7 +119,7 @@ export default async function Home() {
             {sortedIdeaTokens.length > 0 ? (
               sortedIdeaTokens.map((ideaToken, idx) => {
                 return (
-                  <div>
+                  <div key={`idea-${idx}`}>
                     <Link href={`/idea/${ideaToken.id}`}>
                       <ExpandableIdeaCard ideaToken={ideaToken} />
                     </Link>

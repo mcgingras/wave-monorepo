@@ -141,13 +141,13 @@ const WavePage = async ({
       <section className="bg-neutral-100 py-8 grow flex-1">
         <div className="w-[600px] mx-auto space-y-8">
           {isLoading ? (
-            [1, 2, 3].map(() => {
-              return <IdeaCardSkeleton />;
+            [1, 2, 3].map((_, idx) => {
+              return <IdeaCardSkeleton key={`skelly-${idx}`} />;
             })
           ) : sortedIdeaTokens.length > 0 ? (
             sortedIdeaTokens.map((ideaToken, idx) => {
               return (
-                <div>
+                <div key={`idea-${idx}`}>
                   <Link href={`/idea/${ideaToken.id}`}>
                     <ExpandableIdeaCard ideaToken={ideaToken} archived={true} />
                   </Link>
