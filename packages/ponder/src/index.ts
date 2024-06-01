@@ -25,14 +25,18 @@ ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
 ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
   const { Supporter } = context.db;
   const concatAddrWithId = `${event.args.sponsor}-${event.args.ideaId}`;
+  const createObj: any = {
+    owner: event.args.sponsor,
+    tokenId: event.args.ideaId,
+    balance: event.args.params.contributedBalance,
+    isCreator: event.args.params.isCreator,
+  };
+  // conditionally assign `.optional()` column if truthy
+  if (event.args.reason !== "") createObj.reason = event.args.reason;
+
   await Supporter.upsert({
     id: concatAddrWithId,
-    create: {
-      owner: event.args.sponsor,
-      tokenId: event.args.ideaId,
-      balance: event.args.params.contributedBalance,
-      isCreator: event.args.params.isCreator,
-    },
+    create: createObj,
     update: {
       balance: event.args.params.contributedBalance,
     },
