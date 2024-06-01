@@ -3,11 +3,7 @@
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, baseSepolia } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  ConnectKitProvider,
-  getDefaultConfig,
-  ConnectKitButton,
-} from "connectkit";
+import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
 const config = createConfig(
   getDefaultConfig({

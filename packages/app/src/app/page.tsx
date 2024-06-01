@@ -16,6 +16,7 @@ export const dynamic = "force-dynamic";
 
 const getIdeas = async () => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
+  console.log("url", url);
   const query = `
   query GetIdeaTokens {
     ideaTokens(where: { isArchived: false }) {
@@ -26,7 +27,9 @@ const getIdeas = async () => {
             description
             createdAt
             supporters {
+                items {
                 balance
+                }
           }
         }
       }
@@ -41,13 +44,17 @@ const getIdeas = async () => {
     body: JSON.stringify({
       query,
       variables: {},
-      cache: "no-cache",
     }),
   };
 
-  const data = await fetch(url, graphqlRequest);
-  const json = await data.json();
-  return json.data.ideaTokens;
+  try {
+    const data = await fetch(url, graphqlRequest);
+    const json = await data.json();
+    return json.data.ideaTokens.items;
+  } catch (e) {
+    console.log("error", e);
+    return [];
+  }
 };
 
 const getCurrentWaveInfo = async () => {

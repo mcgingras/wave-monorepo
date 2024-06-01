@@ -29,7 +29,7 @@ const Nav = () => {
             <Link href="/delegates">
               <Button title="Delegate" type="secondary" />
             </Link>
-            {/* <CustomConnectKit /> */}
+            <CustomConnectKit />
           </div>
         </nav>
       </div>
