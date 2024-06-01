@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import WaveIcon from "@/components/icons/Wave";
@@ -28,7 +29,7 @@ const Nav = () => {
             <Link href="/delegates">
               <Button title="Delegate" type="secondary" />
             </Link>
-            <CustomConnectKit />
+            {/* <CustomConnectKit /> */}
           </div>
         </nav>
       </div>
