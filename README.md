@@ -12,6 +12,3 @@ there is a bit of lag when you click arrow to a new page that isn't cached, prob
 we could probably do some streaming
 
 
-- kahuna
-- bommie
-- swell
