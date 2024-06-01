@@ -1,10 +1,10 @@
-import { useWriteContract } from "wagmi";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { configAddresses } from "@/lib/constants";
 import { client } from "@/lib/viem";
 
 export const useFinalizeWave = () => {
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
+  const { data: hash, writeContractAsync, error } = useWriteContract();
 
   const finalizeWave = async () => {
     const [, , winningIds] = await client.readContract({
@@ -16,25 +16,32 @@ export const useFinalizeWave = () => {
     const winningIdeaDescriptionsResponse = await getIdeaDescriptions(
       winningIds
     );
+
     const winningIdeaDescriptions =
       winningIdeaDescriptionsResponse.ideaTokens.map(
         (idea: any) => idea.description
       );
 
-    writeContract({
+    const r = await writeContractAsync({
       chainId: 84532,
-      address: configAddresses.PropLotHarness as `0x${string}`,
+      address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       functionName: "finalizeWave",
       // args --
       // winningIds
       // descriptions
-      args: [[BigInt(1)], ["test"]],
-      //   args: [winningIds, winningIdeaDescriptions],
+      args: [winningIds, winningIdeaDescriptions],
     });
+
+    return { ok: true };
   };
 
-  return { finalizeWave, hash, isPending, error };
+  const { data: transactionData, isLoading: isConfirming } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  return { finalizeWave, hash, isConfirming, error, data: transactionData };
 };
 
 const getIdeaDescriptions = async (ids: readonly bigint[]) => {
@@ -54,10 +61,16 @@ const getIdeaDescriptions = async (ids: readonly bigint[]) => {
     body: JSON.stringify({
       query,
       variables: { ideaTokenIds: ids.map((id) => id.toString()) },
+      cache: "no-cache",
     }),
   };
 
-  const data = await fetch("http://localhost:42069", graphqlRequest);
+  const data = await fetch(
+    process.env.NEXT_PUBLIC_GRAPHQL_URL!,
+    graphqlRequest
+  );
   const json = await data.json();
   return json.data;
 };
+
+// cast rpc eth_call '{"to": "0xD49c56d08D3c40854c0543bA5B1747f2Ad1c7b89","from": "0x65A3870F48B5237f27f674Ec42eA1E017E111D63","data": "0x077711df00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047465737400000000000000000000000000000000000000000000000000000000"}'

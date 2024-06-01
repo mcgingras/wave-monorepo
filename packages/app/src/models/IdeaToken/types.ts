@@ -7,7 +7,7 @@ export type Action = {
   calldata: `0x${string}`;
 };
 
-type ActionObject = {
+export type ActionObject = {
   targets: `0x${string}`[];
   values: string[];
   signatures: string[];
@@ -20,6 +20,7 @@ export type IdeaToken = {
   title: string;
   description: string;
   createdAt: BigInt;
+  isArchived: boolean;
   supporters: Supporter[];
-  actions: ActionObject;
+  actions: string; // JSON.stringified array of ActionObject
 };

@@ -1,27 +1,37 @@
 "use client";
-import { ConnectKitButton } from "connectkit";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
+import WaveIcon from "@/components/icons/Wave";
+import CustomConnectKit from "./CustomConnectKit";
 
 const Nav = () => {
   return (
-    <div className="w-full">
-      <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
-        <ul className="flex flex-row space-x-6">
-          <li>
-            <Link href="/" className="text-blue-500 font-bold">
-              Wave
+    <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
+      <div className="w-[600px] mx-auto">
+        <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
+          <ul className="flex flex-row items-center space-x-3">
+            <li>
+              <Link href="/" className="text-blue-500 font-bold">
+                <WaveIcon className="h-10 w-10" />
+              </Link>
+            </li>
+            <li>
+              <Link href="/" className="text-blue-500">
+                wave protocol
+              </Link>
+            </li>
+          </ul>
+          <div className="flex flex-row items-center space-x-2">
+            <Link href="/idea/new">
+              <Button title="Add idea" type="secondary" />
             </Link>
-          </li>
-          <li>
-            <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
-              Documentation
+            <Link href="/delegates">
+              <Button title="Delegate" type="secondary" />
             </Link>
-          </li>
-        </ul>
-        <div className="flex flex-row items-center space-x-4">
-          <ConnectKitButton />
-        </div>
-      </nav>
+            <CustomConnectKit />
+          </div>
+        </nav>
+      </div>
     </div>
   );
 };

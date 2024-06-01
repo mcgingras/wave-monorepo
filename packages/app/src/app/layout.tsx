@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import Link from "next/link";
 import { OnChainProvider } from "@/components/OnChainProvider";
 import Nav from "@/components/Nav";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "PropLot",
+  title: "The Wave Protocol",
   description:
-    "PropLot protocol is a protocol for submitting ideas to the PropLot DAO in a permissionless way.",
+    "The Wave protocol is a protocol for submitting ideas to the Nouns DAO in a permissionless way.",
 };
 
 export default function RootLayout({
@@ -19,14 +18,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <body className="indicate min-h-screen w-full"> */}
-      <body className={`${inter.className} wave`}>
+      <body className="polymath-text">
         <OnChainProvider>
           <>
-            <main className="w-[1200px] mx-auto h-[calc(100vh-200px)]">
+            <Toaster />
+            <div className="flex flex-col min-h-screen">
               <Nav />
               {children}
-            </main>
+              <footer className="bg-neutral-200">
+                <div className="w-[600px] mx-auto py-8 text-xs text-neutral-500">
+                  <h4 className="text-center">
+                    Created by Frog, Adel, and Robriks
+                  </h4>
+                  <ul className="mt-1 flex flex-row items-center justify-center space-x-2">
+                    <li className="hover:text-neutral-600 transition-colors">
+                      <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+                        Github
+                      </Link>
+                    </li>
+                    <li className="hover:text-neutral-600 transition-colors">
+                      <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+                        Warpcast
+                      </Link>
+                    </li>
+                    <li className="hover:text-neutral-600 transition-colors">
+                      <Link href="https://github.com/robriks/nouns-prop-lot/blob/master/README.md">
+                        Discord
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </footer>
+            </div>
           </>
         </OnChainProvider>
       </body>

@@ -83,7 +83,7 @@ export const IdeaTokenHubABI = [
       {
         name: "delegations",
         type: "tuple[]",
-        internalType: "struct IPropLot.Delegation[]",
+        internalType: "struct IWave.Delegation[]",
         components: [
           { name: "delegator", type: "address", internalType: "address" },
           { name: "blockDelegated", type: "uint32", internalType: "uint32" },
@@ -447,7 +447,7 @@ export const IdeaTokenHubABI = [
         name: "idea",
         type: "tuple",
         indexed: false,
-        internalType: "struct IPropLot.Proposal",
+        internalType: "struct IWave.Proposal",
         components: [
           {
             name: "ideaTxs",
@@ -498,39 +498,6 @@ export const IdeaTokenHubABI = [
   },
   {
     type: "event",
-    name: "IdeaProposed",
-    inputs: [
-      {
-        name: "ideaInfo",
-        type: "tuple",
-        indexed: false,
-        internalType: "struct IIdeaTokenHub.IdeaInfo",
-        components: [
-          { name: "totalFunding", type: "uint216", internalType: "uint216" },
-          { name: "blockCreated", type: "uint32", internalType: "uint32" },
-          { name: "isProposed", type: "bool", internalType: "bool" },
-          {
-            name: "proposalTxs",
-            type: "tuple",
-            internalType: "struct NounsDAOV3Proposals.ProposalTxs",
-            components: [
-              { name: "targets", type: "address[]", internalType: "address[]" },
-              { name: "values", type: "uint256[]", internalType: "uint256[]" },
-              {
-                name: "signatures",
-                type: "string[]",
-                internalType: "string[]",
-              },
-              { name: "calldatas", type: "bytes[]", internalType: "bytes[]" },
-            ],
-          },
-        ],
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
     name: "Initialized",
     inputs: [
       { name: "version", type: "uint8", indexed: false, internalType: "uint8" },
@@ -552,6 +519,25 @@ export const IdeaTokenHubABI = [
         type: "address",
         indexed: true,
         internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "ProposedIdeas",
+    inputs: [
+      {
+        name: "proposedIdeas",
+        type: "tuple[]",
+        indexed: false,
+        internalType: "struct IIdeaTokenHub.ProposalInfo[]",
+        components: [
+          { name: "nounsProposalId", type: "uint256", internalType: "uint256" },
+          { name: "waveIdeaId", type: "uint256", internalType: "uint256" },
+          { name: "totalFunding", type: "uint216", internalType: "uint216" },
+          { name: "blockCreated", type: "uint32", internalType: "uint32" },
+        ],
       },
     ],
     anonymous: false,

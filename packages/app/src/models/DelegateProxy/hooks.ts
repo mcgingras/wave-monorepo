@@ -9,7 +9,7 @@ export const useDelegateProxies = () => {
   const { error, isLoading, mutate, data } = useSWR(
     {
       key: "GetDelegateProxies",
-      url: `http://localhost:42069`,
+      url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
       args: { nothing: true },
     },
     SWRGetDelegateProxies

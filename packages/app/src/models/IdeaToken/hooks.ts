@@ -9,8 +9,7 @@ export const useIdeaTokens = () => {
   const { error, isLoading, mutate, data } = useSWR(
     {
       key: "GetIdeaTokens",
-      url: `http://localhost:42069`,
-      args: { nothing: true },
+      url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
     },
     SWRGetIdeaTokens
   );
@@ -32,7 +31,7 @@ export const useIdeaToken = (ideaTokenId: bigint) => {
     ideaTokenId
       ? {
           key: "GetIdeaToken",
-          url: `http://localhost:42069`,
+          url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
           args: { ideaTokenId },
         }
       : null,
@@ -50,6 +49,26 @@ export const useIdeaToken = (ideaTokenId: bigint) => {
     mutate,
     error,
     ideaToken,
+  };
+};
+
+export const useIdeaTokensForWave = (waveId: bigint) => {
+  const { error, isLoading, mutate, data } = useSWR(
+    {
+      key: "GetIdeaTokensForWave",
+      url: process.env.NEXT_PUBLIC_GRAPHQL_URL!,
+      args: { waveId },
+    },
+    SWRGetIdeaTokensForWave
+  );
+
+  const ideaTokens = data?.ideaTokens || [];
+
+  return {
+    isLoading,
+    mutate,
+    error,
+    ideaTokens,
   };
 };
 
@@ -76,6 +95,7 @@ export async function SWRGetIdeaToken({
             description
             createdAt
             actions
+            isArchived
             supporters {
                 balance
                 owner
@@ -100,19 +120,13 @@ export async function SWRGetIdeaToken({
   return json.data;
 }
 
-async function SWRGetIdeaTokens({
-  url,
-  args,
-}: {
-  url: string;
-  args: any;
-}): Promise<{
+async function SWRGetIdeaTokens({ url }: { url: string }): Promise<{
   success: boolean;
   ideaTokens: IdeaToken[];
 }> {
   const query = `
   query GetIdeaTokens {
-    ideaTokens {
+    ideaTokens(where: { isArchived: false }) {
         id
         author
         title
@@ -132,6 +146,47 @@ async function SWRGetIdeaTokens({
     },
     body: JSON.stringify({
       query,
+    }),
+  };
+
+  const data = await fetch(url, graphqlRequest);
+  const json = await data.json();
+  return json.data;
+}
+
+async function SWRGetIdeaTokensForWave({
+  url,
+  args,
+}: {
+  url: string;
+  args: any;
+}): Promise<{
+  success: boolean;
+  ideaTokens: IdeaToken[];
+}> {
+  const query = `
+  query GetIdeaTokensForWave($waveId: BigInt!) {
+    ideaTokens(where: { waveId: $waveId }) {
+        id
+        author
+        title
+        description
+        createdAt
+        supporters {
+            balance
+        }
+      }
+    }
+ `;
+
+  const graphqlRequest = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      variables: args,
     }),
   };
 

@@ -1,16 +1,16 @@
 import { createConfig } from "@ponder/core";
 import { Address, http, parseAbiItem } from "viem";
-import { PropLotHarnessABI } from "./abi/PropLotHarness";
+import { WaveHarnessABI } from "./abi/WaveHarness";
 import { DelegateABI } from "./abi/Delegate";
 import { IdeaTokenHubABI } from "./abi/IdeaTokenHub";
 import { NounsTokenABI } from "./abi/NounsToken";
 
-const startBlock = 7853000;
+const startBlock = 9550000;
 
 export const configAddresses = {
-  PropLotHarness: "0xD49c56d08D3c40854c0543bA5B1747f2Ad1c7b89",
-  IdeaTokenHub: "0xaB626b93B3f98d79ae1FBf6c76Bf678F83E7faf3",
-  NounsTokenHarness: "0x1B8D11880fe221B51FC814fF4C41366a91A59DEB",
+  Wave: "0x55C7c4ADEd315FF29a336cAE5671a4B0A69ae348",
+  IdeaTokenHub: "0x54a488958D1f7e90aC1a9C7eE5a450d1E2170789",
+  NounsTokenHarness: "0xa28Fb072290d6d731cA08EFb8f79bF4dB1D13e67",
 };
 
 export default createConfig({
@@ -22,10 +22,10 @@ export default createConfig({
     },
   },
   contracts: {
-    PropLotHarness: {
+    Wave: {
       network: "baseSepolia",
-      abi: PropLotHarnessABI,
-      address: configAddresses.PropLotHarness as `0x${string}`,
+      abi: WaveHarnessABI,
+      address: configAddresses.Wave as `0x${string}`,
       startBlock: startBlock,
     },
     IdeaTokenHub: {
@@ -38,7 +38,7 @@ export default createConfig({
       network: "baseSepolia",
       abi: DelegateABI,
       factory: {
-        address: configAddresses.PropLotHarness as `0x${string}`,
+        address: configAddresses.Wave as `0x${string}`,
         event: parseAbiItem(
           "event DelegateCreated(address delegate,uint256 id)"
         ),

@@ -1,128 +1,27 @@
 "use client";
+
 import { useIdeaToken } from "@/models/IdeaToken/hooks";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { configAddresses } from "@/lib/constants";
-import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
-import { TableCell, TableRow } from "@/components/ui/Table";
-import { parseEther, formatUnits } from "viem";
-import { truncateEthAddress } from "@/lib/utils";
+import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
+import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
 
 const IdeaPage = ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaToken, isLoading } = useIdeaToken(params.ideaId);
 
-  const { data: hash, writeContract, isPending, error } = useWriteContract();
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
-
-  const supportIdea = async () => {
-    writeContract({
-      chainId: 84532,
-      address: configAddresses.IdeaTokenHub as `0x${string}`,
-      abi: IdeaTokenHubABI,
-      value: parseEther(".001"),
-      functionName: "sponsorIdea",
-      args: [params.ideaId],
-    });
-  };
-
   return (
-    <section className="mt-12 w-[1200px] mx-auto">
-      <div className="grid grid-cols-5 gap-12">
-        <div className="col-span-3">
-          <h1 className="text-2xl text-neutral-700 font-bold">
-            {ideaToken?.title}
-          </h1>
-          <p className="text-neutral-500 mt-2 bg-white p-4 border rounded-lg">
-            {ideaToken?.description}
-          </p>
-          <h1 className="text-2xl text-neutral-700 font-bold mt-6 mb-2">
-            Actions
-          </h1>
-          <p className="text-neutral-500 mt-2 bg-white p-4 border rounded-lg">
-            {ideaToken?.actions.targets.map((target, idx) => (
-              <div key={`target-${idx}`} className="flex items-center">
-                <span className="text-neutral-700 font-bold">{target}</span>
-                <span className="text-neutral-500 ml-2">
-                  {ideaToken?.actions.values[idx]} ETH
-                </span>
-              </div>
-            ))}
-          </p>
-        </div>
-        <div className="col-span-2">
-          <div className="flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div className="overflow-hidden border sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-white">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Supporter
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Contributed
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      {isLoading
-                        ? [1, 2, 3].map((idx) => {
-                            return (
-                              <TableRow
-                                key={`loading-${idx}`}
-                                className="text-neutral-600"
-                              >
-                                <TableCell className="">
-                                  <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[200px]"></span>
-                                </TableCell>
-                                <TableCell className="">
-                                  <span className="animate-pulse rounded bg-gray-200 block h-[12px] w-[50px]"></span>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })
-                        : ideaToken?.supporters.map((supporter, idx) => (
-                            <tr
-                              className="cursor-pointer hover:bg-gray-50"
-                              key={`supporter-${idx}`}
-                            >
-                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
-                                {truncateEthAddress(supporter.owner)}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-green-500">
-                                {formatUnits(
-                                  BigInt(supporter.balance.toString()),
-                                  18
-                                )}{" "}
-                                ETH
-                              </td>
-                            </tr>
-                          ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            className="w-full px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 transition-colors text-white mt-4"
-            onClick={() => supportIdea?.()}
-          >
-            Support
-          </button>
-        </div>
-      </div>
-    </section>
+    <div className="min-h-[calc(100vh-165px)] mt-[65px] bg-neutral-100 py-12 flex flex-col">
+      <section className="w-[600px] mx-auto space-y-4">
+        {ideaToken ? (
+          <ExpandableIdeaCard
+            ideaToken={ideaToken}
+            expandable={true}
+            clickable={false}
+            archived={ideaToken.isArchived}
+          />
+        ) : (
+          <IdeaCardSkeleton />
+        )}
+      </section>
+    </div>
   );
 };
 

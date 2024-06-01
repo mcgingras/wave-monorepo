@@ -60,7 +60,7 @@ export const useTokenHubData = () => {
   // minRequriedVotes: number
   const getCurrentMinRequiredVotes = async () => {
     const minRequiredVotes = await client.readContract({
-      address: configAddresses.PropLotHarness as `0x${string}`,
+      address: configAddresses.Wave as `0x${string}`,
       abi: PropLotHarnessABI,
       functionName: "getCurrentMinRequiredVotes",
     });
@@ -73,7 +73,7 @@ export const useTokenHubData = () => {
   // numEligibleProposerDelegates: number
   const getAllEligibleProposerDelegates = async () => {
     const [minRequiredVotes, delegateAddresses] = await client.readContract({
-      address: configAddresses.PropLotHarness as `0x${string}`,
+      address: configAddresses.Wave as `0x${string}`,
       abi: PropLotHarnessABI,
       functionName: "getAllEligibleProposerDelegates",
     });
