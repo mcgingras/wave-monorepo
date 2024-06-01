@@ -18,6 +18,7 @@ const config = createConfig(
     walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
     appName: "Prop Lot Protocol",
     appDescription: "PropLot Protocol gets your ideas on-chain.",
+    ssr: true,
     // appUrl: "", // TODO: add this when we have it
     // appIcon: "", // TODO: add this when we have it
   })
