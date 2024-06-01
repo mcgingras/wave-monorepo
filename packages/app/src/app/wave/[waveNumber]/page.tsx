@@ -56,7 +56,7 @@ const getWinningIdeasForWave = async (waveId: bigint) => {
 
   const data = await fetch(url, graphqlRequest);
   const json = await data.json();
-  return json.data.ideaTokens;
+  return json.data.ideaTokens.items;
 };
 
 const WavePage = async ({
@@ -70,7 +70,7 @@ const WavePage = async ({
   )) as IdeaToken[];
 
   const ideaTokensWithPooledEth = winningIdeas.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.reduce(
+    const pooledEth = ideaToken.supporters.items.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
       0
     );

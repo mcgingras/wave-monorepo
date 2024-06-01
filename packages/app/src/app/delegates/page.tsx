@@ -6,16 +6,14 @@ import { useDelegateProxies } from "@/models/DelegateProxy/hooks";
 import { truncateEthAddress } from "@/lib/utils";
 import CreateDelegateProxyForm from "@/components/CreateDelegateProxyForm";
 import Modal from "@/components/ui/Modal";
-import { useReadContract, useAccount, useWriteContract } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 import { configAddresses } from "@/lib/constants";
-import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { NounsTokenABI } from "@/abi/NounsToken";
-import { WaveHarnessABI } from "@/abi/WaveHarness";
 
 const DelegatePage = () => {
   const { address } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { delegateProxies, isLoading, isEmpty } = useDelegateProxies();
+  const { delegateProxies } = useDelegateProxies();
 
   const { data: nounsBalance } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
@@ -23,8 +21,6 @@ const DelegatePage = () => {
     functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
-
-  console.log(nounsBalance, address);
 
   const { data: delegatedTo, refetch: refetchDelegateTo } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,

@@ -64,7 +64,7 @@ const ExpandableIdeaCard = ({
     !expandable
   );
 
-  const totalYield = ideaToken.supporters.reduce(
+  const totalYield = ideaToken.supporters.items.reduce(
     (acc, supporter) => acc + BigInt(parseInt(supporter.balance.toString())),
     BigInt(0)
   );
@@ -153,9 +153,9 @@ const ExpandableIdeaCard = ({
           <h3 className="text-xs uppercase text-neutral-400 font-bold polymath-disp tracking-wider">
             Supporters
           </h3>
-          {ideaToken.supporters.length > 0 ? (
+          {ideaToken.supporters.items.length > 0 ? (
             <div className="flex flex-row items-center space-x-[-8px]">
-              {ideaToken.supporters.slice(0, 3).map((supporter, idx) => {
+              {ideaToken.supporters.items.slice(0, 3).map((supporter, idx) => {
                 return (
                   <SupporterAvatar
                     key={idx}
@@ -163,9 +163,9 @@ const ExpandableIdeaCard = ({
                   />
                 );
               })}
-              {ideaToken.supporters.length > 3 && (
+              {ideaToken.supporters.items.length > 3 && (
                 <span className="h-6 px-2 rounded-full border border-white text-xs text-neutral-400 bg-neutral-100 flex items-center">
-                  +{ideaToken.supporters.length - 3}
+                  +{ideaToken.supporters.items.length - 3}
                 </span>
               )}
             </div>
@@ -176,7 +176,7 @@ const ExpandableIdeaCard = ({
 
         {isSupportersExpanded && (
           <div className="mt-2 grid grid-cols-2 gap-4">
-            {ideaToken.supporters.map((supporter, idx) => {
+            {ideaToken.supporters.items.map((supporter, idx) => {
               return <SupporterItem key={idx} supporter={supporter} />;
             })}
           </div>
