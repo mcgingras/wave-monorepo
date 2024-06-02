@@ -91,7 +91,7 @@ const CurrentWaveStats = async () => {
   const delegateProxies = await getDelegates();
 
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.reduce(
+    const pooledEth = ideaToken.supporters.items.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
       0
     );

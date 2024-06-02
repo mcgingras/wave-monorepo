@@ -16,7 +16,6 @@ export const dynamic = "force-dynamic";
 
 const getIdeas = async () => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
-  console.log("url", url);
   const query = `
   query GetIdeaTokens {
     ideaTokens(where: { isArchived: false }) {
