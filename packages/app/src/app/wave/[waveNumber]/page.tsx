@@ -3,16 +3,15 @@ import { formatUnits } from "viem";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
-import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
 import { client } from "@/lib/viem";
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { IdeaToken } from "@/models/IdeaToken/types";
 
 // clears out next-js cache for viem calls
-// this might not be the "best" way but at least it's not storing stale data
-// TODO: review next's caching strategies and decide on best one.
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "only-no-store";
 
 const getCurrentWaveInfo = async () => {
   const waveInfo = await client.readContract({
