@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   useReadContract,
   useAccount,
@@ -38,27 +39,27 @@ const UndelegateProxyForm = ({ closeModal }: { closeModal: () => void }) => {
     isPending: isDelegateWritePending,
   } = useWriteContract();
 
-  console.log("hash", hash);
-  const { isFetching: isDelegateWriteFetching } = useWaitForTransactionReceipt({
+  const {
+    isFetching: isDelegateWriteFetching,
+    isFetched: isUndelegateActionFetched,
+  } = useWaitForTransactionReceipt({
     hash,
   });
 
+  useEffect(() => {
+    if (isUndelegateActionFetched) {
+      refetchDelegateTo();
+    }
+  }, [isUndelegateActionFetched]);
+
   const undelegateHelper = async () => {
-    await delegateTo(
-      {
-        chainId: 84532,
-        address: configAddresses.NounsTokenHarness as `0x${string}`,
-        abi: NounsTokenABI,
-        functionName: "delegate",
-        args: [address as `0x${string}`],
-      },
-      {
-        onSuccess: () => {
-          console.log("we are refetching baby...");
-          refetchDelegateTo();
-        },
-      }
-    );
+    await delegateTo({
+      chainId: 84532,
+      address: configAddresses.NounsTokenHarness as `0x${string}`,
+      abi: NounsTokenABI,
+      functionName: "delegate",
+      args: [address as `0x${string}`],
+    });
   };
 
   return (

@@ -1,4 +1,10 @@
-import { useReadContract, useAccount, useWriteContract } from "wagmi";
+import { useEffect } from "react";
+import {
+  useReadContract,
+  useAccount,
+  useWriteContract,
+  useTransactionReceipt,
+} from "wagmi";
 import { configAddresses } from "@/lib/constants";
 import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { NounsTokenABI } from "@/abi/NounsToken";
@@ -71,29 +77,51 @@ const CreateDelegateProxyForm = ({
     args: [address as `0x${string}`],
   });
 
-  const { writeContractAsync: delegateTo, isPending: isDelegateWritePending } =
-    useWriteContract();
   const {
+    data: delegateDataHash,
+    writeContractAsync: delegateTo,
+    isPending: isDelegateWritePending,
+  } = useWriteContract();
+  const {
+    data: registerDataHash,
     writeContractAsync: registerDelegate,
     isPending: isRegisterWritePending,
   } = useWriteContract();
 
+  const { isFetching: isDelegateFetching, isFetched: isDelegateActionFetched } =
+    useTransactionReceipt({
+      hash: delegateDataHash,
+    });
+
+  useEffect(() => {
+    if (isDelegateActionFetched) {
+      refetchDelegateTo();
+      refetchOptimisticDelegations();
+    }
+  }, [isDelegateActionFetched]);
+
+  const {
+    isFetching: isRegisterFetching,
+    isFetched: isRegistrationActionFetched,
+  } = useTransactionReceipt({
+    hash: registerDataHash,
+  });
+
+  useEffect(() => {
+    if (isRegistrationActionFetched) {
+      refetchDelegateTo();
+      refetchOptimisticDelegations();
+    }
+  }, [isRegistrationActionFetched]);
+
   const delegateHelper = async () => {
-    await delegateTo(
-      {
-        chainId: 84532,
-        address: configAddresses.NounsTokenHarness as `0x${string}`,
-        abi: NounsTokenABI,
-        functionName: "delegate",
-        args: [suitableDelegateForAddress?.[0] as `0x${string}`],
-      },
-      {
-        onSuccess: () => {
-          refetchDelegateTo();
-          refetchOptimisticDelegations();
-        },
-      }
-    );
+    await delegateTo({
+      chainId: 84532,
+      address: configAddresses.NounsTokenHarness as `0x${string}`,
+      abi: NounsTokenABI,
+      functionName: "delegate",
+      args: [suitableDelegateForAddress?.[0] as `0x${string}`],
+    });
   };
   const registerHelper = async () => {
     const delegateId = await client.readContract({
@@ -103,21 +131,13 @@ const CreateDelegateProxyForm = ({
       args: [delegatedTo as `0x${string}`],
     });
 
-    await registerDelegate(
-      {
-        chainId: 84532,
-        address: configAddresses.Wave as `0x${string}`,
-        abi: PropLotHarnessABI,
-        functionName: "registerDelegation",
-        args: [address as `0x${string}`, delegateId],
-      },
-      {
-        onSuccess: () => {
-          refetchDelegateTo();
-          refetchOptimisticDelegations();
-        },
-      }
-    );
+    await registerDelegate({
+      chainId: 84532,
+      address: configAddresses.Wave as `0x${string}`,
+      abi: PropLotHarnessABI,
+      functionName: "registerDelegation",
+      args: [address as `0x${string}`, delegateId],
+    });
   };
 
   const isDelegated = delegatedTo && delegatedTo !== address;
@@ -201,7 +221,10 @@ const CreateDelegateProxyForm = ({
           <Button
             type="primary"
             title={
-              isDelegateWritePending || isRegisterWritePending
+              isDelegateWritePending ||
+              isRegisterWritePending ||
+              isDelegateFetching ||
+              isRegisterFetching
                 ? "Pending..."
                 : isDelegated
                 ? "Register"
