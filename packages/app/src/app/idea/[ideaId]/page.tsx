@@ -56,7 +56,7 @@ const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
             ideaToken={ideaToken}
             expandable={true}
             clickable={false}
-            archived={false}
+            archived={ideaToken.isArchived}
           />
         ) : (
           <IdeaCardSkeleton />

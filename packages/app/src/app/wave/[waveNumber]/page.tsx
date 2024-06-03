@@ -91,7 +91,8 @@ const WavePage = async ({
     (a, b) => b.pooledEth - a.pooledEth
   );
 
-  const isLoading = false;
+  console.log("currentWave", currentWave);
+  console.log("waveNumber", waveNumber);
 
   return (
     <div className="min-h-[calc(100vh-65px)] mt-[65px] pt-12 flex flex-col">
@@ -144,11 +145,7 @@ const WavePage = async ({
       </section>
       <section className="bg-neutral-100 py-8 grow flex-1">
         <div className="w-[600px] mx-auto space-y-8">
-          {isLoading ? (
-            [1, 2, 3].map((_, idx) => {
-              return <IdeaCardSkeleton key={`skelly-${idx}`} />;
-            })
-          ) : sortedIdeaTokens.length > 0 ? (
+          {sortedIdeaTokens.length > 0 ? (
             sortedIdeaTokens.map((ideaToken, idx) => {
               return (
                 <div key={`idea-${idx}`}>

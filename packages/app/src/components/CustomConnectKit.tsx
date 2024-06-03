@@ -6,6 +6,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useDisconnect } from "wagmi";
 import { useRouter } from "next/navigation";
+import { truncateEthAddress } from "@/lib/utils";
 
 const CustomConnectKit = () => {
   const router = useRouter();
@@ -43,7 +44,9 @@ const CustomConnectKit = () => {
             >
               {isConnected ? (
                 <span className="flex flex-row items-center space-x-1">
-                  <span>{ensName ?? truncatedAddress}</span>
+                  <span>
+                    {ensName ?? truncateEthAddress(address as string)}
+                  </span>
                   {showDropdown ? (
                     <ChevronUpIcon className="h-5 w-5" />
                   ) : (
