@@ -17,7 +17,7 @@ const getCurrentWaveInfo = async () => {
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
-    functionName: "currentWaveInfo",
+    functionName: "getCurrentWaveInfo",
   });
 
   return waveInfo;
@@ -65,7 +65,7 @@ const WavePage = async ({
 }: {
   params: { waveNumber: string };
 }) => {
-  const [currentWave, _] = await getCurrentWaveInfo();
+  const [currentWaveId, _] = await getCurrentWaveInfo();
   const winningIdeas = (await getWinningIdeasForWave(
     BigInt(waveNumber)
   )) as IdeaToken[];

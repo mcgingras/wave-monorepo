@@ -65,7 +65,7 @@ const getCurrentWaveInfo = async () => {
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
-    functionName: "currentWaveInfo",
+    functionName: "getCurrentWaveInfo",
   });
 
   return waveInfo;
@@ -86,8 +86,8 @@ const getRemainingTime = async (endingBlock: number) => {
 
 const CurrentWaveStats = async () => {
   const ideaTokens = (await getIdeas()) as IdeaToken[];
-  const [_, endingBlock] = await getCurrentWaveInfo();
-  const { remainingTime } = await getRemainingTime(endingBlock);
+  const [_, waveInfo] = await getCurrentWaveInfo();
+  const { remainingTime } = await getRemainingTime(waveInfo.endBlock);
   const delegateProxies = await getDelegates();
 
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {

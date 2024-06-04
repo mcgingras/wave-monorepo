@@ -9,7 +9,7 @@ const getCurrentWaveInfo = async () => {
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
-    functionName: "currentWaveInfo",
+    functionName: "getCurrentWaveInfo",
   });
 
   return waveInfo;
@@ -29,8 +29,8 @@ const getRemainingTime = async (endingBlock: number) => {
 };
 
 const NewIdeaPage = async () => {
-  const [_, endingBlock] = await getCurrentWaveInfo();
-  const { remainingSeconds } = await getRemainingTime(endingBlock);
+  const [_, waveInfo] = await getCurrentWaveInfo();
+  const { remainingSeconds } = await getRemainingTime(waveInfo.endBlock);
 
   //   const isActive = remainingSeconds <= 0;
   const isActive = true;

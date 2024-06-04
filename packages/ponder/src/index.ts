@@ -100,13 +100,13 @@ ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
   }
 });
 
-ponder.on("IdeaTokenHub:ProposedIdeas", async ({ event, context }) => {
+ponder.on("IdeaTokenHub:WaveFinalized", async ({ event, context }) => {
   const { Wave, IdeaToken } = context.db;
 
   const [currentWaveId, _] = await publicClient.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
-    functionName: "currentWaveInfo",
+    functionName: "getCurrentWaveInfo",
     // get the block before this to ensure we are getting the currentWave before we closed it
     blockNumber: BigInt(event.block.number) - BigInt(1),
   });
@@ -133,7 +133,7 @@ ponder.on("IdeaTokenHub:ProposedIdeas", async ({ event, context }) => {
     await IdeaToken.update({
       id: idea.waveIdeaId,
       data: {
-        waveId: currentWaveId,
+        waveId: Number(currentWaveId),
         nounsProposalId: idea.nounsProposalId,
         totalFunding: idea.totalFunding,
         isArchived: true,
