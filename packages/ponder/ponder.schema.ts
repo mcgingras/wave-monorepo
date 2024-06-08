@@ -23,6 +23,7 @@ export default createSchema((p) => ({
     tokenId: p.bigint().references("IdeaToken.id"),
     balance: p.bigint(),
     isCreator: p.boolean(),
+    reason: p.string().optional(),
   }),
   DelegateProxy: p.createTable({
     id: p.string(), // delegate address string

@@ -641,6 +641,25 @@ export const IdeaTokenHubABI = [
   },
   {
     type: "event",
+    name: "ProposedIdeas",
+    inputs: [
+      {
+        name: "proposedIdeas",
+        type: "tuple[]",
+        indexed: false,
+        internalType: "struct IIdeaTokenHub.ProposalInfo[]",
+        components: [
+          { name: "nounsProposalId", type: "uint256", internalType: "uint256" },
+          { name: "waveIdeaId", type: "uint256", internalType: "uint256" },
+          { name: "totalFunding", type: "uint216", internalType: "uint216" },
+          { name: "blockCreated", type: "uint32", internalType: "uint32" },
+        ],
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
     name: "Sponsorship",
     inputs: [
       {
