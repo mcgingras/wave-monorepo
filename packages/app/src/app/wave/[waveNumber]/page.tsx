@@ -90,9 +90,6 @@ const WavePage = async ({
     (a, b) => b.pooledEth - a.pooledEth
   );
 
-  console.log("currentWave", currentWave);
-  console.log("waveNumber", waveNumber);
-
   return (
     <div className="min-h-[calc(100vh-65px)] mt-[65px] pt-12 flex flex-col">
       <section className="w-[600px] mx-auto pb-6">
@@ -115,7 +112,7 @@ const WavePage = async ({
             )}
             <Link
               href={
-                currentWave <= parseInt(waveNumber) + 1
+                currentWaveId <= parseInt(waveNumber) + 1
                   ? "/"
                   : `/wave/${parseInt(waveNumber) + 1}`
               }

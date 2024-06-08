@@ -5,12 +5,14 @@ import { DelegateABI } from "./abi/Delegate";
 import { IdeaTokenHubABI } from "./abi/IdeaTokenHub";
 import { NounsTokenABI } from "./abi/NounsToken";
 
-const startBlock = 9550000;
+// for baseSepolia
+// will need to sub out when we go to mainnet
+const startBlock = 11000000;
 
 export const configAddresses = {
-  Wave: "0x55C7c4ADEd315FF29a336cAE5671a4B0A69ae348",
-  IdeaTokenHub: "0x54a488958D1f7e90aC1a9C7eE5a450d1E2170789",
-  NounsTokenHarness: "0xa28Fb072290d6d731cA08EFb8f79bF4dB1D13e67",
+  Wave: "0x9deDC79469EA982bd507beB58f1c29B294b4B58d",
+  IdeaTokenHub: "0x30F301933faF7f0d9e3a4cA1536A2FDAdFAdFd20",
+  NounsTokenHarness: "0x3fcac51A44ba6Ec3f1D29BbC6d81b5A30522aacD",
 };
 
 export default createConfig({

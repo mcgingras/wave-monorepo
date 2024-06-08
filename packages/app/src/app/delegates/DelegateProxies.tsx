@@ -43,7 +43,7 @@ const DelegateProxies = async () => {
   const delegateProxies = await getDelegateProxies();
   return (
     <div className="w-full bg-white rounded-lg">
-      {delegateProxies.map((proxy, id) => {
+      {delegateProxies.map((proxy: any, id: any) => {
         return (
           <div
             key={proxy.id}
