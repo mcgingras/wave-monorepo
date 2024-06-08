@@ -17,6 +17,8 @@ export const useFinalizeWave = () => {
       winningIds
     );
 
+    console.log(winningIdeaDescriptionsResponse);
+
     const winningIdeaDescriptions =
       winningIdeaDescriptionsResponse.ideaTokens.items.map(
         (idea: any) => idea.description
@@ -63,7 +65,6 @@ const getIdeaDescriptions = async (ids: readonly bigint[]) => {
     body: JSON.stringify({
       query,
       variables: { ideaTokenIds: ids.map((id) => id.toString()) },
-      cache: "no-cache",
     }),
   };
 

@@ -18,7 +18,7 @@ const BadgeCard = () => {
         <p className="text-sm text-neutral-400">
           Here is my reason for voting. This will be a bunch of random garbage
           here. Idk what else we want to show here, maybe some stats about if
-          it's on-chain or not? Maybe how much I donated?
+          its on-chain or not? Maybe how much I donated?
         </p>
       </div>
     </div>
