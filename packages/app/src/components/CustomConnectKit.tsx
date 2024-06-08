@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useDisconnect } from "wagmi";
 import { useRouter } from "next/navigation";
 import { truncateEthAddress } from "@/lib/utils";
+import { Transition } from "@headlessui/react";
 
 const CustomConnectKit = () => {
   const router = useRouter();
@@ -57,7 +58,16 @@ const CustomConnectKit = () => {
                 "Connect"
               )}
             </button>
-            {showDropdown && (
+
+            <Transition
+              show={showDropdown}
+              enter="transition ease-out duration-75"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
               <div
                 className="absolute w-[150px] border rounded-lg p-2 right-0 top-[40px] bg-white text-neutral-600"
                 ref={dropdownRef}
@@ -91,7 +101,7 @@ const CustomConnectKit = () => {
                   </li>
                 </ul>
               </div>
-            )}
+            </Transition>
           </div>
         );
       }}

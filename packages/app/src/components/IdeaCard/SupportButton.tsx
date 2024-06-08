@@ -7,6 +7,7 @@ import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { parseEther } from "viem";
 import Modal from "../ui/Modal";
+import Image from "next/image";
 
 const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
   const [amount, setAmount] = useState<number>(0);
@@ -24,8 +25,8 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       value: parseEther(String(amount)),
-      functionName: "sponsorIdea",
-      args: [BigInt(ideaId.toString())],
+      functionName: "sponsorIdeaWithReason",
+      args: [BigInt(ideaId.toString()), reason],
     });
   };
 
@@ -36,15 +37,20 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
         <p className="text-neutral-500 text-sm">
           Supporting the idea blah blah this is a description...
         </p>
-        <section className="mt-4">
-          <div className="h-48 w-full border rounded mx-auto"></div>
+        <section className="mt-4 flex items-center justify-center">
+          <Image
+            src="/badge.svg"
+            alt="temporary nft image"
+            width={200}
+            height={200}
+          />
         </section>
         <div className="col-span-full my-4">
           <label
             htmlFor="type"
             className="block text-sm font-medium leading-6 text-gray-900"
           >
-            Support amount
+            Support amount (ETH)
           </label>
           <div className="mt-1">
             <input
@@ -68,14 +74,14 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
             Reason
           </label>
           <div className="mt-1">
-            <input
+            <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               id="reason"
               name="reason"
               className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
               placeholder="I support this idea because..."
-              type="text"
+              rows={3}
             />
           </div>
         </div>
