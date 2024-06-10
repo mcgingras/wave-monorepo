@@ -14,7 +14,9 @@ const getIdeas = async () => {
         items {
            id
            supporters {
-             balance
+                items {
+                    balance
+                }
             }
           }
         }
@@ -34,14 +36,16 @@ const getIdeas = async () => {
 
   const data = await fetch(url, graphqlRequest);
   const json = await data.json();
-  return json.data.ideaTokens;
+  return json.data.ideaTokens.items;
 };
 
 const getDelegates = async () => {
   const query = `
   query GetDelegateProxies {
     delegateProxys {
-        id
+        items {
+            id
+        }
       }
     }
  `;
@@ -121,7 +125,7 @@ const CurrentWaveStats = async () => {
       <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
         <span>Total delegates</span>
         <span className="h-1 border-b border-dotted border-neutral-400 flex-grow"></span>
-        <span>{delegateProxies.delegateProxys.length}</span>
+        <span>{delegateProxies.delegateProxys.items.length}</span>
       </div>
       <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
         <span>Total ideas</span>

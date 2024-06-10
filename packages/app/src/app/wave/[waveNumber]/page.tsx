@@ -98,7 +98,7 @@ const WavePage = async ({
             Wave {waveNumber}
           </h1>
           <div className="flex flex-row divide-x-2 divide-white">
-            {parseInt(waveNumber) > 1 ? (
+            {parseInt(waveNumber) > 0 ? (
               <Link
                 href={`/wave/${parseInt(waveNumber) - 1}`}
                 className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"

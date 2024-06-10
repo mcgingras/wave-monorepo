@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../ui/Button";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { configAddresses } from "@/lib/constants";
@@ -8,6 +8,7 @@ import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { parseEther } from "viem";
 import Modal from "../ui/Modal";
 import Image from "next/image";
+import revalidate from "@/actions/revalidatePath";
 
 const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
   const [amount, setAmount] = useState<number>(0);
@@ -29,6 +30,13 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
       args: [BigInt(ideaId.toString()), reason],
     });
   };
+
+  useEffect(() => {
+    if (isConfirmed) {
+      revalidate(`/idea/${ideaId}`);
+      setIsModalOpen(false);
+    }
+  }, [isConfirmed, ideaId]);
 
   return (
     <>
