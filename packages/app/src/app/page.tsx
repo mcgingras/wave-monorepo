@@ -63,13 +63,15 @@ const getCurrentWaveInfo = async () => {
     functionName: "getCurrentWaveInfo",
   });
 
+  console.log(waveInfo);
+
   return waveInfo;
 };
 
-const getRemainingTime = async (endingBlock: number) => {
+const getRemainingTime = async (startingBlock: number) => {
   const blockNumber = await client.getBlockNumber();
-  const difference = parseInt(blockNumber?.toString()) - endingBlock;
-  const remainingBlocks = WAVELENGTH - difference;
+  const timeElapsed = parseInt(blockNumber?.toString()) - startingBlock;
+  const remainingBlocks = WAVELENGTH - timeElapsed;
   const remainingSeconds = remainingBlocks * 2;
   const now = new Date();
   const remainingTime = new Date(
@@ -98,7 +100,7 @@ export default async function Home() {
 
   const [currentWaveId, waveInfo] = await getCurrentWaveInfo();
   const currentWave = Number(currentWaveId);
-  const { remainingSeconds } = await getRemainingTime(waveInfo.endBlock);
+  const { remainingSeconds } = await getRemainingTime(waveInfo.startBlock);
 
   return (
     <>
