@@ -1,6 +1,5 @@
 import { useFormContext } from "react-hook-form";
 import { useEnsAddress } from "wagmi";
-import { normalize } from "viem/ens";
 
 const AddressInput = ({ name }: { name: string }) => {
   const { register, watch } = useFormContext();
@@ -11,8 +10,6 @@ const AddressInput = ({ name }: { name: string }) => {
     chainId: 1,
     name: address,
   });
-
-  console.log("ens", ensAddress);
 
   return (
     <>

@@ -185,7 +185,8 @@ const NewIdeaForm = () => {
                   )}
                   {actions.map((action, index) => (
                     <>
-                      <ParsedAction action={action} />
+                      {/* <ParsedAction action={action} /> */}
+                      {index} - {action.target}
                       <input
                         key={`action-target-${index}`}
                         {...register(`actions.${index}.target`)}
