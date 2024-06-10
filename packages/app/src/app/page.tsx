@@ -13,6 +13,8 @@ import { client } from "@/lib/viem";
 // this might not be the "best" way but at least it's not storing stale data
 // TODO: review next's caching strategies and decide on best one.
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "only-no-store";
 
 const getIdeas = async () => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
