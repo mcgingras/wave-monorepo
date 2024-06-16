@@ -34,7 +34,7 @@ export default createConfig({
       network: "baseSepolia",
       abi: IdeaTokenHubABI,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
-      startBlock: startBlock,
+      startBlock: 11045538,
     },
     Delegate: {
       network: "baseSepolia",

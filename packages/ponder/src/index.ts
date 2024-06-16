@@ -5,6 +5,7 @@ import publicClient from "../lib/viem";
 import { IdeaTokenHubABI } from "../abi/IdeaTokenHub";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
+  console.log("idea is created!");
   const { IdeaToken } = context.db;
   const [title, description] = event.args.idea.description.split(`\n\n`);
 
