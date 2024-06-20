@@ -2,6 +2,7 @@ import { IdeaToken } from "@/models/IdeaToken/types";
 import { Supporter } from "@/models/Supporter/types";
 import { truncateEthAddress } from "@/lib/utils";
 import { formatUnits } from "viem";
+import AvatarAddress from "@/components/ui/AvatarAddress";
 
 const getSupporters = async () => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
@@ -59,8 +60,7 @@ const SupportersList = async () => {
               <div key={`supporters-${idx}`}>
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row items-center space-x-2">
-                    <span className="h-4 w-4 rounded-full bg-neutral-200 block"></span>
-                    <p>{truncateEthAddress(supporter.owner)}</p>
+                    <AvatarAddress address={supporter.owner as `0x${string}`} />
                     <span className="text-orange-500 bg-orange-100 rounded-full px-2 py-0.5 text-sm">
                       Idea {supporter.tokenId.toString()}
                     </span>
