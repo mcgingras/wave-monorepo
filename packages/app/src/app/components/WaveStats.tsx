@@ -33,9 +33,13 @@ const getIdeas = async () => {
     }),
   };
 
-  const data = await fetch(url, graphqlRequest);
-  const json = await data.json();
-  return json.data.ideaTokens.items;
+  try {
+    const data = await fetch(url, graphqlRequest);
+    const json = await data.json();
+    return json.data.ideaTokens.items;
+  } catch (error) {
+    console.log("error", error);
+  }
 };
 
 const getCurrentWaveInfo = async () => {

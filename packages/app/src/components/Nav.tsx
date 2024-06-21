@@ -18,7 +18,15 @@ const Nav = () => {
             </li>
             <li>
               <Link href="/" className="text-blue-500">
-                wave protocol
+                Wave Protocol
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/"
+                className="text-neutral-400 hover:text-neutral-500 font-normal transition-all"
+              >
+                Docs
               </Link>
             </li>
           </ul>

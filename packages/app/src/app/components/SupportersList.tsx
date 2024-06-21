@@ -53,7 +53,7 @@ const SupportersList = async () => {
   return (
     <div className="mt-8 bg-white p-4 rounded-lg">
       <h3 className="polymath-disp font-bold tracking-wide">Supporters</h3>
-      <div className="mt-4 space-y-4">
+      <div className="mt-4 space-y-6">
         {supporters.length > 0 ? (
           supporters.map((supporter, idx) => {
             return (
@@ -61,15 +61,17 @@ const SupportersList = async () => {
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row items-center space-x-2">
                     <AvatarAddress address={supporter.owner as `0x${string}`} />
-                    <span className="text-orange-500 bg-orange-100 rounded-full px-2 py-0.5 text-sm">
+                    <span className="text-indigo-500 bg-indigo-100 rounded-full px-2 py-0.5 text-sm">
                       Idea {supporter.tokenId.toString()}
                     </span>
                   </div>
-                  <span>
+                  <span className="text-neutral-500">
                     {formatUnits(BigInt(supporter.balance.toString()), 18)} ETH
                   </span>
                 </div>
-                <p className="text-neutral-500 mt-1">{supporter.reason}</p>
+                <p className="text-neutral-500 mt-1 text-sm">
+                  {supporter.reason}
+                </p>
               </div>
             );
           })

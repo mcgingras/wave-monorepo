@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { ConnectKitButton } from "connectkit";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
-import Link from "next/link";
 import { useDisconnect } from "wagmi";
 import { useRouter } from "next/navigation";
 import { truncateEthAddress } from "@/lib/utils";
 import { Transition } from "@headlessui/react";
+import Button from "./ui/Button";
 
 const CustomConnectKit = () => {
   const router = useRouter();
@@ -69,35 +69,49 @@ const CustomConnectKit = () => {
               leaveTo="opacity-0 scale-95"
             >
               <div
-                className="absolute w-[150px] border rounded-lg p-2 right-0 top-[40px] bg-white text-neutral-600"
+                className="absolute w-[400px] border rounded-lg p-4 right-0 top-[40px] bg-white text-neutral-600"
                 ref={dropdownRef}
               >
-                <ul>
+                <div className="bg-neutral-100 rounded-lg p-4 flex-1 flex flex-col text-center">
+                  <span className="text-sm text-neutral-500">Rewards</span>
+                  <span>[insert yield]</span>
+                </div>
+                <h3 className="font-bold mt-4 mb-1">Stats</h3>
+                <ul className="mb-4">
+                  <li className="flex flex-row items-center space-x-2">
+                    <span className="text-neutral-500">Delegated nouns</span>
+                    <span className="h-1 border-b border-dotted flex-1"></span>
+                    <span className="text-neutral-500">0</span>
+                  </li>
+                  <li className="flex flex-row items-center space-x-2">
+                    <span className="text-neutral-500">Ideas submitted</span>
+                    <span className="h-1 border-b border-dotted flex-1"></span>
+                    <span className="text-neutral-500">0</span>
+                  </li>
+                  <li className="flex flex-row items-center space-x-2">
+                    <span className="text-neutral-500">Ideas supported</span>
+                    <span className="h-1 border-b border-dotted flex-1"></span>
+                    <span className="text-neutral-500">0</span>
+                  </li>
+                </ul>
+                <ul className="space-y-2">
                   <li
-                    className="hover:text-neutral-500 cursor-pointer transition-colors"
                     onClick={() => {
                       router.push(`/scout/${address}`);
                       setShowDropdown(false);
                     }}
                   >
-                    Profile
+                    <Button type="secondary" title="Profile" fullWidth />
                   </li>
 
-                  <Link href="/">
-                    <li className="hover:text-neutral-500 cursor-pointer transition-colors">
-                      Docs
-                    </li>
-                  </Link>
-
                   <li
-                    className="hover:text-neutral-500 cursor-pointer transition-colors"
                     onClick={() => {
                       // trigger wagmi disconnect?
                       disconnect();
                       setShowDropdown(false);
                     }}
                   >
-                    Disconnect
+                    <Button type="danger" title="Disconnect" fullWidth />
                   </li>
                 </ul>
               </div>

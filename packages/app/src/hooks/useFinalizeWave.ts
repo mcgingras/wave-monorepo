@@ -17,8 +17,6 @@ export const useFinalizeWave = () => {
       winningIds
     );
 
-    console.log(winningIdeaDescriptionsResponse);
-
     const winningIdeaDescriptions =
       winningIdeaDescriptionsResponse.ideaTokens.items.map(
         (idea: any) => idea.description

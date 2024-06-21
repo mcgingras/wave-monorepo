@@ -48,6 +48,10 @@ const SupporterItem = ({ supporter }: { supporter: any }) => {
 };
 
 const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
+  const ensName = useEnsName({
+    address: ideaToken.author as `0x${string}`,
+    chainId: 1,
+  });
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(true);
 
   const totalYield = ideaToken.supporters.items.reduce(
@@ -56,8 +60,8 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   );
 
   return (
-    <div className={`bg-white rounded-2xl flex flex-col transition-all`}>
-      <div className="flex flex-row justify-between items-center p-4 bg-blue-100 rounded-t-2xl text-blue-500">
+    <div className="bg-white rounded-2xl flex flex-col transition-all group">
+      <div className="flex flex-row justify-between items-center px-4 py-2 bg-blue-100 rounded-t-2xl text-blue-500">
         <div className="flex flex-col space-y-1">
           <div className="flex flex-row space-x-2 items-center justify-center">
             <h2 className="text-lg polymath-disp font-bold tracking-wide">
@@ -65,8 +69,8 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
             </h2>
           </div>
         </div>
-        <div className="text-lg polymath-disp font-bold tracking-wide">
-          {truncateEthAddress(ideaToken.author)}
+        <div className="text-base polymath-text">
+          {ensName.data || truncateEthAddress(ideaToken.author)}
           {/* <SupportButton ideaId={ideaToken.id} /> */}
         </div>
       </div>
@@ -79,7 +83,7 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
           {ideaToken.description}
         </p>
       </div>
-      <div className="flex flex-col px-4 pb-2 rounded-b-2xl">
+      <div className="flex flex-col px-4 pb-4 rounded-b-2xl">
         <div className="flex flex-row items-center justify-between border-b pb-2">
           <span className="text-neutral-500">Supporters</span>
           <p className="self-start font-bold">0</p>

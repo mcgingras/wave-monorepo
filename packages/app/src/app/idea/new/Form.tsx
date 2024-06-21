@@ -110,7 +110,7 @@ const NewIdeaForm = () => {
   console.log(actions);
 
   return (
-    <div className="w-[600px] mx-auto pt-12 pb-12">
+    <div className="w-full mx-auto">
       <FormProvider {...methods}>
         <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
           <AddActionForm
@@ -126,9 +126,6 @@ const NewIdeaForm = () => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="">
-            <h2 className="text-xl text-neutral-800 polymath-disp font-bold text-center py-4 border-b border-neutral-100 tracking-wide">
-              New idea
-            </h2>
             <section className="p-4 border-b border-neutral-100">
               <div className="sm:col-span-3">
                 <label
@@ -142,7 +139,7 @@ const NewIdeaForm = () => {
                     type="text"
                     id="title"
                     {...register("title")}
-                    className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -159,7 +156,7 @@ const NewIdeaForm = () => {
                     <textarea
                       id="description"
                       rows={3}
-                      className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
                       defaultValue={""}
                       {...register("description")}
                     />

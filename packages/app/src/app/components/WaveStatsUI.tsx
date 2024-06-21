@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -6,7 +8,7 @@ import { StaticCountdown } from "@/components/ui/Counter";
 import { formatUnits } from "viem";
 import FinalizeWaveButton from "@/components/FinalizeWaveCard";
 
-const WaveStatsUI = async ({
+const WaveStatsUI = ({
   ideaTokens,
   forWave,
   activeWave,
@@ -89,7 +91,7 @@ const WaveStatsUI = async ({
           )}
         </div>
       )}
-      <p className="text-center text-neutral-500 text-sm mt-4">
+      <p className="text-center text-neutral-500 text-sm mt-2">
         {remainingSeconds <= 0 ? (
           "Wave has ended"
         ) : (
