@@ -24,7 +24,7 @@ const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
         sortedIdeaTokens.map((ideaToken, idx) => {
           return (
             <div key={`idea-${idx}`}>
-              <Link href={`/idea/${ideaToken.id}`}>
+              <Link href={`/idea/${ideaToken.id}`} scroll={false}>
                 <NewIdeaCard ideaToken={ideaToken} />
               </Link>
             </div>
