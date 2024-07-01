@@ -4,6 +4,7 @@ import { OnChainProvider } from "@/components/OnChainProvider";
 import Nav from "@/components/Nav";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import Drawer from "./components/D2";
 
 export const metadata: Metadata = {
   title: "The Wave Protocol",
@@ -13,8 +14,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  slider,
 }: Readonly<{
-  children: React.ReactElement;
+  children: React.ReactNode;
+  slider: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -24,7 +27,9 @@ export default function RootLayout({
             <Toaster />
             <div className="flex flex-col min-h-screen">
               <Nav />
+
               {children}
+              {slider}
               <footer className="bg-neutral-200">
                 <div className="w-[600px] mx-auto py-8 text-xs text-neutral-500">
                   <h4 className="text-center">

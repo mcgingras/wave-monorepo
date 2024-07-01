@@ -17,6 +17,7 @@ export default async function Home() {
         <h2 className="polymath-disp font-bold text-2xl text-neutral-800">
           Submissions
         </h2>
+
         <section className="grid grid-cols-8 gap-8 mt-4">
           <div className="col-span-5">
             <Suspense fallback={<div>Loading...</div>}>
