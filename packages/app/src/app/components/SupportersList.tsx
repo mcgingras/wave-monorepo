@@ -51,17 +51,24 @@ const SupportersList = async () => {
   }, [] as Supporter[]);
 
   return (
-    <div className="mt-8 bg-white p-4 rounded-lg">
-      <h3 className="polymath-disp font-bold tracking-wide">Supporters</h3>
-      <div className="mt-4 space-y-6">
+    <div className="mt-8 p-4 rounded-lg">
+      <div className="border-b pb-2 border-neutral-200">
+        <h3 className="polymath-disp font-bold tracking-wide text-neutral-500 text-sm">
+          {supporters.length} Supporter{supporters.length > 1 ? "s" : ""}
+        </h3>
+      </div>
+      <div className="mt-4 space-y-4">
         {supporters.length > 0 ? (
           supporters.map((supporter, idx) => {
             return (
               <div key={`supporters-${idx}`}>
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row items-center space-x-2">
-                    <AvatarAddress address={supporter.owner as `0x${string}`} />
-                    <span className="text-indigo-500 bg-indigo-100 rounded-full px-2 py-0.5 text-sm">
+                    <AvatarAddress
+                      address={supporter.owner as `0x${string}`}
+                      size="sm"
+                    />
+                    <span className="text-neutral-500 bg-neutral-200 rounded-full px-3 py-0.5 text-xs">
                       Idea {supporter.tokenId.toString()}
                     </span>
                   </div>

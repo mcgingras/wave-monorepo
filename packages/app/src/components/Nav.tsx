@@ -26,16 +26,21 @@ const Nav = () => {
                 href="/"
                 className="text-neutral-400 hover:text-neutral-500 font-normal transition-all"
               >
-                Docs
+                Delegates
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/"
+                className="text-neutral-400 hover:text-neutral-500 font-normal transition-all"
+              >
+                Supporters
               </Link>
             </li>
           </ul>
           <div className="flex flex-row items-center space-x-2">
-            <Link href="/idea/new">
-              <Button title="Add idea" type="secondary" />
-            </Link>
             <Link href="/delegates">
-              <Button title="Delegate" type="secondary" />
+              <Button title="My rewards" type="secondary" />
             </Link>
             <CustomConnectKit />
           </div>

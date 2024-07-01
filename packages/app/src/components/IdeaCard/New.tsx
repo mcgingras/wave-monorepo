@@ -8,6 +8,7 @@ import { IdeaToken } from "@/models/IdeaToken/types";
 import SupportButton from "./SupportButton";
 import ActionDisplay from "./ActionDisplay";
 import Button from "../ui/Button";
+import Image from "next/image";
 
 const SupporterAvatar = ({ address }: { address: `0x${string}` }) => {
   const ensName = useEnsName({ address, chainId: 1 });
@@ -52,7 +53,6 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
     address: ideaToken.author as `0x${string}`,
     chainId: 1,
   });
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(true);
 
   const totalYield = ideaToken.supporters.items.reduce(
     (acc, supporter) => acc + BigInt(parseInt(supporter.balance.toString())),
@@ -60,50 +60,51 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   );
 
   return (
-    <div className="bg-white rounded-2xl flex flex-col transition-all group">
-      <div className="flex flex-row justify-between items-center px-4 py-2 bg-blue-100 rounded-t-2xl text-blue-500">
-        <div className="flex flex-col space-y-1">
-          <div className="flex flex-row space-x-2 items-center justify-center">
-            <h2 className="text-lg polymath-disp font-bold tracking-wide">
-              {ideaToken.title}
-            </h2>
+    <div className="bg-white rounded-2xl flex flex-row transition-all group p-4 space-x-8">
+      <div className="flex-1">
+        <div className="flex flex-col">
+          <div>
+            <span className="text-neutral-500">{Number(ideaToken.id)}</span>
+          </div>
+          <h2 className="text-xl polymath-disp font-bold tracking-wide mt-4">
+            {ideaToken.title}
+          </h2>
+          <div className="text-base polymath-text text-neutral-500 mt-4">
+            By: {ensName.data || truncateEthAddress(ideaToken.author)}
+          </div>
+          <div className="flex flex-row space-x-2 items-center mt-4">
+            <span className="text-neutral-500">Actions:</span>
+            <span className="bg-blue-50 text-blue-500 text-sm px-4 py-1 rounded-full">
+              Transfer 14 ETH
+            </span>
+            <span className="bg-blue-50 text-blue-500 text-sm px-4 py-1 rounded-full">
+              Custom
+            </span>
           </div>
         </div>
-        <div className="text-base polymath-text">
-          {ensName.data || truncateEthAddress(ideaToken.author)}
-          {/* <SupportButton ideaId={ideaToken.id} /> */}
-        </div>
       </div>
-      <div className="flex flex-col p-4">
-        <p
-          className={`bg-neutral-50 p-2 rounded text-neutral-500 mt-2 text-sm ${
-            !isDescriptionExpanded && "line-clamp-2"
-          }`}
-        >
-          {ideaToken.description}
-        </p>
+      <div className="bg-neutral-100 rounded-lg p-4 flex flex-col">
+        <span>
+          <Image
+            src="/badge.svg"
+            alt="temporary nft image"
+            width={150}
+            height={150}
+          />
+        </span>
+        <span className="text-sm text-center text-neutral-500">
+          Supporters badge
+        </span>
+        {/* <span className="text-center font-bold text-xl">
+          {formatUnits(totalYield, 18)} ETH
+        </span>
+        <div className="flex flex-row space-x-[-4px] mx-auto mt-2">
+          <span className="bg-neutral-300 h-6 w-6 rounded-full block"></span>
+          <span className="bg-neutral-300 h-6 w-6 rounded-full block"></span>
+          <span className="bg-neutral-300 h-6 w-6 rounded-full block"></span>
+          <span className="bg-neutral-300 h-6 w-6 rounded-full block"></span>
+        </div> */}
       </div>
-      <div className="flex flex-col px-4 pb-4 rounded-b-2xl">
-        <div className="flex flex-row items-center justify-between border-b pb-2">
-          <span className="text-neutral-500">Supporters</span>
-          <p className="self-start font-bold">0</p>
-        </div>
-        <div className="flex flex-row items-center justify-between border-b py-2">
-          <span className="text-neutral-500">Pooled ETH</span>
-          <p className="self-start font-bold">
-            {formatUnits(totalYield, 18)} ETH
-          </p>
-        </div>
-        <div className="flex flex-row items-center justify-between pt-2">
-          <span className="text-neutral-500">Actions</span>
-          <span className="bg-violet-100 text-violet-500 text-sm px-2 py-1 rounded-full">
-            Transfer
-          </span>
-        </div>
-      </div>
-      {/* <div className="flex flex-row px-4 py-2 bg-neutral-50 rounded-b-2xl text-xs text-neutral-500">
-        Wave 1
-      </div> */}
     </div>
   );
 };
