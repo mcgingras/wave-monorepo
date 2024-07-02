@@ -12,7 +12,7 @@ export const fetchCache = "only-no-store";
 
 export default async function Home() {
   return (
-    <div className="min-h-[calc(100vh-165px)] mt-[65px] flex flex-col bg-neutral-100">
+    <div className="min-h-[calc(100vh-72px)] mt-[72px] flex flex-col bg-neutral-100">
       <div className="container mx-auto py-12">
         <h2 className="polymath-disp font-bold text-2xl text-neutral-800">
           Submissions

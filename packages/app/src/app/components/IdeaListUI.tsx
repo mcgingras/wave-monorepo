@@ -1,6 +1,7 @@
 import { IdeaToken } from "@/models/IdeaToken/types";
 import NewIdeaCard from "@/components/IdeaCard/New";
 import Link from "next/link";
+import Image from "next/image";
 
 const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
@@ -31,9 +32,16 @@ const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
           );
         })
       ) : (
-        <div className="p-4 bg-white rounded-lg mt-4">
-          <p className="text-neutral-500 text-center">
-            No ideas submitted yet.
+        <div className="mt-6">
+          <Image
+            src="/ghost_badge.svg"
+            width={100}
+            height={100}
+            alt="gray rounded looking shape"
+            className="mx-auto"
+          />
+          <p className="text-neutral-500 text-lg font-bold text-center mt-2">
+            No ideas submitted
           </p>
         </div>
       )}

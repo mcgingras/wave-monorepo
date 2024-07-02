@@ -106,10 +106,10 @@ const WavePage = async ({
   );
 
   return (
-    <div className="min-h-[calc(100vh-165px)] mt-[65px] pt-12 flex flex-col bg-neutral-100">
+    <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
       <section className="container mx-auto pb-12 grid grid-cols-8 gap-8">
         <div className="col-span-5">
-          <h2 className="polymath-disp font-bold text-2xl text-neutral-800 pt-6">
+          <h2 className="polymath-disp font-bold text-2xl text-neutral-800 pt-4">
             Submissions
           </h2>
           <Suspense fallback={<LoadingCard />}>

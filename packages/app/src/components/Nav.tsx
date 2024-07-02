@@ -23,7 +23,7 @@ const Nav = () => {
             </li>
             <li>
               <Link
-                href="/"
+                href="/delegates"
                 className="text-neutral-400 hover:text-neutral-500 font-normal transition-all"
               >
                 Delegates
@@ -31,7 +31,7 @@ const Nav = () => {
             </li>
             <li>
               <Link
-                href="/"
+                href="/scout"
                 className="text-neutral-400 hover:text-neutral-500 font-normal transition-all"
               >
                 Supporters
