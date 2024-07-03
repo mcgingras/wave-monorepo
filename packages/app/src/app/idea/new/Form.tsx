@@ -221,7 +221,7 @@ const NewIdeaForm = () => {
           <section className="p-4 flex items-center justify-end space-x-2">
             <Button
               title="Cancel"
-              type="undefined"
+              type="muted"
               onClick={() => {
                 window.history.back();
               }}
