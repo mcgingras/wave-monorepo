@@ -20,7 +20,7 @@ const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
   );
 
   return (
-    <div className="space-y-8 mt-4 first:mt-0">
+    <div className="space-y-4 mt-4 first:mt-0">
       {sortedIdeaTokens.length > 0 ? (
         sortedIdeaTokens.map((ideaToken, idx) => {
           return (

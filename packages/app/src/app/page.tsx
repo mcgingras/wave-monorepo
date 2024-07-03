@@ -18,7 +18,7 @@ export default async function Home() {
           Submissions
         </h2>
 
-        <section className="grid grid-cols-8 gap-20 mt-4">
+        <section className="grid grid-cols-8 gap-12 mt-4">
           <div className="col-span-5">
             <Suspense fallback={<div>Loading...</div>}>
               <IdeaList />
