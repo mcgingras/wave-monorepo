@@ -1,6 +1,5 @@
 import { IdeaToken } from "@/models/IdeaToken/types";
 import { Supporter } from "@/models/Supporter/types";
-import { truncateEthAddress } from "@/lib/utils";
 import { formatUnits } from "viem";
 import AvatarAddress from "@/components/ui/AvatarAddress";
 

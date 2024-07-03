@@ -10,7 +10,7 @@ const Nav = () => {
     <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
       <div className="container mx-auto">
         <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
-          <ul className="flex flex-row items-center space-x-3">
+          <ul className="flex flex-row items-center space-x-6">
             <li>
               <Link href="/" className="text-blue-500 font-bold">
                 <WaveIcon className="h-10 w-10" />

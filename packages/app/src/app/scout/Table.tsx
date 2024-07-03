@@ -6,10 +6,9 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingFn,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import AvatarAddress from "@/components/ui/AvatarAddress";
 
 import { formatUnits } from "viem";
 import { useRouter } from "next/navigation";
@@ -21,13 +20,25 @@ const Table = ({ data }: { data: any[] }) => {
       {
         accessorFn: (row) => row.owner,
         accessorKey: "Supporter",
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          return <AvatarAddress address={info.getValue() as `0x${string}`} />;
+        },
       },
       {
         accessorFn: (row) => 0,
         accessorKey: "Waves",
         header: () => <span>Waves</span>,
         cell: (info) => info.getValue(),
+      },
+      {
+        accessorFn: (row) => 0,
+        id: "Proposals",
+        header: () => <span>Proposals</span>,
+      },
+      {
+        accessorFn: (row) => 0,
+        id: "Passed proposals",
+        header: () => <span>Passed proposals</span>,
       },
       {
         accessorFn: (row) => 0,
@@ -39,11 +50,6 @@ const Table = ({ data }: { data: any[] }) => {
         id: "amount",
         header: () => <span>ETH contributed</span>,
       },
-      //   {
-      //     accessorKey: "status",
-      //     header: "Status",
-      //     sortingFn: sortStatusFn, //use our custom sorting function for this enum column
-      //   },
     ],
     []
   );
@@ -117,7 +123,7 @@ const Table = ({ data }: { data: any[] }) => {
               return (
                 <tr
                   key={row.id}
-                  className="[&:not(:last-child)]:border-b"
+                  className="[&:not(:last-child)]:border-b cursor-pointer"
                   onClick={() => {
                     router.push(`/scout/${row.original.owner}`);
                   }}

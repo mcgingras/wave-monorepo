@@ -1,4 +1,8 @@
 import Image from "next/image";
+import EnsImage from "./EnsImage";
+import EnsName from "./EnsName";
+import { Suspense } from "react";
+import SupportedIdeaList from "./SupportedIdeaList";
 
 const BadgeCard = () => {
   return (
@@ -25,40 +29,69 @@ const BadgeCard = () => {
   );
 };
 
-const ScoutPage = () => {
+const ScoutPage = ({ params }: { params: { address: `0x${string}` } }) => {
   return (
-    <div className="min-h-[calc(100vh-165px)] mt-[65px] pt-12 flex flex-col">
-      <section className="w-[600px] mx-auto pb-12">
-        <div className="flex flex-row items-center justify-between">
-          <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
-            Scout: lilfrog
-          </h1>
-        </div>
-        <div className="flex flex-col space-y-4 w-full mt-4">
-          <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
-            <span>Total ideas supported</span>
-            <span className="h-1 border-b border-dotted border-neutral-400 flex-grow"></span>
-            <span>6</span>
+    <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
+      <div className="container mx-auto pb-12">
+        <section className="grid grid-cols-3 gap-12 pt-6">
+          <div className="flex flex-row space-x-4 items-center self-start">
+            <EnsImage address={params.address} />
+            <EnsName address={params.address} />
           </div>
-          <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
-            <span>% on-chain</span>
-            <span className="h-1 border-b border-dotted border-neutral-400 flex-grow"></span>
-            <span>33%</span>
+          <div>
+            <h3 className="text-neutral-500 pb-2 border-b border-neutral-300 font-semibold">
+              Support stats
+            </h3>
+            <ul className="mt-4 space-y-2">
+              <li className="flex flex-row items-center space-x-4">
+                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
+                <p className="flex-1 text-neutral-500">Waves participated</p>
+                <span className="font-semibold">4</span>
+              </li>
+              <li className="flex flex-row items-center space-x-4">
+                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
+                <p className="flex-1 text-neutral-500">Waves participated</p>
+                <span className="font-semibold">4</span>
+              </li>
+              <li className="flex flex-row items-center space-x-4">
+                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
+                <p className="flex-1 text-neutral-500">Waves participated</p>
+                <span className="font-semibold">4</span>
+              </li>
+            </ul>
           </div>
-        </div>
-      </section>
-      <section className="bg-neutral-100 py-8 grow flex-1">
-        <div className="w-[600px] mx-auto space-y-8">
-          <div className="grid grid-cols-2 gap-4">
-            <BadgeCard />
-            <BadgeCard />
-            <BadgeCard />
-            <BadgeCard />
-            <BadgeCard />
-            <BadgeCard />
+          <div>
+            <h3 className="text-neutral-500 pb-2 border-b border-neutral-300 font-semibold">
+              Success rates
+            </h3>
+            <ul className="mt-4 space-y-2">
+              <li className="flex flex-row items-center space-x-4">
+                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
+                <p className="flex-1 text-neutral-500">Waves participated</p>
+                <span className="font-semibold">4</span>
+              </li>
+              <li className="flex flex-row items-center space-x-4">
+                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
+                <p className="flex-1 text-neutral-500">Waves participated</p>
+                <span className="font-semibold">4</span>
+              </li>
+              <li className="flex flex-row items-center space-x-4">
+                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
+                <p className="flex-1 text-neutral-500">Waves participated</p>
+                <span className="font-semibold">4</span>
+              </li>
+            </ul>
           </div>
-        </div>
-      </section>
+        </section>
+        <section className="mt-12">
+          <h3 className="polymath-disp font-bold text-lg text-neutral-800">
+            Supported ideas
+          </h3>
+          <Suspense fallback={"loading"}>
+            <SupportedIdeaList supporterAddress={params.address} />
+          </Suspense>
+        </section>
+      </div>
     </div>
   );
 };
