@@ -8,7 +8,7 @@ const Button = ({
   isSubmit = false,
 }: {
   title: string;
-  type: string;
+  type: "primary" | "secondary" | "danger" | "muted";
   onClick?: (e?: any) => void;
   fullWidth?: boolean;
   isSubmit?: boolean;

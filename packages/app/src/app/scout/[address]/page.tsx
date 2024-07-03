@@ -33,7 +33,7 @@ const ScoutPage = ({ params }: { params: { address: `0x${string}` } }) => {
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
       <div className="container mx-auto pb-12">
-        <section className="grid grid-cols-3 gap-12 pt-6">
+        <section className="grid grid-cols-3 gap-12">
           <div className="flex flex-row space-x-4 items-center self-start">
             <EnsImage address={params.address} />
             <EnsName address={params.address} />

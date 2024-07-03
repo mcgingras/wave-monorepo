@@ -41,7 +41,7 @@ const ScoutsPage = async () => {
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
       <section className="container mx-auto pb-12">
-        <h2 className="polymath-disp font-bold text-2xl text-neutral-800 pt-6">
+        <h2 className="polymath-disp font-bold text-2xl text-neutral-800">
           Supporters
         </h2>
         <Table data={supporters} />
