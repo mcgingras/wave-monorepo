@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { OnChainProvider } from "@/components/OnChainProvider";
 import Nav from "@/components/Nav";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import Drawer from "./components/D2";
 
 export const metadata: Metadata = {
   title: "The Wave Protocol",

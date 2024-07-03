@@ -41,7 +41,7 @@ const SupportedIdeaList = async ({
   supporterAddress: `0x${string}`;
 }) => {
   const supportedIdeas = (await getSupportedIdeas(supporterAddress)) as any[];
-  console.log(supportedIdeas);
+
   return (
     <div className="grid grid-cols-3 gap-4 mt-4">
       {supportedIdeas.length > 0 ? (
