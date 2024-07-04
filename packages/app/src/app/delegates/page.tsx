@@ -24,7 +24,9 @@ const DelegatePage = () => {
           <h3 className="polymath-disp font-bold text-2xl text-neutral-800">
             Delegate proxies
           </h3>
-          <ProxyTable data={[]} />
+          <Suspense fallback={"loading"}>
+            <ProxyTable />
+          </Suspense>
         </section>
         <section className="mt-12">
           <h3 className="polymath-disp font-bold text-2xl text-neutral-800">
