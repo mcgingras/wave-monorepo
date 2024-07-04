@@ -119,7 +119,6 @@ const Table = ({ data }: { data: any[] }) => {
           </thead>
           <tbody className="bg-white rounded">
             {rows.slice(0, 10).map((row, idx) => {
-              console.log(row);
               return (
                 <tr
                   key={row.id}
@@ -153,6 +152,11 @@ const Table = ({ data }: { data: any[] }) => {
             })}
           </tbody>
         </table>
+        {rows.length === 0 && (
+          <div className="text-center text-neutral-500 w-full bg-white p-4 rounded-lg">
+            No scouts found.
+          </div>
+        )}
       </div>
       <div className="mt-4 text-neutral-500  text-right">
         {table.getRowModel().rows.length.toLocaleString()} Rows
