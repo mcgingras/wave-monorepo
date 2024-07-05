@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import DelegateDrawer from "./DelegateDrawer";
 
 const Nav = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
   return (
