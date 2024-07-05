@@ -1,7 +1,3 @@
-import { client } from "@/lib/viem";
-import { configAddresses } from "@/lib/constants";
-import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
-import { IdeaToken } from "@/models/IdeaToken/types";
 import { Suspense } from "react";
 import IdeaList from "./components/IdeaList";
 import SupportersList from "../../components/SupportersList";
@@ -28,83 +24,11 @@ const LoadingCard = () => {
   );
 };
 
-const getCurrentWaveInfo = async () => {
-  const waveInfo = await client.readContract({
-    address: configAddresses.IdeaTokenHub as `0x${string}`,
-    abi: IdeaTokenHubABI,
-    functionName: "getCurrentWaveInfo",
-  });
-
-  return waveInfo;
-};
-
-const getWinningIdeasForWave = async (waveId: bigint) => {
-  const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
-  const query = `
-  query GetIdeaTokensForWave($waveId: Int!) {
-    ideaTokens(where: { waveId: $waveId }) {
-        items {
-            id
-            author
-            title
-            description
-            createdAt
-            supporters {
-                items {
-                balance
-              }
-            }
-        }
-      }
-    }
- `;
-
-  const graphqlRequest = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query,
-      variables: { waveId: parseInt(waveId.toString()) },
-    }),
-  };
-
-  const data = await fetch(url, graphqlRequest);
-  const json = await data.json();
-  return json.data.ideaTokens.items;
-};
-
 const WavePage = async ({
   params: { waveNumber },
 }: {
   params: { waveNumber: string };
 }) => {
-  const [currentWaveId, _] = await getCurrentWaveInfo();
-  const winningIdeas = (await getWinningIdeasForWave(
-    BigInt(waveNumber)
-  )) as IdeaToken[];
-
-  const ideaTokensWithPooledEth = winningIdeas.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.items.reduce(
-      (acc, supporter) => acc + parseInt(supporter.balance.toString()),
-      0
-    );
-    return {
-      ...ideaToken,
-      pooledEth,
-    };
-  });
-
-  const totalPooledEth = ideaTokensWithPooledEth.reduce(
-    (acc, ideaToken) => acc + ideaToken.pooledEth,
-    0
-  );
-
-  const sortedIdeaTokens = ideaTokensWithPooledEth.sort(
-    (a, b) => b.pooledEth - a.pooledEth
-  );
-
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
       <section className="container mx-auto pb-12 grid grid-cols-8 gap-8">
@@ -112,7 +36,13 @@ const WavePage = async ({
           <h2 className="polymath-disp font-bold text-2xl text-neutral-800 pt-4">
             Submissions
           </h2>
-          <Suspense fallback={<LoadingCard />}>
+          <Suspense
+            fallback={
+              <div className="mt-4">
+                <LoadingCard />
+              </div>
+            }
+          >
             <IdeaList waveNumber={BigInt(waveNumber)} />
           </Suspense>
         </div>
