@@ -94,21 +94,14 @@ const DelegateDrawer = ({
                               />
                             </button>
                           </div>
-                          <Button
-                            type="primary"
-                            onClick={() => {
-                              // pass
-                            }}
-                            title="Idea page"
-                          />
 
-                          <Button
+                          {/* <Button
                             type="secondary"
                             title="Support"
                             onClick={() => {
                               // pass
                             }}
-                          />
+                          /> */}
                         </div>
                         <div className="flex flex-row space-x-1">
                           {/* <Link
@@ -126,8 +119,32 @@ const DelegateDrawer = ({
                         </div>
                       </div>
                     </div>
-                    <div className="relative mt-6 flex-1">
-                      <p>blah</p>
+                    <div className="relative flex-1 p-4">
+                      <div>
+                        <h2>{delegateAddress}</h2>
+                      </div>
+                      <div className="bg-neutral-100 rounded-lg p-4 mt-4 flex flex-row justify-between">
+                        <div className="flex flex-col space-y-1">
+                          <span className="text-sm text-neutral-500">
+                            Unclaimed yield
+                          </span>
+                          <span className="font-bold text-xl">0.0001 ETH</span>
+                        </div>
+                        <div className="self-center">
+                          <Button
+                            type="primary"
+                            title="Claim"
+                            onClick={() => {
+                              // pass
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="border-b pb-2 mt-4">
+                        <h3 className="text-sm text-neutral-500 font-bold">
+                          Delegation stats
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

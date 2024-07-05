@@ -50,15 +50,14 @@ const Nav = () => {
             </li>
           </ul>
           <div className="flex flex-row items-center space-x-2">
-            <Link href="/delegates">
-              <Button
-                title="My rewards"
-                type="muted"
-                onClick={() => {
-                  setOpen(true);
-                }}
-              />
-            </Link>
+            <Button
+              title="My rewards"
+              type="muted"
+              onClick={() => {
+                setOpen(true);
+              }}
+            />
+
             <CustomConnectKit />
           </div>
         </nav>
