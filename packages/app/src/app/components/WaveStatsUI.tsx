@@ -91,7 +91,7 @@ const WaveStatsUI = ({
           )}
         </div>
       )}
-      <p className="text-center text-neutral-500 text-sm mt-2">
+      <p className="text-center text-neutral-400 text-sm mt-2">
         {remainingSeconds <= 0 ? (
           "Wave has ended"
         ) : (

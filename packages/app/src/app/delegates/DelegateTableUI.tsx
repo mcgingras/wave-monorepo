@@ -67,7 +67,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="text-left pb-4 pl-4 text-neutral-500"
+                    className="text-left pb-2 pl-4 text-neutral-500 text-sm font-normal"
                   >
                     {header.isPlaceholder ? null : (
                       <div
@@ -125,7 +125,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                           : ""
                       }
                       key={cell.id}
-                      className="data-[special=first]:first:rounded-tl-xl data-[special=first]:last:rounded-tr-xl data-[special=last]:first:rounded-bl-xl data-[special=last]:last:rounded-br-xl px-4 py-8"
+                      className="data-[special=first]:first:rounded-tl-xl data-[special=first]:last:rounded-tr-xl data-[special=last]:first:rounded-bl-xl data-[special=last]:last:rounded-br-xl px-4 py-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -140,7 +140,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
         </tbody>
       </table>
       {rows.length === 0 && (
-        <div className="text-center text-neutral-500 w-full bg-white p-4 rounded-lg">
+        <div className="text-center text-neutral-400 text-sm w-full bg-white p-4 rounded-lg">
           No delegates found.
         </div>
       )}

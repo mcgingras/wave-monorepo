@@ -57,7 +57,9 @@ const NewIdeaPage = async () => {
               <NewIdeaForm />
             )}
           </div>
-          <div className="col-span-3 bg-white rounded-xl p-4 self-start"></div>
+          <div className="col-span-3 text-neutral-700 text-sm bg-white rounded-xl p-4 self-start">
+            Tips for a successful idea maybe
+          </div>
         </div>
       </div>
     </section>

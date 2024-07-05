@@ -1,13 +1,15 @@
 "use client";
-import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+
 import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 // redirect to prev page
 const BackButton = () => {
   const router = useRouter();
   return (
-    <ArrowLeftIcon
-      className="h-8 w-8 text-neutral-500 bg-white rounded-full p-1 cursor-pointer transition-all hover:shadow-[0_0_0_2px_rgba(255,255,255,1)]"
+    <Button
+      title="Back"
+      type="secondary"
       onClick={() => {
         router.back();
       }}

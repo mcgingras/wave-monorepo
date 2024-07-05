@@ -61,7 +61,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="text-left pb-4 pl-4 text-neutral-500"
+                    className="text-left pb-2 pl-4 text-neutral-500 text-sm font-normal"
                   >
                     {header.isPlaceholder ? null : (
                       <div
@@ -111,14 +111,25 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                   return (
                     <td
                       data-special={
-                        idx === 0
+                        rows.length === 1
+                          ? "both"
+                          : idx === 0
                           ? "first"
                           : idx === Math.min(rows.length - 1, 9)
                           ? "last"
                           : ""
                       }
                       key={cell.id}
-                      className="data-[special=first]:first:rounded-tl-xl data-[special=first]:last:rounded-tr-xl data-[special=last]:first:rounded-bl-xl data-[special=last]:last:rounded-br-xl px-4 py-8"
+                      className="
+                      data-[special=first]:first:rounded-tl-xl
+                      data-[special=first]:last:rounded-tr-xl
+                      data-[special=last]:first:rounded-bl-xl
+                      data-[special=last]:last:rounded-br-xl
+                      data-[special=both]:rounded-tl-xl
+                      data-[special=both]:rounded-tr-xl
+                      data-[special=both]:rounded-bl-xl
+                      data-[special=both]:rounded-br-xl
+                      px-4 py-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -133,7 +144,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
         </tbody>
       </table>
       {rows.length === 0 && (
-        <div className="text-center text-neutral-500 w-full bg-white p-4 rounded-lg">
+        <div className="text-center text-neutral-400 w-full bg-white p-4 text-sm rounded-lg">
           No proxies found.
         </div>
       )}

@@ -1,16 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import WaveIcon from "@/components/icons/Wave";
 import CustomConnectKit from "./CustomConnectKit";
 import { usePathname } from "next/navigation";
+import DelegateDrawer from "./DelegateDrawer";
 
 const Nav = () => {
+  const [open, setOpen] = useState(true);
   const pathname = usePathname();
 
   return (
     <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
+      <DelegateDrawer delegateAddress={"0xabc"} open={open} setOpen={setOpen} />
       <div className="container mx-auto">
         <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
           <ul className="flex flex-row items-center space-x-6">
@@ -27,10 +31,8 @@ const Nav = () => {
             <li>
               <Link
                 href="/delegates"
-                className={` hover:text-neutral-500 transition-all ${
-                  pathname === "/delegates"
-                    ? "text-neutral-500"
-                    : "text-neutral-400"
+                className={` text-neutral-400 border-0 hover:border-b transition-all ${
+                  pathname === "/delegates" ? "border-b pb-1" : "pb-1"
                 }`}
               >
                 Delegates
@@ -39,10 +41,8 @@ const Nav = () => {
             <li>
               <Link
                 href="/scout"
-                className={`hover:text-neutral-500 transition-all ${
-                  pathname.includes("scout")
-                    ? "text-neutral-500"
-                    : "text-neutral-400"
+                className={`text-neutral-400 border-0 hover:border-b transition-all ${
+                  pathname.includes("scout") ? "border-b pb-1" : "pb-1"
                 }`}
               >
                 Supporters
@@ -51,7 +51,13 @@ const Nav = () => {
           </ul>
           <div className="flex flex-row items-center space-x-2">
             <Link href="/delegates">
-              <Button title="My rewards" type="muted" />
+              <Button
+                title="My rewards"
+                type="muted"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              />
             </Link>
             <CustomConnectKit />
           </div>

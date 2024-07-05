@@ -70,7 +70,7 @@ const Table = ({ data }: { data: any[] }) => {
 
   return (
     <>
-      <div className="p-2 block max-w-full overflow-x-scroll overflow-y-hidden">
+      <div className="mt-4 block max-w-full overflow-x-scroll overflow-y-hidden">
         <div className="h-2" />
         <table className="w-full">
           <thead>
@@ -81,7 +81,7 @@ const Table = ({ data }: { data: any[] }) => {
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="text-left pb-4 pl-4 text-neutral-500"
+                      className="text-left pb-2 pl-4 text-neutral-500 text-sm font-normal"
                     >
                       {header.isPlaceholder ? null : (
                         <div
@@ -138,7 +138,7 @@ const Table = ({ data }: { data: any[] }) => {
                             : ""
                         }
                         key={cell.id}
-                        className="data-[special=first]:first:rounded-tl-xl data-[special=first]:last:rounded-tr-xl data-[special=last]:first:rounded-bl-xl data-[special=last]:last:rounded-br-xl px-4 py-8"
+                        className="data-[special=first]:first:rounded-tl-xl data-[special=first]:last:rounded-tr-xl data-[special=last]:first:rounded-bl-xl data-[special=last]:last:rounded-br-xl px-4 py-4 text-neutral-700"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -157,9 +157,6 @@ const Table = ({ data }: { data: any[] }) => {
             No scouts found.
           </div>
         )}
-      </div>
-      <div className="mt-4 text-neutral-500  text-right">
-        {table.getRowModel().rows.length.toLocaleString()} Rows
       </div>
     </>
   );
