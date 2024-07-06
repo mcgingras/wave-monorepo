@@ -18,8 +18,10 @@ import toast from "react-hot-toast";
 import { parseEventLogs } from "viem";
 import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
 import ParsedAction from "./ParsedAction";
+import Markdown from "react-markdown";
 
 const NewIdeaForm = () => {
+  const [showMarkdown, setShowMarkdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address } = useAccount();
   const methods = useForm<{
@@ -148,23 +150,37 @@ const NewIdeaForm = () => {
                 <div className="col-span-full">
                   <label
                     htmlFor="description"
-                    className="block text-sm font-medium leading-6 text-neutral-800"
+                    className="block text-sm font-medium leading-6 text-neutral-800 self-end"
                   >
                     Description
                   </label>
+
                   <div className="mt-1">
-                    <textarea
-                      id="description"
-                      rows={3}
-                      className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
-                      defaultValue={""}
-                      {...register("description")}
-                    />
+                    {showMarkdown ? (
+                      <div className="bg-neutral-100 p-2 rounded-md prose">
+                        <Markdown>{methods.watch("description")}</Markdown>
+                      </div>
+                    ) : (
+                      <textarea
+                        id="description"
+                        rows={3}
+                        className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
+                        defaultValue={""}
+                        {...register("description")}
+                      />
+                    )}
                   </div>
                   <p className="mt-1 text-sm leading-6 text-neutral-400">
                     The details of your idea. This will be submitted as the body
-                    of the proposal.
+                    of the proposal. This will be saved as markdown.
                   </p>
+                  <div className="flex justify-end mt-2">
+                    <Button
+                      title={showMarkdown ? "Hide markdown" : "Show markdown"}
+                      onClick={() => setShowMarkdown(!showMarkdown)}
+                      type="secondary"
+                    />
+                  </div>
                 </div>
               </div>
               <div className="sm:col-span-3 mt-6">
