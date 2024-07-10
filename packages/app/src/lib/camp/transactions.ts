@@ -10,8 +10,8 @@ import {
   AbiFunction,
   AbiParameter,
 } from "viem";
-import { sortBy } from "../lib/utils/array";
-import { formatSolidityArgument } from "../lib/utils/ethereum";
+import { sortBy } from "./utils/array";
+import { formatSolidityArgument } from "./utils/ethereum";
 import { resolveAddress, resolveIdentifier } from "./contracts";
 import {
   RawTransactions,

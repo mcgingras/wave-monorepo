@@ -109,7 +109,7 @@ const AddActionForm = ({
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col">
-          <label className="text-sm font-bold text-neutral-500 mb-1 ml-1">
+          <label className="block text-sm font-medium leading-6 text-neutral-800">
             Action Type
           </label>
           {/*
@@ -117,7 +117,10 @@ const AddActionForm = ({
             - set default values for the given type
             - clear out the old values for the other types
          */}
-          <select className="border p-1" {...register("type")}>
+          <select
+            className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
+            {...register("type")}
+          >
             {actionTypes.map((actionType) => (
               <option key={actionType} value={actionType}>
                 {actionType}
@@ -127,9 +130,6 @@ const AddActionForm = ({
           <div className="mt-4">
             {renderFormForType(type || actionTypes[0])}
           </div>
-          <button className="mt-4 bg-blue-100 text-blue-500 rounded px-2 py-1 cursor-pointer">
-            Submit
-          </button>
         </div>
         <div className="mt-4 flex justify-end space-x-2">
           <Button onClick={closeModal} type="secondary" title="Cancel" />

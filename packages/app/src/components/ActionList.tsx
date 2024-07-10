@@ -260,7 +260,7 @@ const UnparsedFunctionCallCodeBlock = ({
 }: {
   transaction: any;
 }) => (
-  <pre className="bg-neutral-100 rounded p-2 text-sm text-neutral-500">
+  <pre className="bg-neutral-100 rounded p-2 text-xs text-neutral-500">
     <span>target</span>: <span>{t.target}</span>
     {t.signature != null && (
       <>
@@ -405,12 +405,11 @@ const TransactionCodeBlock = ({ transaction }: { transaction: any }) => {
           value={t.value}
         />
       );
-      return null;
     }
   }
 };
 
-const ActionListItem = ({ action }: { action: Action }) => {
+export const ActionListItem = ({ action }: { action: Action }) => {
   const [expanded, setExpanded] = useState(false);
   const chainId = 1;
   const actionTransactions = resolveActionTransactions(action, { chainId });
@@ -453,13 +452,17 @@ const ActionListItem = ({ action }: { action: Action }) => {
   return (
     <>
       <div>
-        <ActionSummary action={action} />
+        - <ActionSummary action={action} />
       </div>
-      <button onClick={() => setExpanded(!expanded)}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        type="button"
+        className="py-0.5 px-1 rounded text-xs bg-neutral-100 text-neutral-500 mt-1"
+      >
         {expanded ? "Hide" : "Show"} Transaction
       </button>
       {expanded && (
-        <ul className="space-y-4">
+        <ul className="space-y-4 mt-2">
           {actionTransactions.map((t, i) => {
             const comment = renderTransactionComment(t);
             return (
@@ -479,16 +482,13 @@ const ActionListItem = ({ action }: { action: Action }) => {
 
 const ActionList = ({ actions }: { actions: Action[] }) => {
   return (
-    <>
-      <h1>Actions</h1>
-      <ul>
-        {actions.map((a, i) => (
-          <li key={`${a.type}-${i}`}>
-            <ActionListItem action={a} />
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul className="space-y-4">
+      {actions.map((a, i) => (
+        <li key={`${a.type}-${i}`}>
+          <ActionListItem action={a} />
+        </li>
+      ))}
+    </ul>
   );
 };
 

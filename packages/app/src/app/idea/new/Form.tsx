@@ -9,20 +9,27 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import { useForm, FormProvider, useFieldArray } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { configAddresses } from "@/lib/constants";
 import { parseEther } from "viem";
-import { Action } from "@/models/IdeaToken/types";
+import { Action } from "@/lib/camp/types";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { parseEventLogs } from "viem";
 import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
 import ParsedAction from "./ParsedAction";
 import Markdown from "react-markdown";
+import ActionList from "@/components/ActionList";
 
 const NewIdeaForm = () => {
   const [showMarkdown, setShowMarkdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actions, setActions] = useState<Action[]>([]);
+
+  const addAction = (action: Action) => {
+    setActions((actions) => [...actions, action]);
+  };
+
   const { address } = useAccount();
   const methods = useForm<{
     title: string;
@@ -40,24 +47,9 @@ const NewIdeaForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = methods;
 
-  const {
-    fields: actions,
-    append,
-    remove,
-  } = useFieldArray({
-    control,
-    name: "actions",
-  });
-
-  const {
-    data: hash,
-    writeContractAsync,
-    isPending,
-    error,
-  } = useWriteContract();
+  const { data: hash, writeContractAsync } = useWriteContract();
   const { data: transactionData, isLoading: isConfirming } =
     useWaitForTransactionReceipt({
       hash,
@@ -109,15 +101,13 @@ const NewIdeaForm = () => {
     });
   };
 
-  console.log(actions);
-
   return (
     <div className="w-full mx-auto">
       <FormProvider {...methods}>
         <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
           <AddActionForm
-            onSubmitCallback={(data: any) => {
-              append(data);
+            addAction={(action) => {
+              addAction(action);
               setIsModalOpen(false);
             }}
             closeModal={() => setIsModalOpen(false)}
@@ -190,38 +180,14 @@ const NewIdeaForm = () => {
                 >
                   Actions
                 </label>
-                <div className="space-y-1 flex flex-col bg-neutral-100 p-2 text-sm rounded-md">
-                  {actions.length === 0 && (
+                <div className="space-y-1 flex flex-col text-sm rounded-md">
+                  {actions.length === 0 ? (
                     <div className="text-center text-neutral-500">
                       No actions added yet.
                     </div>
+                  ) : (
+                    <ActionList actions={actions} />
                   )}
-                  {actions.map((action, index) => (
-                    <>
-                      {/* <ParsedAction action={action} /> */}
-                      {index} - {action.target}
-                      <input
-                        key={`action-target-${index}`}
-                        {...register(`actions.${index}.target`)}
-                        type="hidden"
-                      />
-                      <input
-                        key={`action-value-${index}`}
-                        {...register(`actions.${index}.value`)}
-                        type="hidden"
-                      />
-                      <input
-                        key={`action-signature-${index}`}
-                        {...register(`actions.${index}.signature`)}
-                        type="hidden"
-                      />
-                      <input
-                        key={`action-calldata-${index}`}
-                        {...register(`actions.${index}.calldata`)}
-                        type="hidden"
-                      />
-                    </>
-                  ))}
                 </div>
                 <div className="flex justify-end mt-4">
                   <Button
