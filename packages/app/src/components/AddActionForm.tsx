@@ -1,159 +1,142 @@
-import { useForm, FormProvider } from "react-hook-form";
-import { useAccount } from "wagmi";
-import { encodeFunctionData } from "viem";
-import TransferActionForm from "./TransferActionForm";
-import StreamActionForm from "./StreamActionForm";
-import CustomActionForm from "./CustomActionForm";
+import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
+import { parseEther, decodeAbiParameters, encodeAbiParameters } from "viem";
+import OneTimePaymentForm from "./OneTimePaymentForm";
+import StreamingPaymentForm from "./StreamingPaymentForm";
+import CustomTransactionForm from "./CustomTransactionForm";
+import fetchPredictedStreamContractAddress from "@/hooks/useFetchPredictedStreamContractAddress";
 import Button from "./ui/Button";
 
-const createSignature = (functionAbiItem: {
-  name: string;
-  inputs: { type: string }[];
-}) =>
+const createSignature = (functionAbiItem: any) =>
   `${functionAbiItem.name}(${
-    functionAbiItem.inputs?.map((i) => i.type).join(",") ?? ""
+    functionAbiItem.inputs?.map((i: any) => i.type).join(",") ?? ""
   })`;
+
+/**
+ * Action types are the top level actions you can select from the UI.
+ * Selecting an action will render a form that will help build a transaction.
+ */
+const actionTypes = [
+  "one-time-payment",
+  "streaming-payment",
+  //   "payer-top-up", (not selectable)
+  "custom-transaction",
+];
 
 const AddActionForm = ({
   closeModal,
-  onSubmitCallback,
+  addAction,
 }: {
-  onSubmitCallback: (data: any) => void;
   closeModal: () => void;
+  addAction: (action: any) => void;
 }) => {
-  const methods = useForm<{ amount: number; receiver: string; type: string }>({
-    defaultValues: {
-      type: "transfer",
-      amount: 0,
-      receiver: "",
-    },
-  });
+  const methods = useForm<any>();
+  const { register, handleSubmit, watch } = methods;
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    let action;
+    if (data.type === "one-time-payment") {
+      action = {
+        type: data.type,
+        currency: data.currency,
+        amount: data.amount,
+        target: data.receiverAddress,
+      };
+    } else if (data.type === "streaming-payment") {
+      const start = new Date(data.startDate);
+      const end = new Date(data.endDate);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = methods;
-
-  const { address } = useAccount();
-  const actionType = watch("type");
-
-  const renderFormForActionType = (type: string) => {
-    if (type === "transfer") {
-      return <TransferActionForm />;
-    } else if (type === "stream") {
-      return <StreamActionForm />;
-    } else if (type === "custom") {
-      return <CustomActionForm />;
-    }
-    return null;
-  };
-
-  const processTransactionData = (data: any) => {
-    const { type } = data;
-    switch (type) {
-      case "transfer":
-        const { amount, receiver, currency } = data;
-        if (currency === "ETH") {
-          return {
-            target: receiver,
-            value: amount,
-            signature: "",
-            calldata: "",
-          };
-        } else {
-          return {
-            target: receiver,
-            value: 0,
-            signature: "transfer(address,uint256)",
-            calldata: `0x${receiver.slice(2)}`,
-          };
-        }
-      case "stream":
-        // const fetchPredictedStreamContractAddress =
-        //   useFetchPredictedStreamContractAddress();
-
-        // const canPredictStreamContractAddress =
-        //   isAddress(state.receiverAddress) &&
-        //   state.amount > 0 &&
-        //   state.dateRange?.start != null &&
-        //   state.dateRange?.end != null &&
-        //   state.dateRange.start < state.dateRange.end;
-
-        return {
-          target: data.receiver,
-          value: data.amount,
-          signature: "",
-          calldata: "",
-        };
-      case "custom":
-        const { abi: serializedABI, function: functionName, args } = data;
-        const abi = JSON.parse(serializedABI);
-        const signature = createSignature(abi);
-        const calldata = encodeFunctionData({
-          abi: [abi],
-          functionName,
-          args: args.slice(0, abi.inputs.length),
+      const predictedStreamContractAddress =
+        await fetchPredictedStreamContractAddress({
+          receiverAddress: data.receiverAddress,
+          currency: data.currency,
+          amount: data.amount,
+          startDate: start,
+          endDate: end,
         });
-        return {
-          target: data.target,
-          value: 0,
-          signature: signature,
-          calldata: calldata,
-        };
-      default:
-        return {
-          target: data.receiver,
-          value: data.amount,
-          signature: "",
-          calldata: "",
-        };
+
+      action = {
+        type: data.type,
+        currency: data.currency,
+        amount: data.amount,
+        target: data.receiverAddress,
+        startTimestamp: start.getTime(),
+        endTimestamp: end.getTime(),
+        predictedStreamContractAddress: predictedStreamContractAddress,
+      };
+    } else if (data.type === "custom-transaction") {
+      const parsedAbi = JSON.parse(data.abi);
+      const selectedSignatureAbiItem = parsedAbi?.find(
+        (i: any) => createSignature(i) === data.signature
+      );
+      const { inputs: inputTypes } = selectedSignatureAbiItem;
+      action = {
+        type: "custom-transaction",
+        contractCallTarget: data.target,
+        contractCallSignature: data.signature,
+        contractCallArguments: JSON.parse(
+          JSON.stringify(
+            // Encoding and decoding gives us valid defaults for empty
+            // arguments, e.g. empty numbers turn into zeroes
+            decodeAbiParameters(
+              inputTypes,
+              encodeAbiParameters(inputTypes, data.args)
+            ),
+            (_, value) => (typeof value === "bigint" ? value.toString() : value)
+          )
+        ),
+        contractCallValue: data.ethValue
+          ? parseEther(data.ethValue).toString()
+          : 0,
+      };
     }
+
+    addAction(action);
   };
 
-  const onSubmit = (data: any) => {
-    const transactionData = processTransactionData(data);
-    onSubmitCallback({
-      target: transactionData.target,
-      value: transactionData.value,
-      signature: transactionData.signature,
-      calldata: transactionData.calldata,
-    });
+  const type = watch("type");
+
+  const renderFormForType = (type: string) => {
+    switch (type) {
+      case "one-time-payment":
+        return <OneTimePaymentForm />;
+      case "streaming-payment":
+        return <StreamingPaymentForm />;
+      case "custom-transaction":
+        return <CustomTransactionForm />;
+    }
   };
 
   return (
-    <div>
-      <h2 className="font-bold text-center">Add action</h2>
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="col-span-full mt-4">
-            <label
-              htmlFor="type"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Type
-            </label>
-            <div className="mt-1">
-              <select
-                {...register("type")}
-                className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
-              >
-                <option value="transfer">Transfer</option>
-                {/* <option value="stream">Stream</option>
-                <option value="custom">Custom</option> */}
-              </select>
-            </div>
-
-            {renderFormForActionType(actionType)}
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col">
+          <label className="text-sm font-bold text-neutral-500 mb-1 ml-1">
+            Action Type
+          </label>
+          {/*
+            onChange --
+            - set default values for the given type
+            - clear out the old values for the other types
+         */}
+          <select className="border p-1" {...register("type")}>
+            {actionTypes.map((actionType) => (
+              <option key={actionType} value={actionType}>
+                {actionType}
+              </option>
+            ))}
+          </select>
+          <div className="mt-4">
+            {renderFormForType(type || actionTypes[0])}
           </div>
-          <div className="mt-4 flex justify-end space-x-2">
-            <Button onClick={closeModal} type="secondary" title="Cancel" />
-            <Button isSubmit={true} type="primary" title="Add" />
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+          <button className="mt-4 bg-blue-100 text-blue-500 rounded px-2 py-1 cursor-pointer">
+            Submit
+          </button>
+        </div>
+        <div className="mt-4 flex justify-end space-x-2">
+          <Button onClick={closeModal} type="secondary" title="Cancel" />
+          <Button isSubmit={true} type="primary" title="Add" />
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 
