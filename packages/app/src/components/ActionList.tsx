@@ -201,7 +201,7 @@ export const FunctionCallCodeBlock = ({
   value: bigint;
   inputTypes: any[];
 }) => (
-  <pre className="bg-neutral-100 rounded p-2 text-sm text-neutral-500">
+  <pre className="bg-neutral-100 rounded p-2 text-xs text-neutral-500">
     {truncateAddress(target)}.<span className="text-blue-500">{name}</span>(
     {inputs.length > 0 && (
       <>

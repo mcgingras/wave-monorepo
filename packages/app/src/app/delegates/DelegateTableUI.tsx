@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const DelegateTableUI = ({ data }: { data: any[] }) => {
   const columns = useMemo<ColumnDef<any>[]>(
@@ -73,7 +74,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                       <div
                         className={
                           header.column.getCanSort()
-                            ? "cursor-pointer select-none"
+                            ? "cursor-pointer select-none flex flex-row items-center"
                             : ""
                         }
                         onClick={header.column.getToggleSortingHandler()}
@@ -92,9 +93,11 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                           header.getContext()
                         )}
                         {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as string] ?? null}
+                          asc: <ChevronUpIcon className="w-4 h-4" />,
+                          desc: <ChevronDownIcon className="w-4 h-4" />,
+                        }[header.column.getIsSorted() as string] ?? (
+                          <span className="w-4 h-4" />
+                        )}
                       </div>
                     )}
                   </th>
@@ -117,7 +120,8 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td
-                      data-special={
+                      data-rows={rows.length === 1 ? "single" : ""}
+                      data-row={
                         idx === 0
                           ? "first"
                           : idx === Math.min(rows.length - 1, 9)
@@ -125,7 +129,14 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                           : ""
                       }
                       key={cell.id}
-                      className="data-[special=first]:first:rounded-tl-xl data-[special=first]:last:rounded-tr-xl data-[special=last]:first:rounded-bl-xl data-[special=last]:last:rounded-br-xl px-4 py-4"
+                      className="
+                      data-[row=first]:first:rounded-tl-xl
+                      data-[row=first]:last:rounded-tr-xl
+                      data-[row=last]:first:rounded-bl-xl
+                      data-[row=last]:last:rounded-br-xl
+                      data-[rows=single]:first:rounded-bl-xl
+                      data-[rows=single]:last:rounded-br-xl
+                      px-4 py-4"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

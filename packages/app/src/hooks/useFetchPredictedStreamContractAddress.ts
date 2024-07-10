@@ -1,6 +1,6 @@
 import { parseUnits } from "viem";
 import { resolveIdentifier as getContractWithIdentifier } from "@/lib/camp/contracts";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 
 const decimalsByCurrency = {
   eth: 18,
@@ -36,6 +36,7 @@ const fetchPredictedStreamContractAddress = ({
   endDate: Date;
 }) => {
   const chainId = 1;
+  const client = getClient(chainId);
 
   const executorContract = getContractWithIdentifier(chainId, "executor");
   const streamFactoryContract = getContractWithIdentifier(

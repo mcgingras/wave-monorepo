@@ -11,11 +11,15 @@ const SupporterAvatar = ({
   address: `0x${string}`;
   size?: "sm" | "base";
 }) => {
-  const ensName = useEnsName({ address, chainId: 1 });
+  console.log("address", address);
+  const { data: ensName } = useEnsName({ address, chainId: 1 });
   const ensAvatar = useEnsAvatar({
-    name: ensName.data || "",
+    name: ensName || "",
     chainId: 1,
   });
+
+  console.log("ensName", ensName);
+  console.log("ensAvatar", ensAvatar);
 
   if (ensAvatar.data) {
     return (

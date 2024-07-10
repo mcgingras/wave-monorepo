@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const ProxyTableUI = ({ data }: { data: any[] }) => {
   const columns = useMemo<ColumnDef<any>[]>(
@@ -40,11 +41,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
     data,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(), //client-side sorting
-    // onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
-    // state: {
-    //   sorting,
-    // },
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const rows = table.getRowModel().rows;
@@ -67,7 +64,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                       <div
                         className={
                           header.column.getCanSort()
-                            ? "cursor-pointer select-none"
+                            ? "cursor-pointer select-none flex flex-row items-center"
                             : ""
                         }
                         onClick={header.column.getToggleSortingHandler()}
@@ -86,9 +83,13 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                           header.getContext()
                         )}
                         {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as string] ?? null}
+                          asc: <ChevronUpIcon className="w-4 h-4 mt-[1px]" />,
+                          desc: (
+                            <ChevronDownIcon className="w-4 h-4 mt-[1px]" />
+                          ),
+                        }[header.column.getIsSorted() as string] ?? (
+                          <span className="w-4 h-4" />
+                        )}
                       </div>
                     )}
                   </th>
@@ -110,10 +111,9 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td
-                      data-special={
-                        rows.length === 1
-                          ? "both"
-                          : idx === 0
+                      data-rows={rows.length === 1 ? "single" : ""}
+                      data-row={
+                        idx === 0
                           ? "first"
                           : idx === Math.min(rows.length - 1, 9)
                           ? "last"
@@ -121,14 +121,12 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                       }
                       key={cell.id}
                       className="
-                      data-[special=first]:first:rounded-tl-xl
-                      data-[special=first]:last:rounded-tr-xl
-                      data-[special=last]:first:rounded-bl-xl
-                      data-[special=last]:last:rounded-br-xl
-                      data-[special=both]:rounded-tl-xl
-                      data-[special=both]:rounded-tr-xl
-                      data-[special=both]:rounded-bl-xl
-                      data-[special=both]:rounded-br-xl
+                      data-[row=first]:first:rounded-tl-xl
+                      data-[row=first]:last:rounded-tr-xl
+                      data-[row=last]:first:rounded-bl-xl
+                      data-[row=last]:last:rounded-br-xl
+                      data-[rows=single]:first:rounded-bl-xl
+                      data-[rows=single]:last:rounded-br-xl
                       px-4 py-4"
                     >
                       {flexRender(

@@ -180,15 +180,17 @@ const NewIdeaForm = () => {
                 >
                   Actions
                 </label>
-                <div className="space-y-1 flex flex-col text-sm rounded-md">
-                  {actions.length === 0 ? (
-                    <div className="text-center text-neutral-500">
-                      No actions added yet.
-                    </div>
-                  ) : (
+
+                {actions.length === 0 ? (
+                  <div className="text-center text-neutral-500 border rounded text-sm py-4">
+                    No actions added yet.
+                  </div>
+                ) : (
+                  <div className="space-y-1 flex flex-col text-sm rounded-md w-3/4 text-neutral-500">
                     <ActionList actions={actions} />
-                  )}
-                </div>
+                  </div>
+                )}
+
                 <div className="flex justify-end mt-4">
                   <Button
                     title="Add Action"
