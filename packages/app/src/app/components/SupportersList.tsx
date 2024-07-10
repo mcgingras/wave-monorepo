@@ -52,7 +52,7 @@ const SupportersList = async () => {
   return (
     <div className="mt-8 p-4 rounded-lg">
       <div className="border-b pb-2 border-neutral-200">
-        <h3 className="polymath-disp font-bold tracking-wide text-neutral-500 text-sm">
+        <h3 className="text-neutral-500 text-sm font-normal">
           {supporters.length} Supporter{supporters.length !== 1 ? "s" : ""}
         </h3>
       </div>
@@ -82,7 +82,7 @@ const SupportersList = async () => {
             );
           })
         ) : (
-          <div className="mt-4">
+          <div className="mt-4 text-neutral-500 text-sm font-normal">
             <p className="text-neutral-500 text-center">No supporters.</p>
           </div>
         )}

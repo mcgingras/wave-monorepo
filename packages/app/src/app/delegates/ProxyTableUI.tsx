@@ -47,7 +47,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
   const rows = table.getRowModel().rows;
 
   return (
-    <div className="p-2 block max-w-full overflow-x-scroll overflow-y-hidden">
+    <div className="mt-4 block max-w-full overflow-x-scroll overflow-y-hidden">
       <div className="h-2" />
       <table className="w-full">
         <thead>

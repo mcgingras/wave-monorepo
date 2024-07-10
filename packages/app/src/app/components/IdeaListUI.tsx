@@ -40,7 +40,7 @@ const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
             alt="gray rounded looking shape"
             className="mx-auto"
           />
-          <p className="text-neutral-500 text-center mt-2">
+          <p className="text-neutral-500 text-center mt-2 text-sm font-normal">
             No ideas submitted
           </p>
         </div>
