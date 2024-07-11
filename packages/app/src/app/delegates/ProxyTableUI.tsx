@@ -9,28 +9,63 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
+import NounAvatarGroup from "@/components/NounAvatarGroup";
 
 const ProxyTableUI = ({ data }: { data: any[] }) => {
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        accessorFn: (row) => row.owner,
+        accessorFn: (row) => row.id,
         accessorKey: "Address",
         cell: (info) => {
-          return <></>;
+          return (
+            <span className="text-neutral-500">
+              {info.getValue() as React.ReactNode}
+            </span>
+          );
         },
       },
       {
-        accessorFn: (row) => 0,
-        accessorKey: "Total nouns",
-        header: () => <span>Total nouns</span>,
-        cell: (info) => info.getValue(),
+        accessorFn: (row) => row.votingPower,
+        accessorKey: "Nouns under delegation",
+        header: () => <span>Nouns under delegation</span>,
+        cell: (info) => {
+          const original = info.row.original;
+          const ids = original.delegators.items.map((item: any) => item.id);
+          return (
+            <div className="flex flex-row items-center space-x-2">
+              <span>{ids.length}</span>
+              <NounAvatarGroup
+                ids={ids}
+                // max={3}
+                // size="sm"
+              />
+            </div>
+          );
+        },
       },
       {
-        accessorFn: (row) => 0,
+        accessorFn: (row) => row.votingPower,
         accessorKey: "Status",
         header: () => <span>Status</span>,
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          console.log(info);
+          const votingPower = info.getValue();
+          const isActive = parseInt(String(votingPower)) > 2;
+          if (isActive) {
+            return (
+              <span className="bg-green-100 text-green-500 rounded-full px-2 py-1 text-sm">
+                Active
+              </span>
+            );
+          } else {
+            return (
+              <span className="bg-neutral-100 text-neutral-500 rounded-full px-2 py-1 text-sm">
+                Inactive
+              </span>
+            );
+          }
+        },
       },
     ],
     []
