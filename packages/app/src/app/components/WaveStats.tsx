@@ -6,6 +6,10 @@ import WaveStatsUI from "./WaveStatsUI";
 
 const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "only-no-store";
+
 const getIdeas = async () => {
   const query = `
     query GetIdeaTokens {

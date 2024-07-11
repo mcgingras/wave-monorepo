@@ -5,6 +5,10 @@ import ProxyTable from "./ProxyTable";
 import DelegateTable from "./DelegateTable";
 import Hero from "./Hero";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "only-no-store";
+
 const DelegatePage = () => {
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">

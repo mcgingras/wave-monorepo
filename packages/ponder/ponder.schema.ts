@@ -11,19 +11,29 @@ export default createSchema((p) => ({
     description: p.string(),
     actions: p.string(), // JSON.stringified array of actions
     createdAt: p.bigint(),
-    supporters: p.many("Supporter.tokenId"),
+    supporters: p.many("Support.tokenId"),
     waveId: p.int().references("Wave.id").optional(),
     nounsProposalId: p.bigint().optional(),
     totalFunding: p.bigint().optional(),
     isArchived: p.boolean(),
   }),
-  Supporter: p.createTable({
+  // --------------------------------
+  // Support -- represents the abstract concept of an instance of supporting an idea
+  // --------------------------------
+  Support: p.createTable({
     id: p.string(), // string.concat(<address>, "-", <tokenId>)
-    owner: p.string(),
     tokenId: p.bigint().references("IdeaToken.id"),
     balance: p.bigint(),
     isCreator: p.boolean(),
     reason: p.string().optional(),
+    supporterId: p.string().references("Supporter.id"),
+  }),
+  // --------------------------------
+  // Supporter -- the actual supporter of ideas
+  // --------------------------------
+  Supporter: p.createTable({
+    id: p.string(), // address
+    supportedIdeas: p.many("Support.supporterId"),
   }),
   DelegateProxy: p.createTable({
     id: p.string(), // delegate address string
