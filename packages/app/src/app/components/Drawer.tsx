@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { ArrowDownIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import SupportButton from "@/components/IdeaCard/SupportButton";
 
 export function useClickAway(cb: any) {
   const ref = useRef(null);
@@ -108,13 +109,7 @@ const Drawer = ({
                             title="Idea page"
                           />
 
-                          <Button
-                            type="secondary"
-                            title="Support"
-                            onClick={() => {
-                              // pass
-                            }}
-                          />
+                          <SupportButton ideaId={ideaToken.id} />
                         </div>
                         <div className="flex flex-row space-x-1">
                           <Link

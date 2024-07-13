@@ -2,20 +2,20 @@ export const NounsTokenABI = [
   {
     type: "constructor",
     inputs: [
-      { name: "_noundersDAO", type: "address", internalType: "address" },
-      { name: "_minter", type: "address", internalType: "address" },
+      { name: "noundersDAO", type: "address", internalType: "address" },
+      { name: "minter", type: "address", internalType: "address" },
       {
-        name: "_descriptor",
+        name: "descriptor",
         type: "address",
         internalType: "contract INounsDescriptorMinimal",
       },
       {
-        name: "_seeder",
+        name: "seeder",
         type: "address",
         internalType: "contract INounsSeeder",
       },
       {
-        name: "_proxyRegistry",
+        name: "proxyRegistry",
         type: "address",
         internalType: "contract IProxyRegistry",
       },
@@ -78,6 +78,13 @@ export const NounsTokenABI = [
     name: "contractURI",
     inputs: [],
     outputs: [{ name: "", type: "string", internalType: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "currentNounId",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
   },
   {
@@ -220,6 +227,37 @@ export const NounsTokenABI = [
   },
   {
     type: "function",
+    name: "mintMany",
+    inputs: [
+      { name: "to", type: "address", internalType: "address" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "mintSeed",
+    inputs: [
+      { name: "to", type: "address", internalType: "address" },
+      { name: "background", type: "uint48", internalType: "uint48" },
+      { name: "body", type: "uint48", internalType: "uint48" },
+      { name: "accessory", type: "uint48", internalType: "uint48" },
+      { name: "head", type: "uint48", internalType: "uint48" },
+      { name: "glasses", type: "uint48", internalType: "uint48" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "mintTo",
+    inputs: [{ name: "to", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "minter",
     inputs: [],
     outputs: [{ name: "", type: "address", internalType: "address" }],
@@ -272,7 +310,11 @@ export const NounsTokenABI = [
     name: "proxyRegistry",
     inputs: [],
     outputs: [
-      { name: "", type: "address", internalType: "contract IProxyRegistry" },
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IProxyRegistry",
+      },
     ],
     stateMutability: "view",
   },
@@ -342,7 +384,11 @@ export const NounsTokenABI = [
     type: "function",
     name: "setContractURIHash",
     inputs: [
-      { name: "newContractURIHash", type: "string", internalType: "string" },
+      {
+        name: "newContractURIHash",
+        type: "string",
+        internalType: "string",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -500,7 +546,12 @@ export const NounsTokenABI = [
         indexed: true,
         internalType: "address",
       },
-      { name: "approved", type: "bool", indexed: false, internalType: "bool" },
+      {
+        name: "approved",
+        type: "bool",
+        indexed: false,
+        internalType: "bool",
+      },
     ],
     anonymous: false,
   },
@@ -554,7 +605,12 @@ export const NounsTokenABI = [
     ],
     anonymous: false,
   },
-  { type: "event", name: "DescriptorLocked", inputs: [], anonymous: false },
+  {
+    type: "event",
+    name: "DescriptorLocked",
+    inputs: [],
+    anonymous: false,
+  },
   {
     type: "event",
     name: "DescriptorUpdated",
@@ -671,8 +727,18 @@ export const NounsTokenABI = [
     type: "event",
     name: "Transfer",
     inputs: [
-      { name: "from", type: "address", indexed: true, internalType: "address" },
-      { name: "to", type: "address", indexed: true, internalType: "address" },
+      {
+        name: "from",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "to",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
       {
         name: "tokenId",
         type: "uint256",

@@ -43,7 +43,7 @@ const getSupporters = async () => {
   }
 };
 
-const SupportersList = async () => {
+const SupportsList = async ({ ideaId }: { ideaId: bigint }) => {
   const ideaTokens = (await getSupporters()) as IdeaToken[];
   const supporters = ideaTokens.reduce((acc, ideaToken) => {
     return acc.concat(ideaToken.supports.items);
@@ -91,4 +91,4 @@ const SupportersList = async () => {
   );
 };
 
-export default SupportersList;
+export default SupportsList;

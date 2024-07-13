@@ -54,7 +54,7 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
     chainId: 1,
   });
 
-  const totalYield = ideaToken.supporters.items.reduce(
+  const totalYield = ideaToken.supports.items.reduce(
     (acc, supporter) => acc + BigInt(parseInt(supporter.balance.toString())),
     BigInt(0)
   );

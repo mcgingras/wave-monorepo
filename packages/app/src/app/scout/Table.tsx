@@ -12,43 +12,64 @@ import AvatarAddress from "@/components/ui/AvatarAddress";
 
 import { formatUnits } from "viem";
 import { useRouter } from "next/navigation";
+import { Supporter } from "@/models/Supporter/types";
 
-const Table = ({ data }: { data: any[] }) => {
+const Table = ({ data }: { data: Supporter[] }) => {
   const router = useRouter();
-  const columns = useMemo<ColumnDef<any>[]>(
+  const columns = useMemo<ColumnDef<Supporter>[]>(
     () => [
       {
-        accessorFn: (row) => row.owner,
+        accessorFn: (row) => row.id,
         accessorKey: "Supporter",
         cell: (info) => {
           return <AvatarAddress address={info.getValue() as `0x${string}`} />;
         },
       },
       {
-        accessorFn: (row) => 0,
-        accessorKey: "Waves",
-        header: () => <span>Waves</span>,
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => 0,
-        id: "Proposals",
-        header: () => <span>Proposals</span>,
-      },
-      {
-        accessorFn: (row) => 0,
-        id: "Passed proposals",
-        header: () => <span>Passed proposals</span>,
-      },
-      {
-        accessorFn: (row) => 0,
         id: "Ideas",
         header: () => <span>Ideas supported</span>,
+        cell: (info) => {
+          const original = info.row.original;
+          const supportedIdeas = original.supportedIdeas.items;
+          return <span>{supportedIdeas.length}</span>;
+        },
       },
       {
-        accessorFn: (row) => formatUnits(row.balance, 18),
+        id: "Proposals",
+        header: () => <span>Proposals</span>,
+        cell: (info) => {
+          const original = info.row.original;
+          const supportedIdeas = original.supportedIdeas.items;
+          const proposals = supportedIdeas.filter(
+            (item) => item.token.nounsProposalId !== null
+          );
+          return <span>{proposals.length}</span>;
+        },
+      },
+      {
+        id: "Passed proposals",
+        header: () => <span>Passed proposals</span>,
+        cell: (info) => {
+          const original = info.row.original;
+          const supportedIdeas = original.supportedIdeas.items;
+          const proposals = supportedIdeas.filter(
+            (item) => item.token.nounsProposalStatus === "passed"
+          );
+          return <span>{proposals.length}</span>;
+        },
+      },
+      {
         id: "amount",
         header: () => <span>ETH contributed</span>,
+        cell: (info) => {
+          const original = info.row.original;
+          const supportedIdeas = original.supportedIdeas.items;
+          const amount = supportedIdeas.reduce(
+            (acc, item) => acc + item.balance,
+            BigInt(0)
+          );
+          return <span>{formatUnits(amount, 18)} ETH</span>;
+        },
       },
     ],
     []
@@ -124,7 +145,7 @@ const Table = ({ data }: { data: any[] }) => {
                   key={row.id}
                   className="[&:not(:last-child)]:border-b cursor-pointer"
                   onClick={() => {
-                    router.push(`/scout/${row.original.owner}`);
+                    router.push(`/scout/${row.original.id}`);
                   }}
                 >
                   {row.getVisibleCells().map((cell) => {

@@ -5,6 +5,7 @@ import publicClient from "../lib/viem";
 import { IdeaTokenHubABI } from "../abi/IdeaTokenHub";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
+  console.log("this is created bro");
   const { IdeaToken } = context.db;
   const [title, description] = event.args.idea.description.split(`\n\n`);
 
@@ -26,8 +27,19 @@ ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
 });
 
 ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
-  const { Support } = context.db;
+  const { Support, Supporter } = context.db;
   const concatAddrWithId = `${event.args.sponsor}-${event.args.ideaId}`;
+
+  const existingSupporter = await Supporter.findUnique({
+    id: event.args.sponsor,
+  });
+
+  if (!existingSupporter) {
+    await Supporter.create({
+      id: event.args.sponsor,
+    });
+  }
+
   const createObj = {
     supporterId: event.args.sponsor,
     tokenId: event.args.ideaId,
@@ -108,6 +120,7 @@ ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
 
 ponder.on("IdeaTokenHub:WaveFinalized", async ({ event, context }) => {
   const { Wave, IdeaToken } = context.db;
+  console.log("wave finalized");
 
   const [currentWaveId, _] = await publicClient.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,

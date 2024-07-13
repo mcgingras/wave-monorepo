@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Button from "../ui/Button";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useReadContract,
+} from "wagmi";
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { parseEther } from "viem";
@@ -37,6 +41,16 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
       setIsModalOpen(false);
     }
   }, [isConfirmed, ideaId]);
+
+  const { data: badgeSVG, error: blah } = useReadContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "uri",
+    args: [BigInt(ideaId.toString())],
+  });
+
+  console.log("bb", blah);
+  console.log("bbb", badgeSVG);
 
   return (
     <>

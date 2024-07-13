@@ -1,12 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { configAddresses } from "@/lib/constants";
 import { NounsTokenABI } from "@/abi/NounsToken";
 import Button from "@/components/ui/Button";
 import { useReadContract, useAccount } from "wagmi";
 import NounAvatar from "@/components/NounAvatar";
+import DelegateProxies from "./DelegateProxies";
+import Upper from "./Upper";
+import Modal from "@/components/ui/Modal";
+import CreateDelegateProxyForm from "@/components/CreateDelegateProxyForm";
+import UndelegateProxyForm from "@/components/UndelegateProxyForm";
 
 const Hero = () => {
+  const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false);
+  const [isUnDelegateModalOpen, setIsUnDelegateModalOpen] = useState(false);
   const { address } = useAccount();
   const { data: nounsBalance, error } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
@@ -17,6 +25,23 @@ const Hero = () => {
 
   return (
     <section>
+      <Modal
+        isOpen={isDelegateModalOpen}
+        setIsOpen={() => setIsDelegateModalOpen(false)}
+      >
+        <CreateDelegateProxyForm
+          closeModal={() => setIsDelegateModalOpen(false)}
+        />
+      </Modal>
+      <Modal
+        isOpen={isUnDelegateModalOpen}
+        setIsOpen={() => setIsUnDelegateModalOpen(false)}
+      >
+        <UndelegateProxyForm
+          closeModal={() => setIsUnDelegateModalOpen(false)}
+        />
+      </Modal>
+
       <div className="flex flex-col items-center max-w-[600px] mx-auto">
         <NounAvatar id={4} className="h-16 w-16 rounded-full" />
         {!!nounsBalance && (
@@ -43,7 +68,7 @@ const Hero = () => {
           title="Get started"
           type="primary"
           onClick={() => {
-            console.log("clicked");
+            setIsDelegateModalOpen(true);
           }}
         />
       </div>

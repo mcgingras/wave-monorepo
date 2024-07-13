@@ -21,8 +21,8 @@ const WaveStatsUI = ({
   remainingTime: Date;
   remainingSeconds: number;
 }) => {
-  const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.items.reduce(
+  const ideaTokensWithPooledEth = ideaTokens?.map((ideaToken) => {
+    const pooledEth = ideaToken.supports.items.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
       0
     );
@@ -32,7 +32,7 @@ const WaveStatsUI = ({
     };
   });
 
-  const totalPooledEth = ideaTokensWithPooledEth.reduce(
+  const totalPooledEth = ideaTokensWithPooledEth?.reduce(
     (acc, ideaToken) => acc + ideaToken.pooledEth,
     0
   );

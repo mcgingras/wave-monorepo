@@ -11,7 +11,7 @@ export default createSchema((p) => ({
     description: p.string(),
     actions: p.string(), // JSON.stringified array of actions
     createdAt: p.bigint(),
-    supporters: p.many("Support.tokenId"),
+    supports: p.many("Support.tokenId"),
     waveId: p.int().references("Wave.id").optional(),
     nounsProposalId: p.bigint().optional(),
     totalFunding: p.bigint().optional(),
@@ -23,6 +23,7 @@ export default createSchema((p) => ({
   Support: p.createTable({
     id: p.string(), // string.concat(<address>, "-", <tokenId>)
     tokenId: p.bigint().references("IdeaToken.id"),
+    token: p.one("tokenId"),
     balance: p.bigint(),
     isCreator: p.boolean(),
     reason: p.string().optional(),

@@ -16,7 +16,7 @@ const getIdeas = async () => {
       ideaTokens(where: { isArchived: false }) {
         items {
            id
-           supporters {
+           supports {
                 items {
                     balance
                 }

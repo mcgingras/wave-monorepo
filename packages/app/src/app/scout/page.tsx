@@ -12,10 +12,17 @@ const getSupporters = async () => {
   const query = `
             query GetSupporters {
                     supporters {
-                        items {
-                            reason
-                            balance
-                            owner
+                         items {
+                            id
+                            supportedIdeas {
+                                items {
+                                token {
+                                    nounsProposalId
+                                }
+                                reason
+                                balance
+                                }
+                            }
                         }
                     }
                 }
@@ -34,8 +41,6 @@ const getSupporters = async () => {
 
   try {
     const data = await fetch(url, graphqlRequest);
-    console.log(url);
-    console.log(data);
     const json = await data.json();
     return json.data.supporters.items;
   } catch (e) {

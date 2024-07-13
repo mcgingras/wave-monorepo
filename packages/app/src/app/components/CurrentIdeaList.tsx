@@ -12,7 +12,7 @@ const getIdeas = async () => {
               title
               description
               createdAt
-              supporters {
+              supports {
                   items {
                   balance
                   }

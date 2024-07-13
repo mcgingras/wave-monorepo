@@ -17,7 +17,7 @@ const getWinningIdeasForWave = async (waveId: bigint) => {
                 title
                 description
                 createdAt
-                supporters {
+                supports {
                     items {
                     balance
                   }

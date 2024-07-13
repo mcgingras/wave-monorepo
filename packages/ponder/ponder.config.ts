@@ -7,12 +7,12 @@ import { NounsTokenABI } from "./abi/NounsToken";
 
 // for baseSepolia
 // will need to sub out when we go to mainnet
-const startBlock = 11000000;
+const startBlock = 12000000;
 
 export const configAddresses = {
-  Wave: "0x55C7c4ADEd315FF29a336cAE5671a4B0A69ae348",
-  IdeaTokenHub: "0x54a488958D1f7e90aC1a9C7eE5a450d1E2170789",
-  NounsTokenHarness: "0xa28Fb072290d6d731cA08EFb8f79bF4dB1D13e67",
+  Wave: "0x443f1F80fBB72Fa40cA70A93a0139852b0563961",
+  IdeaTokenHub: "0xAFFED3815a60aACeACDA3aE53425f053eD6Efc4d",
+  NounsTokenHarness: "0xE8b46D16107e1d562B62B5aA8d4bF9A60e6c51b4",
 };
 
 export default createConfig({
@@ -34,7 +34,7 @@ export default createConfig({
       network: "baseSepolia",
       abi: IdeaTokenHubABI,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
-      startBlock: 11045538,
+      startBlock: startBlock,
     },
     Delegate: {
       network: "baseSepolia",

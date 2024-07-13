@@ -21,6 +21,9 @@ export type IdeaToken = {
   description: string;
   createdAt: BigInt;
   isArchived: boolean;
-  supporters: { items: Supporter[] };
+  totalFunding?: BigInt;
+  supports: { items: Supporter[] };
   actions: string; // JSON.stringified array of ActionObject
+  nounsProposalId?: BigInt;
+  nounsProposalStatus?: string;
 };

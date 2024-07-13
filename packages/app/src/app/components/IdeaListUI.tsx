@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.items.reduce(
+    const pooledEth = ideaToken.supports.items.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
       0
     );

@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import DelegateProxies from "./DelegateProxies";
-import Upper from "./Upper";
 import ProxyTable from "./ProxyTable";
 import DelegateTable from "./DelegateTable";
 import Hero from "./Hero";
