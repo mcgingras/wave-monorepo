@@ -11,15 +11,11 @@ const SupporterAvatar = ({
   address: `0x${string}`;
   size?: "sm" | "base";
 }) => {
-  console.log("address", address);
   const { data: ensName } = useEnsName({ address, chainId: 1 });
   const ensAvatar = useEnsAvatar({
     name: ensName || "",
     chainId: 1,
   });
-
-  console.log("ensName", ensName);
-  console.log("ensAvatar", ensAvatar);
 
   if (ensAvatar.data) {
     return (
@@ -55,7 +51,11 @@ const AvatarAddress = ({
   return (
     <span className={`flex flex-row items-center space-x-2 ${className}`}>
       <SupporterAvatar address={address} size={size} />
-      <span className={`${size === "base" ? "text-base" : "text-sm"}`}>
+      <span
+        className={`${
+          size === "base" ? "text-base" : "text-sm"
+        } text-neutral-700`}
+      >
         {ensName.data || truncateEthAddress(address)}
       </span>
     </span>

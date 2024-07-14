@@ -49,9 +49,6 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
     args: [BigInt(ideaId.toString())],
   });
 
-  console.log("bb", blah);
-  console.log("bbb", badgeSVG);
-
   return (
     <>
       <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>

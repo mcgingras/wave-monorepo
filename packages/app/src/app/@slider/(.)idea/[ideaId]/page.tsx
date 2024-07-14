@@ -1,5 +1,9 @@
 import Drawer from "@/app/components/Drawer";
 import { IdeaToken } from "@/models/IdeaToken/types";
+import { parse, buildActions } from "@/lib/camp/transactions";
+import ActionListItems from "./ActionListItems";
+import { Suspense } from "react";
+import SupportListUI from "@/app/components/SupportListUI";
 
 const getIdea = async (id: bigint) => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
@@ -15,13 +19,14 @@ const getIdea = async (id: bigint) => {
               isArchived
               supports {
                   items {
+                  tokenId
                   reason
                   balance
-                  owner
+                  supporterId
                   }
               }
           }
-          }
+        }
      `;
 
   const graphqlRequest = {
@@ -48,7 +53,11 @@ const getIdea = async (id: bigint) => {
 const Page = async ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaId } = params;
   const ideaToken = (await getIdea(ideaId)) as IdeaToken;
-  console.log("it", ideaToken);
+  const supports = ideaToken.supports.items;
+  const actions = JSON.parse(ideaToken.actions);
+  const parsedActions = parse(actions, { chainId: 1 });
+  // @ts-ignore
+  const builtActions = buildActions(parsedActions, { chainId: 1 });
 
   return (
     <Drawer ideaToken={ideaToken}>
@@ -57,15 +66,24 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
           {ideaToken.title}
         </h1>
         <div className="border-b mt-4">
-          <h3 className="text-sm text-neutral-500 font-bold">2 actions</h3>
+          <h3 className="text-sm text-neutral-500">
+            {actions.targets.length} action{actions.targets.length !== 1 && "s"}
+          </h3>
+        </div>
+        <div className="py-2">
+          <ActionListItems builtActions={builtActions} />
         </div>
         <div className="border-b mt-4">
-          <h3 className="text-sm text-neutral-500 font-bold">Description</h3>
+          <h3 className="text-sm text-neutral-500">Description</h3>
         </div>
-        <p className="mt-2 text-sm text-gray-500">{ideaToken.description}</p>
-        <div className="border-b mt-4">
-          <h3 className="text-sm text-neutral-500 font-bold">12 supporters</h3>
-        </div>
+        <p className="mt-2 text-sm text-neutral-700">{ideaToken.description}</p>
+
+        <SupportListUI
+          supports={supports}
+          options={{
+            withIdeaId: false,
+          }}
+        />
       </section>
     </Drawer>
   );

@@ -378,7 +378,6 @@ const ActionSummary = ({ action }: { action: Action }) => {
 const TransactionCodeBlock = ({ transaction }: { transaction: any }) => {
   //   const t = useEnhancedParsedTransaction(transaction);
   const t = transaction;
-  console.log("transaction", t);
 
   switch (t.type) {
     case "transfer":
@@ -451,15 +450,15 @@ export const ActionListItem = ({ action }: { action: Action }) => {
 
   return (
     <>
-      <div>
-        - <ActionSummary action={action} />
+      <div className="leading-5 text-neutral-700 text-sm">
+        <ActionSummary action={action} />
       </div>
       <button
         onClick={() => setExpanded(!expanded)}
         type="button"
-        className="py-0.5 px-1 rounded text-xs bg-neutral-100 text-neutral-500 mt-1"
+        className="py-0.5 px-1 rounded text-xs bg-neutral-100 text-neutral-500 mt-2"
       >
-        {expanded ? "Hide" : "Show"} Transaction
+        {expanded ? "Hide" : "Show"} transaction
       </button>
       {expanded && (
         <ul className="space-y-4 mt-2">
