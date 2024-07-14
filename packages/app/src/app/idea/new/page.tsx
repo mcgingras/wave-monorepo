@@ -37,7 +37,7 @@ const NewIdeaPage = async () => {
   const isActive = true;
 
   return (
-    <section className="bg-neutral-100 min-h-[calc(100vh-165px)] mt-[65px]">
+    <section className="bg-neutral-100 min-h-[calc(100vh-72px)] mt-[72px]">
       <div className="container mx-auto py-12">
         <div className="flex flex-row space-x-4 items-center pb-6">
           <BackButton />
@@ -45,8 +45,8 @@ const NewIdeaPage = async () => {
             New idea
           </h2>
         </div>
-        <div className=" grid grid-cols-8 gap-8">
-          <div className="col-span-5">
+        <div className=" grid grid-cols-12 gap-6">
+          <div className="col-span-7">
             {!isActive ? (
               <div className="w-[600px] mx-auto pt-12 pb-12">
                 <div className="bg-white border border-neutral-200 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 mt-4">
@@ -56,9 +56,6 @@ const NewIdeaPage = async () => {
             ) : (
               <NewIdeaForm />
             )}
-          </div>
-          <div className="col-span-3 text-neutral-700 text-sm bg-white rounded-xl p-4 self-start">
-            Tips for a successful idea maybe
           </div>
         </div>
       </div>

@@ -17,9 +17,9 @@ import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { parseEventLogs } from "viem";
 import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
-import ParsedAction from "./ParsedAction";
 import Markdown from "react-markdown";
 import ActionList from "@/components/ActionList";
+import { resolveAction as resolveActionTransactions } from "@/lib/camp/transactions";
 
 const NewIdeaForm = () => {
   const [showMarkdown, setShowMarkdown] = useState(false);
@@ -39,7 +39,6 @@ const NewIdeaForm = () => {
     defaultValues: {
       title: "",
       description: "",
-      actions: [],
     },
   });
 
@@ -82,19 +81,25 @@ const NewIdeaForm = () => {
       return;
     }
 
+    const transactions = actions.flatMap((a) =>
+      resolveActionTransactions(a, { chainId: 1 })
+    );
+
     const id = await writeContractAsync({
       chainId: 84532,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       functionName: "createIdea",
+      // TODO: replace with default minimum value
       value: parseEther(".001"),
-      // TODO: replace with real args
       args: [
         {
-          targets: [address] as `0x${string}`[],
-          values: [parseEther(".00001")],
-          signatures: [""],
-          calldatas: ["0x"] as `0x${string}`[],
+          targets: transactions.map((t) => t.target) as `0x${string}`[],
+          values: transactions.map((t) => t.value) as bigint[],
+          signatures: transactions.map((t) => t.signature || "") as string[],
+          calldatas: transactions.map(
+            (t) => t.calldata || "0x"
+          ) as `0x${string}`[],
         },
         `${data.title}\n\n${data.description}`,
       ],

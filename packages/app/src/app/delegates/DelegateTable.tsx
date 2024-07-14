@@ -4,9 +4,10 @@ const getDelegates = async () => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
   const query = `
         query GetDelegates{
-            delegates {
+            delegators {
                 items {
                 id
+                delegateProxyId
                }
               }
             }
@@ -26,7 +27,7 @@ const getDelegates = async () => {
   try {
     const data = await fetch(url, graphqlRequest);
     const json = await data.json();
-    return json.data.delegates.items;
+    return json.data.delegators.items;
   } catch (e) {
     console.log("error", e);
     return [];

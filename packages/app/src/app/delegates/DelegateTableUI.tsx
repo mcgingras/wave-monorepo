@@ -14,30 +14,34 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        accessorFn: (row) => row.owner,
+        accessorFn: (row) => row.id,
         accessorKey: "Delegation from",
         cell: (info) => {
-          return <></>;
+          return (
+            <span className="text-neutral-500">
+              {info.getValue() as React.ReactNode}
+            </span>
+          );
         },
       },
       {
-        accessorFn: (row) => 0,
+        accessorFn: (row) => row.delegateProxyId,
         accessorKey: "Proxy",
         header: () => <span>Proxy</span>,
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          return (
+            <span className="text-neutral-500">
+              {info.getValue() as React.ReactNode}
+            </span>
+          );
+        },
       },
-      {
-        accessorFn: (row) => 0,
-        accessorKey: "Yield earned",
-        header: () => <span>Yield earned</span>,
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => 0,
-        accessorKey: "Registration",
-        header: () => <span>Registration</span>,
-        cell: (info) => info.getValue(),
-      },
+      //   {
+      //     accessorFn: (row) => 0,
+      //     accessorKey: "Yield earned",
+      //     header: () => <span>Yield earned</span>,
+      //     cell: (info) => info.getValue(),
+      //   },
     ],
     []
   );

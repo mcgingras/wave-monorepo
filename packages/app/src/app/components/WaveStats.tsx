@@ -3,6 +3,7 @@ import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { IdeaToken } from "@/models/IdeaToken/types";
 import WaveStatsUI from "./WaveStatsUI";
+import { start } from "repl";
 
 const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
 
@@ -56,15 +57,17 @@ const getCurrentWaveInfo = async () => {
   return waveInfo;
 };
 
-const getRemainingTime = async (startingBlock: number) => {
+const getRemainingTime = async (startBlock: number) => {
   const blockNumber = await client.getBlockNumber();
-  const timeElapsed = parseInt(blockNumber?.toString()) - startingBlock;
+  const timeElapsed = parseInt(blockNumber?.toString()) - startBlock;
   const remainingBlocks = WAVELENGTH - timeElapsed;
   const remainingSeconds = remainingBlocks * 2;
   const now = new Date();
   const remainingTime = new Date(
     now.getTime() + (remainingSeconds > 0 ? remainingSeconds : 0) * 1000
   );
+
+  console.log(remainingTime, remainingSeconds);
 
   return { remainingTime, remainingSeconds };
 };
@@ -74,7 +77,7 @@ const WaveStats = async () => {
   const [currentWaveId, waveInfo] = await getCurrentWaveInfo();
   const currentWave = Number(currentWaveId);
   const { remainingTime, remainingSeconds } = await getRemainingTime(
-    waveInfo.endBlock
+    waveInfo.startBlock
   );
 
   return (

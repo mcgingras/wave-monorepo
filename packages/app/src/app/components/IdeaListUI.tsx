@@ -1,5 +1,6 @@
 import { IdeaToken } from "@/models/IdeaToken/types";
 import NewIdeaCard from "@/components/IdeaCard/New";
+import FullIdeaCard from "@/components/IdeaCard/Full";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -26,7 +27,8 @@ const IdeaListUI = ({ ideaTokens }: { ideaTokens: IdeaToken[] }) => {
           return (
             <div key={`idea-${idx}`}>
               <Link href={`/idea/${ideaToken.id}`} scroll={false}>
-                <NewIdeaCard ideaToken={ideaToken} />
+                {/* <NewIdeaCard ideaToken={ideaToken} /> */}
+                <FullIdeaCard ideaToken={ideaToken} />
               </Link>
             </div>
           );

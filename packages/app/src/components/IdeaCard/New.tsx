@@ -63,15 +63,17 @@ const NewIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
     <div className="bg-white rounded-2xl flex flex-row transition-all group p-4 space-x-8">
       <div className="flex-1">
         <div className="flex flex-col">
-          <div>
+          <div className="flex flex-row items-center space-x-2">
             <span className="text-neutral-500">{Number(ideaToken.id)}</span>
+            <span>-</span>
+            <div className="text-base polymath-text text-neutral-500">
+              {ensName.data || truncateEthAddress(ideaToken.author)}
+            </div>
           </div>
           <h2 className="text-xl polymath-disp font-bold tracking-wide mt-4">
             {ideaToken.title}
           </h2>
-          <div className="text-base polymath-text text-neutral-500 mt-4">
-            By: {ensName.data || truncateEthAddress(ideaToken.author)}
-          </div>
+
           <div className="flex flex-row space-x-2 items-center mt-4">
             <span className="text-neutral-500">Actions:</span>
             <span className="bg-blue-50 text-blue-500 text-sm px-4 py-1 rounded-full">

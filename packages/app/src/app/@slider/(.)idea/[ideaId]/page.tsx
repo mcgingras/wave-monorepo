@@ -13,7 +13,7 @@ const getIdea = async (id: bigint) => {
               createdAt
               actions
               isArchived
-              supporters {
+              supports {
                   items {
                   reason
                   balance
@@ -48,6 +48,7 @@ const getIdea = async (id: bigint) => {
 const Page = async ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaId } = params;
   const ideaToken = (await getIdea(ideaId)) as IdeaToken;
+  console.log("it", ideaToken);
 
   return (
     <Drawer ideaToken={ideaToken}>

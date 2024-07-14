@@ -7,6 +7,7 @@ import { IdeaToken } from "@/models/IdeaToken/types";
 import { StaticCountdown } from "@/components/ui/Counter";
 import { formatUnits } from "viem";
 import FinalizeWaveButton from "@/components/FinalizeWaveCard";
+import Button from "@/components/ui/Button";
 
 const WaveStatsUI = ({
   ideaTokens,
@@ -23,7 +24,7 @@ const WaveStatsUI = ({
 }) => {
   const ideaTokensWithPooledEth = ideaTokens?.map((ideaToken) => {
     const pooledEth = ideaToken.supports.items.reduce(
-      (acc, supporter) => acc + parseInt(supporter.balance.toString()),
+      (acc, support) => acc + parseInt(support.balance.toString()),
       0
     );
     return {
@@ -87,7 +88,9 @@ const WaveStatsUI = ({
           {remainingSeconds <= 0 ? (
             <FinalizeWaveButton />
           ) : (
-            <Link href="/new">Add new idea</Link>
+            <a href="/idea/new">
+              <Button type="primary" title="Submit idea" fullWidth />
+            </a>
           )}
         </div>
       )}
