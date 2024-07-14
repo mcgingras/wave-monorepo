@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import IdeaList from "./components/CurrentIdeaList";
-import SupportersList from "./components/SupportersList";
+import SupportersList from "./components/SupportList";
 import WaveStats from "./components/WaveStats";
 
 const LoadingCard = () => {

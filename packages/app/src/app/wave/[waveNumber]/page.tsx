@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import IdeaList from "./components/IdeaList";
-import SupportersList from "../../components/SupportersList";
+import SupportList from "./components/SupportList";
 import WaveStats from "./components/WaveStats";
 
 // clears out next-js cache for viem calls
@@ -51,7 +51,7 @@ const WavePage = async ({
             <WaveStats waveNumber={BigInt(waveNumber)} />
           </Suspense>
           <Suspense fallback={<LoadingCard />}>
-            <SupportersList />
+            <SupportList waveNumber={waveNumber} />
           </Suspense>
         </div>
       </section>
