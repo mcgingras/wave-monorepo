@@ -1,14 +1,20 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect, useEffect } from "react";
+import { useRef, useLayoutEffect, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
-import { IdeaToken } from "@/models/IdeaToken/types";
 import Button from "@/components/ui/Button";
-import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { ArrowDownIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
+
+function hasParentWithId(element: HTMLElement | null, idName: string) {
+  while (element) {
+    if (element.id === idName) {
+      return true;
+    }
+    element = element.parentElement;
+  }
+  return false;
+}
 
 export function useClickAway(cb: any) {
   const ref = useRef(null);
@@ -25,7 +31,7 @@ export function useClickAway(cb: any) {
       if (
         element &&
         !element.contains(e.target) &&
-        element.target.id !== "avoid-clickaway"
+        !hasParentWithId(e.target, "avoid-clickaway")
       ) {
         refCb.current(e);
       }

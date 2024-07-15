@@ -1,5 +1,5 @@
 import { IdeaToken } from "@/models/IdeaToken/types";
-import { Supporter } from "@/models/Supporter/types";
+import { Support } from "@/models/Supporter/types";
 import { formatUnits } from "viem";
 import AvatarAddress from "@/components/ui/AvatarAddress";
 
@@ -9,10 +9,10 @@ const getSupporters = async () => {
   query GetSupporters {
     ideaTokens(where: {isArchived: false}) {
       items {
-        supporters {
+        supports {
           items {
             balance
-            owner
+            supporterId
             reason
             tokenId
           }
@@ -45,26 +45,26 @@ const getSupporters = async () => {
 
 const SupportsList = async ({ ideaId }: { ideaId: bigint }) => {
   const ideaTokens = (await getSupporters()) as IdeaToken[];
-  const supporters = ideaTokens.reduce((acc, ideaToken) => {
+  const supports = ideaTokens.reduce((acc, ideaToken) => {
     return acc.concat(ideaToken.supports.items);
-  }, [] as Supporter[]);
+  }, [] as Support[]);
 
   return (
     <div className="mt-8 p-4 rounded-lg">
       <div className="border-b pb-2 border-neutral-200">
         <h3 className="text-neutral-500 text-sm font-normal">
-          {supporters.length} Supporter{supporters.length !== 1 ? "s" : ""}
+          {supports.length} Supporter{supports.length !== 1 ? "s" : ""}
         </h3>
       </div>
       <div className="mt-4 space-y-4">
-        {supporters.length > 0 ? (
-          supporters.map((supporter, idx) => {
+        {supports.length > 0 ? (
+          supports.map((supporter, idx) => {
             return (
               <div key={`supporters-${idx}`}>
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row items-center space-x-2">
                     <AvatarAddress
-                      address={supporter.owner as `0x${string}`}
+                      address={supporter.supporterId as `0x${string}`}
                       size="sm"
                     />
                     <span className="text-neutral-500 bg-neutral-200 rounded-full px-3 py-0.5 text-xs">
