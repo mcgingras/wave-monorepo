@@ -7,14 +7,34 @@ import WaveIcon from "@/components/icons/Wave";
 import CustomConnectKit from "./CustomConnectKit";
 import { usePathname } from "next/navigation";
 import DelegateDrawer from "./DelegateDrawer";
+import { useAccount, useReadContract } from "wagmi";
+import { configAddresses } from "@/lib/constants";
+import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
+import { formatUnits } from "viem";
 
 const Nav = () => {
   const [open, setOpen] = useState(false);
+  const { address } = useAccount();
   const pathname = usePathname();
+
+  const { data: claimableYield } = useReadContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "getClaimableYield",
+    args: [address as `0x${string}`],
+  });
+
+  const parsedYield = claimableYield ? formatUnits(claimableYield, 18) : 0;
 
   return (
     <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
-      <DelegateDrawer delegateAddress={"0xabc"} open={open} setOpen={setOpen} />
+      {address && (
+        <DelegateDrawer
+          delegateAddress={address}
+          open={open}
+          setOpen={setOpen}
+        />
+      )}
       <div className="container mx-auto">
         <nav className="px-4 md:px-0 py-4 flex flex-row justify-between items-center text-neutral-600 min-h-[56px]">
           <ul className="flex flex-row items-center space-x-6">
@@ -50,13 +70,15 @@ const Nav = () => {
             </li>
           </ul>
           <div className="flex flex-row items-center space-x-2">
-            <Button
-              title="My rewards"
-              type="muted"
-              onClick={() => {
-                setOpen(true);
-              }}
-            />
+            {address && (
+              <Button
+                title={`My rewards ${parsedYield} ETH`}
+                type="muted"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              />
+            )}
 
             <CustomConnectKit />
           </div>

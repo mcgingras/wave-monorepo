@@ -5,6 +5,10 @@ import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
+import { useReadContract } from "wagmi";
+import { configAddresses } from "@/lib/constants";
+import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
+import { formatUnits } from "viem";
 
 function hasParentWithId(element: HTMLElement | null, idName: string) {
   while (element) {
@@ -65,6 +69,15 @@ const DelegateDrawer = ({
   const ref = useClickAway(() => {
     onClose();
   });
+
+  const { data: claimableYield } = useReadContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "getClaimableYield",
+    args: [delegateAddress],
+  });
+
+  const parsedYield = claimableYield ? formatUnits(claimableYield, 18) : 0;
 
   return (
     <AnimatePresence>
@@ -139,7 +152,9 @@ const DelegateDrawer = ({
                           <span className="text-sm text-neutral-500">
                             Unclaimed yield
                           </span>
-                          <span className="font-bold text-xl">0.0001 ETH</span>
+                          <span className="font-bold text-xl">
+                            {parsedYield} ETH
+                          </span>
                         </div>
                         <div className="self-center">
                           <Button
@@ -151,11 +166,14 @@ const DelegateDrawer = ({
                           />
                         </div>
                       </div>
-                      <div className="border-b pb-2 mt-4">
-                        <h3 className="text-sm text-neutral-500 font-bold">
+                      <div className="border-b pb-2 mt-8">
+                        <h3 className="text-sm text-neutral-500">
                           Delegation stats
                         </h3>
                       </div>
+                      <p className="text-sm text-neutral-500 mt-2">
+                        Coming soon...
+                      </p>
                     </div>
                   </div>
                 </motion.div>
