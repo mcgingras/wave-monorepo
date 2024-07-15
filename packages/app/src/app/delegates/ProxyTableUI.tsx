@@ -10,9 +10,10 @@ import {
 } from "@tanstack/react-table";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import NounAvatarGroup from "@/components/NounAvatarGroup";
+import { DelegateProxy } from "@/models/DelegateProxy/types";
 
-const ProxyTableUI = ({ data }: { data: any[] }) => {
-  const columns = useMemo<ColumnDef<any>[]>(
+const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
+  const columns = useMemo<ColumnDef<DelegateProxy>[]>(
     () => [
       {
         accessorFn: (row) => row.id,
@@ -31,13 +32,12 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
         header: () => <span>Nouns under delegation</span>,
         cell: (info) => {
           const original = info.row.original;
-          const ids = original.delegators.items.map((item: any) => item.id);
+          const ids = original.nouns.items.map((item: any) => item.id);
           return (
             <div className="flex flex-row items-center space-x-2">
-              <span className="text-neutral-700">{ids.length}</span>
               <NounAvatarGroup
                 ids={ids}
-                // max={3}
+                max={3}
                 // size="sm"
               />
             </div>

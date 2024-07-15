@@ -7,6 +7,11 @@ const getDelegateProxies = async () => {
           delegateProxys {
               items {
               id
+              nouns {
+                items {
+                    id
+                }
+              }
               votingPower
               delegators {
                   items {

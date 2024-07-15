@@ -5,6 +5,9 @@ type Delegate = {
 export type DelegateProxy = {
   id: string;
   createdAt: BigInt;
-  delegators: Delegate[];
+  nouns: {
+    items: { id: string }[];
+  };
+  delegators: { items: Delegate[] };
   votingPower: BigInt;
 };
