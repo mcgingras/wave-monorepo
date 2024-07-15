@@ -12,6 +12,16 @@ import { ArrowDownIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import SupportButton from "@/components/IdeaCard/SupportButton";
 
+function hasParentWithId(element: HTMLElement | null, idName: string) {
+  while (element) {
+    if (element.id === idName) {
+      return true;
+    }
+    element = element.parentElement;
+  }
+  return false;
+}
+
 export function useClickAway(cb: any) {
   const ref = useRef(null);
   const refCb = useRef(cb);
@@ -23,7 +33,12 @@ export function useClickAway(cb: any) {
   useEffect(() => {
     const handler = (e: any) => {
       const element = ref.current as any;
-      if (element && !element.contains(e.target)) {
+
+      if (
+        element &&
+        !element.contains(e.target) &&
+        !hasParentWithId(e.target, "avoid-clickaway")
+      ) {
         refCb.current(e);
       }
     };
@@ -127,7 +142,7 @@ const Drawer = ({
                         </div>
                       </div>
                     </div>
-                    <div className="relative mt-6 flex-1">{children}</div>
+                    <div className="relative mt-4 flex-1">{children}</div>
                   </div>
                 </motion.div>
               </div>

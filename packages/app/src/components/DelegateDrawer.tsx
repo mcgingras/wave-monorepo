@@ -21,7 +21,12 @@ export function useClickAway(cb: any) {
   useEffect(() => {
     const handler = (e: any) => {
       const element = ref.current as any;
-      if (element && !element.contains(e.target)) {
+
+      if (
+        element &&
+        !element.contains(e.target) &&
+        element.target.id !== "avoid-clickaway"
+      ) {
         refCb.current(e);
       }
     };

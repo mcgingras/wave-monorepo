@@ -16,10 +16,10 @@ export type ActionObject = {
 
 export type IdeaToken = {
   id: BigInt;
-  author: string;
+  author: `0x${string}`;
   title: string;
   description: string;
-  createdAt: BigInt;
+  createdAt: string;
   isArchived: boolean;
   totalFunding?: BigInt;
   supports: { items: Support[] };
