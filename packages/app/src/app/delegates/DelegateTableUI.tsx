@@ -18,7 +18,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
         accessorKey: "Delegation from",
         cell: (info) => {
           return (
-            <span className="text-neutral-500">
+            <span className="text-neutral-700">
               {info.getValue() as React.ReactNode}
             </span>
           );
@@ -30,7 +30,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
         header: () => <span>Proxy</span>,
         cell: (info) => {
           return (
-            <span className="text-neutral-500">
+            <span className="text-neutral-700">
               {info.getValue() as React.ReactNode}
             </span>
           );
@@ -72,7 +72,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="text-left pb-2 pl-4 text-neutral-500 text-sm font-normal"
+                    className="text-left pb-2 pl-4 text-neutral-700 text-sm font-normal"
                   >
                     {header.isPlaceholder ? null : (
                       <div

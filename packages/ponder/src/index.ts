@@ -63,8 +63,6 @@ ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
 ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
   const { DelegateProxy } = context.db;
 
-  // TODO: this might be wrong -- we shouldn't add the voting power to the delegate until it is registered?
-  // Can we assume that it has the "full power" of the votes delegated to it if they are not registered?
   const initVotingPower = await context.client.readContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
@@ -86,6 +84,7 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
   const existingDelegateProxy = await DelegateProxy.findUnique({
     id: event.args.toDelegate,
   });
+
   if (existingDelegateProxy) {
     await Delegator.upsert({
       id: event.args.delegator,
@@ -99,6 +98,34 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
   } else {
     await Delegator.delete({
       id: event.args.fromDelegate,
+    });
+  }
+
+  const nounsBalance = await context.client.readContract({
+    address: configAddresses.NounsTokenHarness as `0x${string}`,
+    abi: NounsTokenABI,
+    functionName: "balanceOf",
+    args: [event.args.fromDelegate],
+  });
+
+  for (let i = 0; i < nounsBalance; i++) {
+    const nounId = await context.client.readContract({
+      address: configAddresses.NounsTokenHarness as `0x${string}`,
+      abi: NounsTokenABI,
+      functionName: "tokenOfOwnerByIndex",
+      args: [event.args.fromDelegate, BigInt(i)],
+    });
+
+    await context.db.Noun.upsert({
+      id: nounId,
+      create: {
+        owner: event.args.fromDelegate,
+        delegateProxyId: event.args.toDelegate,
+      },
+      update: {
+        owner: event.args.fromDelegate,
+        delegateProxyId: event.args.toDelegate,
+      },
     });
   }
 });

@@ -6,12 +6,14 @@ const Button = ({
   onClick,
   fullWidth,
   isSubmit = false,
+  children,
 }: {
-  title: string;
+  title?: string;
   type: "primary" | "secondary" | "danger" | "muted";
   onClick?: (e?: any) => void;
   fullWidth?: boolean;
   isSubmit?: boolean;
+  children?: React.ReactNode;
 }) => {
   return (
     <button
@@ -30,7 +32,7 @@ const Button = ({
         "rounded-md px-2 py-1 cursor-pointer transition-all"
       )}
     >
-      {title}
+      {title || children}
     </button>
   );
 };

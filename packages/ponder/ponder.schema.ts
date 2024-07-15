@@ -41,9 +41,18 @@ export default createSchema((p) => ({
     createdAt: p.bigint(),
     delegators: p.many("Delegator.delegateProxyId"),
     votingPower: p.bigint(),
+    nouns: p.many("Noun.delegateProxyId"),
   }),
   Delegator: p.createTable({
     id: p.string(), // delegator (nouns token holder) address string
+    delegateProxyId: p.string().references("DelegateProxy.id"),
+  }),
+  // --------------------------------
+  // Nouns -- which nouns the proxy owns
+  // --------------------------------
+  Noun: p.createTable({
+    id: p.bigint(),
+    owner: p.string(),
     delegateProxyId: p.string().references("DelegateProxy.id"),
   }),
   // --------------------------------

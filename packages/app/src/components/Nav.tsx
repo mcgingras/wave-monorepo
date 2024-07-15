@@ -24,7 +24,8 @@ const Nav = () => {
     args: [address as `0x${string}`],
   });
 
-  const parsedYield = claimableYield ? formatUnits(claimableYield, 18) : 0;
+  let parsedYield = claimableYield ? formatUnits(claimableYield, 18) : "0";
+  if (parseFloat(parsedYield) < 0.001) parsedYield = "< 0.001";
 
   return (
     <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
@@ -72,12 +73,16 @@ const Nav = () => {
           <div className="flex flex-row items-center space-x-2">
             {address && (
               <Button
-                title={`My rewards ${parsedYield} ETH`}
                 type="muted"
                 onClick={() => {
                   setOpen(true);
                 }}
-              />
+              >
+                <span className="mr-2">My reward</span>
+                <span className="font-bold text-neutral-500">
+                  {parsedYield} ETH
+                </span>
+              </Button>
             )}
 
             <CustomConnectKit />

@@ -31,7 +31,9 @@ const Table = ({ data }: { data: Supporter[] }) => {
         cell: (info) => {
           const original = info.row.original;
           const supportedIdeas = original.supportedIdeas.items;
-          return <span>{supportedIdeas.length}</span>;
+          return (
+            <span className="text-neutral-700">{supportedIdeas.length}</span>
+          );
         },
       },
       {
@@ -43,7 +45,7 @@ const Table = ({ data }: { data: Supporter[] }) => {
           const proposals = supportedIdeas.filter(
             (item) => item.token.nounsProposalId !== null
           );
-          return <span>{proposals.length}</span>;
+          return <span className="text-neutral-700">{proposals.length}</span>;
         },
       },
       {
@@ -55,7 +57,7 @@ const Table = ({ data }: { data: Supporter[] }) => {
           const proposals = supportedIdeas.filter(
             (item) => item.token.nounsProposalStatus === "passed"
           );
-          return <span>{proposals.length}</span>;
+          return <span className="text-neutral-700">{proposals.length}</span>;
         },
       },
       {
@@ -68,7 +70,11 @@ const Table = ({ data }: { data: Supporter[] }) => {
             (acc, item) => acc + item.balance,
             BigInt(0)
           );
-          return <span>{formatUnits(amount, 18)} ETH</span>;
+          return (
+            <span className="text-neutral-700">
+              {formatUnits(amount, 18)} ETH
+            </span>
+          );
         },
       },
     ],

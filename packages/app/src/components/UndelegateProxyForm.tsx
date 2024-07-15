@@ -93,7 +93,7 @@ const UndelegateProxyForm = ({ closeModal }: { closeModal: () => void }) => {
             Current delegate
           </label>
           <div className="mt-1">
-            <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500">
+            <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500 overflow-x-clip truncate">
               {delegatedTo}
             </span>
           </div>

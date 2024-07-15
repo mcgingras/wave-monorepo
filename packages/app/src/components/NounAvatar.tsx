@@ -20,7 +20,8 @@ const NounAvatar = ({
   [key: string]: any;
 }) => {
   const address = getContractWithIdentifier(1, "token").address;
-  const { data: seed } = useReadContract({
+  const { data: seed, error } = useReadContract({
+    chainId: 1,
     address,
     abi: [
       {
@@ -62,7 +63,8 @@ const NounAvatar = ({
       )
     : null;
 
-  if (nounAvatarUrl == null) return null;
+  if (nounAvatarUrl == null)
+    return <span data-fallback={true} {...props}></span>;
 
   return <img src={nounAvatarUrl} alt="Nouns logo" {...props} />;
 };

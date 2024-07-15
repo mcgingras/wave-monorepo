@@ -124,7 +124,9 @@ const Drawer = ({
                             title="Idea page"
                           />
 
-                          <SupportButton ideaId={ideaToken.id} />
+                          {!ideaToken.isArchived && (
+                            <SupportButton ideaId={ideaToken.id} />
+                          )}
                         </div>
                         <div className="flex flex-row space-x-1">
                           <Link

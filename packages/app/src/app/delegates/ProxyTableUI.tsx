@@ -19,7 +19,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
         accessorKey: "Address",
         cell: (info) => {
           return (
-            <span className="text-neutral-500">
+            <span className="text-neutral-700">
               {info.getValue() as React.ReactNode}
             </span>
           );
@@ -34,7 +34,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
           const ids = original.delegators.items.map((item: any) => item.id);
           return (
             <div className="flex flex-row items-center space-x-2">
-              <span>{ids.length}</span>
+              <span className="text-neutral-700">{ids.length}</span>
               <NounAvatarGroup
                 ids={ids}
                 // max={3}
@@ -60,7 +60,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
             );
           } else {
             return (
-              <span className="bg-neutral-100 text-neutral-500 rounded-full px-2 py-1 text-sm">
+              <span className="bg-neutral-100 text-neutral-700 rounded-full px-2 py-1 text-sm">
                 Inactive
               </span>
             );
@@ -93,7 +93,7 @@ const ProxyTableUI = ({ data }: { data: any[] }) => {
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="text-left pb-2 pl-4 text-neutral-500 text-sm font-normal"
+                    className="text-left pb-2 pl-4 text-neutral-700 text-sm font-normal"
                   >
                     {header.isPlaceholder ? null : (
                       <div
