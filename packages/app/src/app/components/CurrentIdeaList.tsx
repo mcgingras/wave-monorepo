@@ -12,6 +12,7 @@ const getIdeas = async () => {
               title
               description
               createdAt
+              actions
               supports {
                   items {
                   balance

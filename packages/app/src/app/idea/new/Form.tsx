@@ -152,7 +152,7 @@ const NewIdeaForm = () => {
 
                   <div className="mt-1">
                     {showMarkdown ? (
-                      <div className="bg-neutral-100 p-2 rounded-md prose">
+                      <div className="bg-neutral-100 p-2 rounded-md prose text-sm text-neutral-500">
                         <Markdown>{methods.watch("description")}</Markdown>
                       </div>
                     ) : (

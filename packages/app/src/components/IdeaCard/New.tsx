@@ -5,8 +5,6 @@ import { formatUnits } from "viem";
 import { useEnsAvatar, useEnsName } from "wagmi";
 import { truncateEthAddress } from "@/lib/utils";
 import { IdeaToken } from "@/models/IdeaToken/types";
-import SupportButton from "./SupportButton";
-import ActionDisplay from "./ActionDisplay";
 import Button from "../ui/Button";
 import Image from "next/image";
 

@@ -67,8 +67,6 @@ const getRemainingTime = async (startBlock: number) => {
     now.getTime() + (remainingSeconds > 0 ? remainingSeconds : 0) * 1000
   );
 
-  console.log(remainingTime, remainingSeconds);
-
   return { remainingTime, remainingSeconds };
 };
 

@@ -138,7 +138,7 @@ const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
             return (
               <tr
                 key={row.id}
-                className="[&:not(:last-child)]:border-b cursor-pointer"
+                className="[&:not(:last-child)]:border-b"
                 onClick={() => {
                   // todo
                 }}

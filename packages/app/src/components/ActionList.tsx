@@ -10,7 +10,14 @@ import {
   truncateAddress,
   formatSolidityArgument,
 } from "@/lib/camp/utils/ethereum";
-import { useEnhancedParsedTransaction } from "@/lib/camp/transaction-list";
+
+export const TransactionPill = ({ transaction }: { transaction: any }) => {
+  return (
+    <span className="bg-violet-100 text-violet-500 px-2 py-1 rounded-lg text-sm">
+      <TransactionExplanation transaction={transaction} />
+    </span>
+  );
+};
 
 export const TransactionExplanation = ({
   transaction: t,

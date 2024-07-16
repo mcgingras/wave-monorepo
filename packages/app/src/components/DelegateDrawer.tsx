@@ -9,6 +9,8 @@ import { useReadContract } from "wagmi";
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { formatUnits } from "viem";
+import EnsImage from "@/app/scout/[address]/EnsImage";
+import EnsName from "@/app/scout/[address]/EnsName";
 
 function hasParentWithId(element: HTMLElement | null, idName: string) {
   while (element) {
@@ -118,34 +120,15 @@ const DelegateDrawer = ({
                               />
                             </button>
                           </div>
-
-                          {/* <Button
-                            type="secondary"
-                            title="Support"
-                            onClick={() => {
-                              // pass
-                            }}
-                          /> */}
-                        </div>
-                        <div className="flex flex-row space-x-1">
-                          {/* <Link
-                            href={`/idea/${Number(ideaToken.id) - 1}`}
-                            className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
-                          >
-                            <ArrowUpIcon className="text-neutral-500 h-5 w-5" />
-                          </Link>
-                          <Link
-                            href={`/idea/${Number(ideaToken.id) + 1}`}
-                            className="rounded-r-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
-                          >
-                            <ArrowDownIcon className="text-neutral-500 h-5 w-5" />
-                          </Link> */}
                         </div>
                       </div>
                     </div>
                     <div className="relative flex-1 p-4">
-                      <div>
-                        <h2>{delegateAddress}</h2>
+                      <div className="flex flex-row w-1/2 flex-1 space-x-4 items-center">
+                        <EnsImage address={delegateAddress} />
+                        <div className="flex flex-col">
+                          <EnsName address={delegateAddress} />
+                        </div>
                       </div>
                       <div className="bg-neutral-100 rounded-lg p-4 mt-4 flex flex-row justify-between">
                         <div className="flex flex-col space-y-1">

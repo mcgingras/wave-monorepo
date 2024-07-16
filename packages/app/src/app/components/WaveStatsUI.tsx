@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -22,6 +23,27 @@ const WaveStatsUI = ({
   remainingTime: Date;
   remainingSeconds: number;
 }) => {
+  const [isMounted, setIsMounted] = useState(false);
+  const [timeExpired, setTimeExpired] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = remainingTime.getTime() - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        setTimeExpired(true);
+        return;
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [remainingTime]);
+
+  // for hydration issues
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const ideaTokensWithPooledEth = ideaTokens?.map((ideaToken) => {
     const pooledEth = ideaToken.supports.items.reduce(
       (acc, support) => acc + parseInt(support.balance.toString()),
@@ -41,7 +63,7 @@ const WaveStatsUI = ({
   return (
     <div className="bg-white rounded-lg p-4">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
+        <h1 className="polymath-disp font-bold text-2xl text-neutral-700">
           Wave {forWave}
         </h1>
         <div className="flex flex-row divide-x-2 divide-white">
@@ -94,13 +116,15 @@ const WaveStatsUI = ({
           )}
         </div>
       )}
-      <p className="text-center text-neutral-400 text-sm mt-2">
-        {remainingSeconds <= 0 ? (
-          "Wave has ended"
-        ) : (
-          <StaticCountdown endDate={remainingTime} className="space-x-1" />
-        )}
-      </p>
+      {isMounted && (
+        <p className="text-center text-neutral-400 text-sm mt-2">
+          {timeExpired ? (
+            "Wave has ended"
+          ) : (
+            <StaticCountdown endDate={remainingTime} className="space-x-1" />
+          )}
+        </p>
+      )}
     </div>
   );
 };

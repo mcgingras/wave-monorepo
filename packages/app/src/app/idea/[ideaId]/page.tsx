@@ -58,7 +58,6 @@ const getIdea = async (id: bigint) => {
 const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaId } = params;
   const ideaToken = await getIdea(ideaId);
-  console.log(ideaToken);
 
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 bg-neutral-100 flex flex-col">

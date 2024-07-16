@@ -6,6 +6,7 @@ import SupportListUI from "@/app/components/SupportListUI";
 import { formatUnits } from "viem";
 import EnsImage from "@/app/scout/[address]/EnsImage";
 import EnsName from "@/app/scout/[address]/EnsName";
+import IdeaNFT from "@/components/IdeaNFT";
 
 const getIdea = async (id: bigint) => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
@@ -95,7 +96,7 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
             </div>
           </div>
           <div className="flex flex-row w-1/2 flex-1 space-x-4 items-center">
-            <span className="h-10 w-10 rounded-full block bg-neutral-200"></span>
+            <IdeaNFT id={ideaToken.id} className="h-12 w-12" />
             <div className="flex flex-col">
               <span>{formatUnits(BigInt(pooledEth), 18)} ETH</span>
               <span>

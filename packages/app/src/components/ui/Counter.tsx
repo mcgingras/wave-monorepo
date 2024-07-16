@@ -14,6 +14,7 @@ export const StaticCountdown = ({
   endDate: Date;
   className?: string;
 }) => {
+  const [loaded, setLoaded] = useState(false);
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -21,6 +22,7 @@ export const StaticCountdown = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
+      setLoaded(true);
       const now = new Date().getTime();
       const distance = endDate.getTime() - now;
 
@@ -42,6 +44,10 @@ export const StaticCountdown = ({
     }, 1000);
     return () => clearInterval(interval);
   }, [endDate]);
+
+  if (!loaded) {
+    return <span>loading...</span>;
+  }
 
   return (
     <div className={className}>
