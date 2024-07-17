@@ -35,11 +35,15 @@ const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
           const ids = original.nouns.items.map((item: any) => item.id);
           return (
             <div className="flex flex-row items-center space-x-2">
-              <NounAvatarGroup
-                ids={ids}
-                max={3}
-                // size="sm"
-              />
+              {ids.length > 0 ? (
+                <NounAvatarGroup
+                  ids={ids}
+                  max={3}
+                  // size="sm"
+                />
+              ) : (
+                <span className="text-neutral-700">None</span>
+              )}
             </div>
           );
         },
@@ -177,7 +181,7 @@ const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
         </tbody>
       </table>
       {rows.length === 0 && (
-        <div className="text-center text-neutral-400 w-full bg-white p-4 text-sm rounded-lg">
+        <div className="text-center text-neutral-400 w-full bg-white p-4 rounded-lg">
           No proxies found.
         </div>
       )}

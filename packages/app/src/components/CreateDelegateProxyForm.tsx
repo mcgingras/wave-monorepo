@@ -12,6 +12,7 @@ import { WaveHarnessABI } from "@/abi/WaveHarness";
 import Button from "./ui/Button";
 import { client } from "@/lib/viem";
 import { CheckIcon } from "@heroicons/react/24/solid";
+import revalidate from "@/actions/revalidatePath";
 
 const copy = {
   1: {
@@ -111,6 +112,10 @@ const CreateDelegateProxyForm = ({
     if (isRegistrationActionFetched) {
       refetchDelegateTo();
       refetchOptimisticDelegations();
+      // trying to give the indexer a bit of time
+      setTimeout(() => {
+        revalidate("/delegates");
+      }, 2000);
     }
   }, [isRegistrationActionFetched]);
 

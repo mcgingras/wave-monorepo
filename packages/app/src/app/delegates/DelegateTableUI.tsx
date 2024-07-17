@@ -155,7 +155,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
         </tbody>
       </table>
       {rows.length === 0 && (
-        <div className="text-center text-neutral-400 text-sm w-full bg-white p-4 rounded-lg">
+        <div className="text-center text-neutral-400 w-full bg-white p-4 rounded-lg">
           No delegates found.
         </div>
       )}

@@ -8,6 +8,7 @@ import {
 import { configAddresses } from "@/lib/constants";
 import { NounsTokenABI } from "@/abi/NounsToken";
 import Button from "./ui/Button";
+import revalidate from "@/actions/revalidatePath";
 
 /**
  * TODO:
@@ -49,6 +50,10 @@ const UndelegateProxyForm = ({ closeModal }: { closeModal: () => void }) => {
   useEffect(() => {
     if (isUndelegateActionFetched) {
       refetchDelegateTo();
+      // trying to give the indexer a bit of time
+      setTimeout(() => {
+        revalidate("/delegates");
+      }, 2000);
     }
   }, [isUndelegateActionFetched]);
 

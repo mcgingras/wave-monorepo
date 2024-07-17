@@ -15,26 +15,25 @@ const Hero = ({ proxies }: { proxies: any }) => {
   const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false);
   const [isUnDelegateModalOpen, setIsUnDelegateModalOpen] = useState(false);
   const { address } = useAccount();
-  const { data: nounsBalance, error } = useReadContract({
+  const { data: nounsBalance } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
     functionName: "balanceOf",
     args: [address as `0x${string}`],
   });
 
-  const { data: delegatedTo, refetch: refetchDelegateTo } = useReadContract({
+  const { data: delegatedTo } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
     functionName: "delegates",
     args: [address as `0x${string}`],
   });
 
-  const { data: optimisticDelegations, refetch: refetchOptimisticDelegations } =
-    useReadContract({
-      address: configAddresses.Wave as `0x${string}`,
-      abi: WaveHarnessABI,
-      functionName: "getOptimisticDelegations",
-    });
+  const { data: optimisticDelegations } = useReadContract({
+    address: configAddresses.Wave as `0x${string}`,
+    abi: WaveHarnessABI,
+    functionName: "getOptimisticDelegations",
+  });
 
   const isDelegatedToProxy = proxies.some((proxy: any) => {
     return proxy.id === delegatedTo;
