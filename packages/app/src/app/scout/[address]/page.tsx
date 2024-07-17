@@ -4,6 +4,10 @@ import EnsName from "./EnsName";
 import { Suspense } from "react";
 import SupportedIdeaList from "./SupportedIdeaList";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "only-no-store";
+
 const BadgeCard = () => {
   return (
     <div className="bg-white rounded-lg">
@@ -42,7 +46,7 @@ const ScoutPage = ({ params }: { params: { address: `0x${string}` } }) => {
             />
           </div>
           <div>
-            <h3 className="text-neutral-500 pb-2 border-b border-neutral-300 font-semibold">
+            <h3 className="text-neutral-500 pb-2 border-b border-neutral-200 text-sm">
               Support stats
             </h3>
             <ul className="mt-4 space-y-2">
@@ -64,7 +68,7 @@ const ScoutPage = ({ params }: { params: { address: `0x${string}` } }) => {
             </ul>
           </div>
           <div>
-            <h3 className="text-neutral-500 pb-2 border-b border-neutral-300 font-semibold">
+            <h3 className="text-neutral-500 pb-2 border-b border-neutral-200 text-sm">
               Success rates
             </h3>
             <ul className="mt-4 space-y-2">

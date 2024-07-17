@@ -8,6 +8,10 @@ import EnsImage from "@/app/scout/[address]/EnsImage";
 import EnsName from "@/app/scout/[address]/EnsName";
 import IdeaNFT from "@/components/IdeaNFT";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "only-no-store";
+
 const getIdea = async (id: bigint) => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
   const query = `
