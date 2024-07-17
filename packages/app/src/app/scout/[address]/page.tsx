@@ -20,6 +20,7 @@ const getSupporter = async (supporterAddress: string) => {
                 token {
                   id
                   title
+                  nounsProposalId
                 }
                 reason
                 balance
@@ -104,64 +105,52 @@ const ScoutPage = async ({
   const supporter = await getSupporter(params.address);
   const supportedIdeas = supporter.supportedIdeas.items;
   console.log(supportedIdeas);
+  const proposals = supportedIdeas.filter(
+    (support: any) => support.token.nounsProposalId !== null
+  );
+  const fundedProposals = supportedIdeas.filter(
+    (support: any) => support.token.nounsProposalStatus === "PASSED"
+  );
+
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
       <div className="container mx-auto pb-12">
         <section className="grid grid-cols-3 gap-12">
-          <div className="flex flex-row space-x-4 items-center self-start">
-            <EnsImage address={params.address} />
-            <EnsName
-              address={params.address}
-              className="polymath-disp font-bold text-2xl text-neutral-800"
-            />
-          </div>
           <div>
-            <h3 className="text-neutral-500 pb-2 border-b border-neutral-200 text-sm">
-              Support stats
-            </h3>
-            <ul className="mt-4 space-y-2">
+            <div className="flex flex-row space-x-4 items-center self-start">
+              <EnsImage address={params.address} />
+              <EnsName
+                address={params.address}
+                className="polymath-disp font-bold text-2xl text-neutral-800"
+              />
+            </div>
+            <ul className="mt-6 space-y-2">
               <li className="flex flex-row items-center space-x-4">
-                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
-                <p className="flex-1 text-neutral-500">Waves participated</p>
-                <span className="font-semibold">4</span>
+                <p className="text-neutral-500">Ideas</p>
+                <span className="h-1 block border-b border-dotted border-neutral-400 flex-1"></span>
+                <span className="font-semibold text-neutral-700">
+                  {supportedIdeas.length}
+                </span>
               </li>
               <li className="flex flex-row items-center space-x-4">
-                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
-                <p className="flex-1 text-neutral-500">Waves participated</p>
-                <span className="font-semibold">4</span>
+                <p className="text-neutral-500">Proposals</p>
+                <span className="h-1 block border-b border-dotted border-neutral-400 flex-1"></span>
+                <span className="font-semibold text-neutral-700">
+                  {proposals.length}
+                </span>
               </li>
               <li className="flex flex-row items-center space-x-4">
-                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
-                <p className="flex-1 text-neutral-500">Waves participated</p>
-                <span className="font-semibold">4</span>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-neutral-500 pb-2 border-b border-neutral-200 text-sm">
-              Success rates
-            </h3>
-            <ul className="mt-4 space-y-2">
-              <li className="flex flex-row items-center space-x-4">
-                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
-                <p className="flex-1 text-neutral-500">Waves participated</p>
-                <span className="font-semibold">4</span>
-              </li>
-              <li className="flex flex-row items-center space-x-4">
-                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
-                <p className="flex-1 text-neutral-500">Waves participated</p>
-                <span className="font-semibold">4</span>
-              </li>
-              <li className="flex flex-row items-center space-x-4">
-                <span className="h-4 w-4 rounded-full bg-neutral-300 block"></span>
-                <p className="flex-1 text-neutral-500">Waves participated</p>
-                <span className="font-semibold">4</span>
+                <p className="text-neutral-500">Passed proposals</p>
+                <span className="h-1 block border-b border-dotted border-neutral-400 flex-1"></span>
+                <span className="font-semibold text-neutral-700">
+                  {fundedProposals.length}
+                </span>
               </li>
             </ul>
           </div>
         </section>
         <section className="mt-12">
-          <h3 className="polymath-disp font-bold text-lg text-neutral-800">
+          <h3 className="polymath-disp font-bold text-2xl text-neutral-800">
             Supported ideas
           </h3>
           {supportedIdeas.length > 0 ? (
