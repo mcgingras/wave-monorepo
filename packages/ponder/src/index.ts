@@ -5,7 +5,6 @@ import publicClient from "../lib/viem";
 import { IdeaTokenHubABI } from "../abi/IdeaTokenHub";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
-  console.log("this is created bro");
   const { IdeaToken } = context.db;
   const [title, description] = event.args.idea.description.split(`\n\n`);
 
@@ -80,12 +79,15 @@ ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
 });
 
 ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
+  let direction = "to";
   const { DelegateProxy, Delegator } = context.db;
-  const existingDelegateProxy = await DelegateProxy.findUnique({
+  const existingToDelegateProxy = await DelegateProxy.findUnique({
     id: event.args.toDelegate,
   });
 
-  if (existingDelegateProxy) {
+  // someone is giving voting power to the proxy
+  if (existingToDelegateProxy) {
+    direction = "to";
     await Delegator.upsert({
       id: event.args.delegator,
       create: {
@@ -95,38 +97,61 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
         delegateProxyId: event.args.toDelegate,
       },
     });
-  } else {
+  }
+
+  const existingFromDelegateProxy = await DelegateProxy.findUnique({
+    id: event.args.fromDelegate,
+  });
+
+  // someone is claiming their voting power back
+  if (existingFromDelegateProxy) {
+    direction = "from";
     await Delegator.delete({
-      id: event.args.fromDelegate,
+      id: event.args.toDelegate,
     });
   }
+
+  console.log("direction", direction);
 
   const nounsBalance = await context.client.readContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
     functionName: "balanceOf",
-    args: [event.args.fromDelegate],
+    args: [
+      direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
+    ],
   });
+
+  console.log(nounsBalance);
 
   for (let i = 0; i < nounsBalance; i++) {
     const nounId = await context.client.readContract({
       address: configAddresses.NounsTokenHarness as `0x${string}`,
       abi: NounsTokenABI,
       functionName: "tokenOfOwnerByIndex",
-      args: [event.args.fromDelegate, BigInt(i)],
+      args: [
+        direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
+        BigInt(i),
+      ],
     });
 
-    await context.db.Noun.upsert({
-      id: nounId,
-      create: {
-        owner: event.args.fromDelegate,
-        delegateProxyId: event.args.toDelegate,
-      },
-      update: {
-        owner: event.args.fromDelegate,
-        delegateProxyId: event.args.toDelegate,
-      },
-    });
+    if (direction === "to") {
+      await context.db.Noun.upsert({
+        id: nounId,
+        create: {
+          owner: event.args.fromDelegate,
+          delegateProxyId: event.args.toDelegate,
+        },
+        update: {
+          owner: event.args.fromDelegate,
+          delegateProxyId: event.args.toDelegate,
+        },
+      });
+    } else {
+      await context.db.Noun.delete({
+        id: nounId,
+      });
+    }
   }
 });
 
@@ -135,6 +160,7 @@ ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
   const existingDelegateProxy = await DelegateProxy.findUnique({
     id: event.args.delegate,
   });
+
   if (existingDelegateProxy) {
     await DelegateProxy.update({
       id: event.args.delegate,
@@ -147,7 +173,6 @@ ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
 
 ponder.on("IdeaTokenHub:WaveFinalized", async ({ event, context }) => {
   const { Wave, IdeaToken } = context.db;
-  console.log("wave finalized");
 
   const [currentWaveId, _] = await publicClient.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
