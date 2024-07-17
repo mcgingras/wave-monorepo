@@ -47,7 +47,6 @@ const getIdea = async (id: bigint) => {
   try {
     const data = await fetch(url, graphqlRequest);
     const json = await data.json();
-    console.log(json);
     return json.data.ideaToken;
   } catch (e) {
     console.log("error", e);
