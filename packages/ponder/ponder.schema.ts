@@ -11,28 +11,48 @@ export default createSchema((p) => ({
     description: p.string(),
     actions: p.string(), // JSON.stringified array of actions
     createdAt: p.bigint(),
-    supporters: p.many("Supporter.tokenId"),
+    supports: p.many("Support.tokenId"),
     waveId: p.int().references("Wave.id").optional(),
     nounsProposalId: p.bigint().optional(),
     totalFunding: p.bigint().optional(),
     isArchived: p.boolean(),
   }),
-  Supporter: p.createTable({
+  // --------------------------------
+  // Support -- represents the abstract concept of an instance of supporting an idea
+  // --------------------------------
+  Support: p.createTable({
     id: p.string(), // string.concat(<address>, "-", <tokenId>)
-    owner: p.string(),
     tokenId: p.bigint().references("IdeaToken.id"),
+    token: p.one("tokenId"),
     balance: p.bigint(),
     isCreator: p.boolean(),
     reason: p.string().optional(),
+    supporterId: p.string().references("Supporter.id"),
+  }),
+  // --------------------------------
+  // Supporter -- the actual supporter of ideas
+  // --------------------------------
+  Supporter: p.createTable({
+    id: p.string(), // address
+    supportedIdeas: p.many("Support.supporterId"),
   }),
   DelegateProxy: p.createTable({
     id: p.string(), // delegate address string
     createdAt: p.bigint(),
     delegators: p.many("Delegator.delegateProxyId"),
     votingPower: p.bigint(),
+    nouns: p.many("Noun.delegateProxyId"),
   }),
   Delegator: p.createTable({
     id: p.string(), // delegator (nouns token holder) address string
+    delegateProxyId: p.string().references("DelegateProxy.id"),
+  }),
+  // --------------------------------
+  // Nouns -- which nouns the proxy owns
+  // --------------------------------
+  Noun: p.createTable({
+    id: p.bigint(),
+    owner: p.string(),
     delegateProxyId: p.string().references("DelegateProxy.id"),
   }),
   // --------------------------------

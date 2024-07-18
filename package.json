@@ -1,6 +1,7 @@
 {
   "name": "proplot-monorepo",
   "version": "0.0.1",
+  "private": true,
   "description": "Prop lot protocol helps you get your Nounish ideas on-chain.",
   "scripts": {
     "build": "lerna run build --stream",

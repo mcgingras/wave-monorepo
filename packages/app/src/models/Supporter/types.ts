@@ -1,7 +1,18 @@
+import { IdeaToken } from "../IdeaToken/types";
+
 export type Supporter = {
-  id: BigInt;
-  owner: string;
-  tokenId: BigInt;
-  balance: BigInt;
+  id: string;
+  supportedIdeas: {
+    items: Support[];
+  };
+};
+
+export type Support = {
+  id: string;
+  tokenId: bigint;
+  token: IdeaToken;
+  balance: string;
   isCreator: boolean;
+  reason: string;
+  supporterId: string;
 };

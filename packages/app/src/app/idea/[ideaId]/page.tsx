@@ -1,5 +1,9 @@
 import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
-import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
+import BackButton from "@/app/components/BackButton";
+import FullIdeaCard from "@/components/IdeaCard/Full";
+import SupportButton from "@/components/IdeaCard/SupportButton";
+import SupportsList from "./SupportsList";
+import { Suspense } from "react";
 
 // clears out next-js cache for viem calls
 export const dynamic = "force-dynamic";
@@ -18,11 +22,11 @@ const getIdea = async (id: bigint) => {
             createdAt
             actions
             isArchived
-            supporters {
+            supports {
                 items {
                 reason
                 balance
-                owner
+                id
                 }
             }
         }
@@ -53,22 +57,29 @@ const getIdea = async (id: bigint) => {
 const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaId } = params;
   const ideaToken = await getIdea(ideaId);
-  console.log(ideaToken);
 
   return (
-    <div className="min-h-[calc(100vh-165px)] mt-[65px] bg-neutral-100 py-12 flex flex-col">
-      <section className="w-[600px] mx-auto space-y-4">
-        {ideaToken ? (
-          <ExpandableIdeaCard
-            ideaToken={ideaToken}
-            expandable={true}
-            clickable={false}
-            archived={ideaToken.isArchived}
-          />
-        ) : (
-          <IdeaCardSkeleton />
-        )}
-      </section>
+    <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 bg-neutral-100 flex flex-col">
+      <div className="container mx-auto pb-12">
+        <BackButton />
+        <section className="grid grid-cols-8 gap-8 mt-4">
+          <section className="col-span-5">
+            {ideaToken ? (
+              <FullIdeaCard ideaToken={ideaToken} />
+            ) : (
+              <IdeaCardSkeleton />
+            )}
+          </section>
+          <section className="col-span-3">
+            <div className="p-4 bg-white rounded-xl">
+              <SupportButton ideaId={ideaId} />
+            </div>
+            <Suspense fallback={<IdeaCardSkeleton />}>
+              <SupportsList ideaId={ideaId} />
+            </Suspense>
+          </section>
+        </section>
+      </div>
     </div>
   );
 };

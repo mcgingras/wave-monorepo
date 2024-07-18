@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { ConnectKitButton } from "connectkit";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
-import Link from "next/link";
 import { useDisconnect } from "wagmi";
 import { useRouter } from "next/navigation";
 import { truncateEthAddress } from "@/lib/utils";
 import { Transition } from "@headlessui/react";
+import Button from "./ui/Button";
 
 const CustomConnectKit = () => {
   const router = useRouter();
@@ -69,12 +69,12 @@ const CustomConnectKit = () => {
               leaveTo="opacity-0 scale-95"
             >
               <div
-                className="absolute w-[150px] border rounded-lg p-2 right-0 top-[40px] bg-white text-neutral-600"
+                className="absolute w-[200px] border rounded-lg p-4 right-0 top-[40px] bg-white text-neutral-600"
                 ref={dropdownRef}
               >
-                <ul>
+                <ul className="space-y-2">
                   <li
-                    className="hover:text-neutral-500 cursor-pointer transition-colors"
+                    className="cursor-pointer text-neutral-400 hover:text-neutral-500 transition-all"
                     onClick={() => {
                       router.push(`/scout/${address}`);
                       setShowDropdown(false);
@@ -83,14 +83,8 @@ const CustomConnectKit = () => {
                     Profile
                   </li>
 
-                  <Link href="/">
-                    <li className="hover:text-neutral-500 cursor-pointer transition-colors">
-                      Docs
-                    </li>
-                  </Link>
-
                   <li
-                    className="hover:text-neutral-500 cursor-pointer transition-colors"
+                    className="cursor-pointer text-neutral-400 hover:text-neutral-500 transition-all"
                     onClick={() => {
                       // trigger wagmi disconnect?
                       disconnect();

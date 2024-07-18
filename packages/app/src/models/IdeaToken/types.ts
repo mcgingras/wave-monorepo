@@ -1,4 +1,4 @@
-import { Supporter } from "../Supporter/types";
+import { Support } from "../Supporter/types";
 
 export type Action = {
   target: `0x${string}`;
@@ -16,11 +16,14 @@ export type ActionObject = {
 
 export type IdeaToken = {
   id: BigInt;
-  author: string;
+  author: `0x${string}`;
   title: string;
   description: string;
-  createdAt: BigInt;
+  createdAt: string;
   isArchived: boolean;
-  supporters: { items: Supporter[] };
+  totalFunding?: BigInt;
+  supports: { items: Support[] };
   actions: string; // JSON.stringified array of ActionObject
+  nounsProposalId?: BigInt;
+  nounsProposalStatus?: string;
 };

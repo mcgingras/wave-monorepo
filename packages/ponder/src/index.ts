@@ -26,18 +26,31 @@ ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
 });
 
 ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
-  const { Supporter } = context.db;
+  const { Support, Supporter } = context.db;
   const concatAddrWithId = `${event.args.sponsor}-${event.args.ideaId}`;
-  const createObj: any = {
-    owner: event.args.sponsor,
+
+  const existingSupporter = await Supporter.findUnique({
+    id: event.args.sponsor,
+  });
+
+  if (!existingSupporter) {
+    await Supporter.create({
+      id: event.args.sponsor,
+    });
+  }
+
+  const createObj = {
+    supporterId: event.args.sponsor,
     tokenId: event.args.ideaId,
     balance: event.args.params.contributedBalance,
     isCreator: event.args.params.isCreator,
+    reason: "",
   };
+
   // conditionally assign `.optional()` column if truthy
   if (event.args.reason !== "") createObj.reason = event.args.reason;
 
-  await Supporter.upsert({
+  await Support.upsert({
     id: concatAddrWithId,
     create: createObj,
     update: {
@@ -49,8 +62,6 @@ ponder.on("IdeaTokenHub:Sponsorship", async ({ event, context }) => {
 ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
   const { DelegateProxy } = context.db;
 
-  // TODO: this might be wrong -- we shouldn't add the voting power to the delegate until it is registered?
-  // Can we assume that it has the "full power" of the votes delegated to it if they are not registered?
   const initVotingPower = await context.client.readContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
@@ -68,11 +79,15 @@ ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
 });
 
 ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
+  let direction = "to";
   const { DelegateProxy, Delegator } = context.db;
-  const existingDelegateProxy = await DelegateProxy.findUnique({
+  const existingToDelegateProxy = await DelegateProxy.findUnique({
     id: event.args.toDelegate,
   });
-  if (existingDelegateProxy) {
+
+  // someone is giving voting power to the proxy
+  if (existingToDelegateProxy) {
+    direction = "to";
     await Delegator.upsert({
       id: event.args.delegator,
       create: {
@@ -82,10 +97,61 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
         delegateProxyId: event.args.toDelegate,
       },
     });
-  } else {
+  }
+
+  const existingFromDelegateProxy = await DelegateProxy.findUnique({
+    id: event.args.fromDelegate,
+  });
+
+  // someone is claiming their voting power back
+  if (existingFromDelegateProxy) {
+    direction = "from";
     await Delegator.delete({
-      id: event.args.fromDelegate,
+      id: event.args.toDelegate,
     });
+  }
+
+  console.log("direction", direction);
+
+  const nounsBalance = await context.client.readContract({
+    address: configAddresses.NounsTokenHarness as `0x${string}`,
+    abi: NounsTokenABI,
+    functionName: "balanceOf",
+    args: [
+      direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
+    ],
+  });
+
+  console.log(nounsBalance);
+
+  for (let i = 0; i < nounsBalance; i++) {
+    const nounId = await context.client.readContract({
+      address: configAddresses.NounsTokenHarness as `0x${string}`,
+      abi: NounsTokenABI,
+      functionName: "tokenOfOwnerByIndex",
+      args: [
+        direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
+        BigInt(i),
+      ],
+    });
+
+    if (direction === "to") {
+      await context.db.Noun.upsert({
+        id: nounId,
+        create: {
+          owner: event.args.fromDelegate,
+          delegateProxyId: event.args.toDelegate,
+        },
+        update: {
+          owner: event.args.fromDelegate,
+          delegateProxyId: event.args.toDelegate,
+        },
+      });
+    } else {
+      await context.db.Noun.delete({
+        id: nounId,
+      });
+    }
   }
 });
 
@@ -94,6 +160,7 @@ ponder.on("NounsToken:DelegateVotesChanged", async ({ event, context }) => {
   const existingDelegateProxy = await DelegateProxy.findUnique({
     id: event.args.delegate,
   });
+
   if (existingDelegateProxy) {
     await DelegateProxy.update({
       id: event.args.delegate,

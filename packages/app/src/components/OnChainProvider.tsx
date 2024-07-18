@@ -7,8 +7,7 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 
 const config = createConfig(
   getDefaultConfig({
-    // chains: [mainnet],
-    chains: [baseSepolia],
+    chains: [mainnet, baseSepolia],
     transports: {
       [mainnet.id]: http(
         `https://eth-mainnet.g.alchemy.com/v2/${process.env

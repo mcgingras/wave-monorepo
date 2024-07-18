@@ -8,6 +8,7 @@ import {
 import { configAddresses } from "@/lib/constants";
 import { NounsTokenABI } from "@/abi/NounsToken";
 import Button from "./ui/Button";
+import revalidate from "@/actions/revalidatePath";
 
 /**
  * TODO:
@@ -49,6 +50,10 @@ const UndelegateProxyForm = ({ closeModal }: { closeModal: () => void }) => {
   useEffect(() => {
     if (isUndelegateActionFetched) {
       refetchDelegateTo();
+      // trying to give the indexer a bit of time
+      setTimeout(() => {
+        revalidate("/delegates");
+      }, 2000);
     }
   }, [isUndelegateActionFetched]);
 
@@ -93,7 +98,7 @@ const UndelegateProxyForm = ({ closeModal }: { closeModal: () => void }) => {
             Current delegate
           </label>
           <div className="mt-1">
-            <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500">
+            <span className="p-2 rounded w-full bg-neutral-100 block text-sm text-neutral-500 overflow-x-clip truncate">
               {delegatedTo}
             </span>
           </div>

@@ -9,18 +9,27 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import { useForm, FormProvider, useFieldArray } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { configAddresses } from "@/lib/constants";
 import { parseEther } from "viem";
-import { Action } from "@/models/IdeaToken/types";
+import { Action } from "@/lib/camp/types";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { parseEventLogs } from "viem";
 import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
-import ParsedAction from "./ParsedAction";
+import Markdown from "react-markdown";
+import ActionList from "@/components/ActionList";
+import { resolveAction as resolveActionTransactions } from "@/lib/camp/transactions";
 
 const NewIdeaForm = () => {
+  const [showMarkdown, setShowMarkdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actions, setActions] = useState<Action[]>([]);
+
+  const addAction = (action: Action) => {
+    setActions((actions) => [...actions, action]);
+  };
+
   const { address } = useAccount();
   const methods = useForm<{
     title: string;
@@ -30,7 +39,6 @@ const NewIdeaForm = () => {
     defaultValues: {
       title: "",
       description: "",
-      actions: [],
     },
   });
 
@@ -38,24 +46,9 @@ const NewIdeaForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = methods;
 
-  const {
-    fields: actions,
-    append,
-    remove,
-  } = useFieldArray({
-    control,
-    name: "actions",
-  });
-
-  const {
-    data: hash,
-    writeContractAsync,
-    isPending,
-    error,
-  } = useWriteContract();
+  const { data: hash, writeContractAsync } = useWriteContract();
   const { data: transactionData, isLoading: isConfirming } =
     useWaitForTransactionReceipt({
       hash,
@@ -88,34 +81,38 @@ const NewIdeaForm = () => {
       return;
     }
 
+    const transactions = actions.flatMap((a) =>
+      resolveActionTransactions(a, { chainId: 1 })
+    );
+
     const id = await writeContractAsync({
       chainId: 84532,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       functionName: "createIdea",
+      // TODO: replace with default minimum value
       value: parseEther(".001"),
-      // TODO: replace with real args
       args: [
         {
-          targets: [address] as `0x${string}`[],
-          values: [parseEther(".00001")],
-          signatures: [""],
-          calldatas: ["0x"] as `0x${string}`[],
+          targets: transactions.map((t) => t.target) as `0x${string}`[],
+          values: transactions.map((t) => t.value) as bigint[],
+          signatures: transactions.map((t) => t.signature || "") as string[],
+          calldatas: transactions.map(
+            (t) => t.calldata || "0x"
+          ) as `0x${string}`[],
         },
         `${data.title}\n\n${data.description}`,
       ],
     });
   };
 
-  console.log(actions);
-
   return (
-    <div className="w-[600px] mx-auto pt-12 pb-12">
+    <div className="w-full mx-auto">
       <FormProvider {...methods}>
         <Modal isOpen={isModalOpen} setIsOpen={() => setIsModalOpen(false)}>
           <AddActionForm
-            onSubmitCallback={(data: any) => {
-              append(data);
+            addAction={(action) => {
+              addAction(action);
               setIsModalOpen(false);
             }}
             closeModal={() => setIsModalOpen(false)}
@@ -126,9 +123,6 @@ const NewIdeaForm = () => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="">
-            <h2 className="text-xl text-neutral-800 polymath-disp font-bold text-center py-4 border-b border-neutral-100 tracking-wide">
-              New idea
-            </h2>
             <section className="p-4 border-b border-neutral-100">
               <div className="sm:col-span-3">
                 <label
@@ -142,7 +136,7 @@ const NewIdeaForm = () => {
                     type="text"
                     id="title"
                     {...register("title")}
-                    className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -151,23 +145,37 @@ const NewIdeaForm = () => {
                 <div className="col-span-full">
                   <label
                     htmlFor="description"
-                    className="block text-sm font-medium leading-6 text-neutral-800"
+                    className="block text-sm font-medium leading-6 text-neutral-800 self-end"
                   >
                     Description
                   </label>
+
                   <div className="mt-1">
-                    <textarea
-                      id="description"
-                      rows={3}
-                      className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
-                      defaultValue={""}
-                      {...register("description")}
-                    />
+                    {showMarkdown ? (
+                      <div className="bg-neutral-100 p-2 rounded-md prose text-sm text-neutral-500">
+                        <Markdown>{methods.watch("description")}</Markdown>
+                      </div>
+                    ) : (
+                      <textarea
+                        id="description"
+                        rows={3}
+                        className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-neutral-200 sm:text-sm sm:leading-6"
+                        defaultValue={""}
+                        {...register("description")}
+                      />
+                    )}
                   </div>
                   <p className="mt-1 text-sm leading-6 text-neutral-400">
                     The details of your idea. This will be submitted as the body
-                    of the proposal.
+                    of the proposal. This will be saved as markdown.
                   </p>
+                  <div className="flex justify-end mt-2">
+                    <Button
+                      title={showMarkdown ? "Hide markdown" : "Show markdown"}
+                      onClick={() => setShowMarkdown(!showMarkdown)}
+                      type="secondary"
+                    />
+                  </div>
                 </div>
               </div>
               <div className="sm:col-span-3 mt-6">
@@ -177,39 +185,17 @@ const NewIdeaForm = () => {
                 >
                   Actions
                 </label>
-                <div className="space-y-1 flex flex-col bg-neutral-100 p-2 text-sm rounded-md">
-                  {actions.length === 0 && (
-                    <div className="text-center text-neutral-500">
-                      No actions added yet.
-                    </div>
-                  )}
-                  {actions.map((action, index) => (
-                    <>
-                      {/* <ParsedAction action={action} /> */}
-                      {index} - {action.target}
-                      <input
-                        key={`action-target-${index}`}
-                        {...register(`actions.${index}.target`)}
-                        type="hidden"
-                      />
-                      <input
-                        key={`action-value-${index}`}
-                        {...register(`actions.${index}.value`)}
-                        type="hidden"
-                      />
-                      <input
-                        key={`action-signature-${index}`}
-                        {...register(`actions.${index}.signature`)}
-                        type="hidden"
-                      />
-                      <input
-                        key={`action-calldata-${index}`}
-                        {...register(`actions.${index}.calldata`)}
-                        type="hidden"
-                      />
-                    </>
-                  ))}
-                </div>
+
+                {actions.length === 0 ? (
+                  <div className="text-center text-neutral-500 border rounded text-sm py-4">
+                    No actions added yet.
+                  </div>
+                ) : (
+                  <div className="space-y-1 flex flex-col text-sm rounded-md w-3/4 text-neutral-500">
+                    <ActionList actions={actions} />
+                  </div>
+                )}
+
                 <div className="flex justify-end mt-4">
                   <Button
                     title="Add Action"
@@ -224,7 +210,7 @@ const NewIdeaForm = () => {
           <section className="p-4 flex items-center justify-end space-x-2">
             <Button
               title="Cancel"
-              type="undefined"
+              type="muted"
               onClick={() => {
                 window.history.back();
               }}

@@ -13,7 +13,7 @@ const getIdeas = async () => {
       ideaTokens(where: { isArchived: false }) {
         items {
            id
-           supporters {
+           supports {
                 items {
                     balance
                 }
@@ -95,7 +95,7 @@ const CurrentWaveStats = async () => {
   const delegateProxies = await getDelegates();
 
   const ideaTokensWithPooledEth = ideaTokens.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.items.reduce(
+    const pooledEth = ideaToken.supports.items.reduce(
       (acc, supporter) => acc + parseInt(supporter.balance.toString()),
       0
     );

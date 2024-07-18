@@ -1,63 +1,27 @@
-import Link from "next/link";
-import { formatUnits } from "viem";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import ExpandableIdeaCard from "@/components/IdeaCard/Expandable";
-import { client } from "@/lib/viem";
-import { configAddresses } from "@/lib/constants";
-import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
-import { IdeaToken } from "@/models/IdeaToken/types";
+import { Suspense } from "react";
+import IdeaList from "./components/IdeaList";
+import SupportList from "./components/SupportList";
+import WaveStats from "./components/WaveStats";
 
 // clears out next-js cache for viem calls
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "only-no-store";
 
-const getCurrentWaveInfo = async () => {
-  const waveInfo = await client.readContract({
-    address: configAddresses.IdeaTokenHub as `0x${string}`,
-    abi: IdeaTokenHubABI,
-    functionName: "getCurrentWaveInfo",
-  });
-
-  return waveInfo;
-};
-
-const getWinningIdeasForWave = async (waveId: bigint) => {
-  const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
-  const query = `
-  query GetIdeaTokensForWave($waveId: Int!) {
-    ideaTokens(where: { waveId: $waveId }) {
-        items {
-            id
-            author
-            title
-            description
-            createdAt
-            supporters {
-                items {
-                balance
-              }
-            }
-        }
-      }
-    }
- `;
-
-  const graphqlRequest = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query,
-      variables: { waveId: parseInt(waveId.toString()) },
-    }),
-  };
-
-  const data = await fetch(url, graphqlRequest);
-  const json = await data.json();
-  return json.data.ideaTokens.items;
+const LoadingCard = () => {
+  return (
+    <div className="bg-white rounded-lg p-6">
+      <div className="animate-pulse flex space-x-4">
+        <div className="flex-1 space-y-4 py-1">
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const WavePage = async ({
@@ -65,97 +29,30 @@ const WavePage = async ({
 }: {
   params: { waveNumber: string };
 }) => {
-  const [currentWaveId, _] = await getCurrentWaveInfo();
-  const winningIdeas = (await getWinningIdeasForWave(
-    BigInt(waveNumber)
-  )) as IdeaToken[];
-
-  const ideaTokensWithPooledEth = winningIdeas.map((ideaToken) => {
-    const pooledEth = ideaToken.supporters.items.reduce(
-      (acc, supporter) => acc + parseInt(supporter.balance.toString()),
-      0
-    );
-    return {
-      ...ideaToken,
-      pooledEth,
-    };
-  });
-
-  const totalPooledEth = ideaTokensWithPooledEth.reduce(
-    (acc, ideaToken) => acc + ideaToken.pooledEth,
-    0
-  );
-
-  const sortedIdeaTokens = ideaTokensWithPooledEth.sort(
-    (a, b) => b.pooledEth - a.pooledEth
-  );
-
   return (
-    <div className="min-h-[calc(100vh-65px)] mt-[65px] pt-12 flex flex-col">
-      <section className="w-[600px] mx-auto pb-6">
-        <div className="flex flex-row items-center justify-between">
-          <h1 className="polymath-disp font-bold text-2xl text-neutral-800">
-            Wave {waveNumber}
-          </h1>
-          <div className="flex flex-row divide-x-2 divide-white">
-            {parseInt(waveNumber) > 0 ? (
-              <Link
-                href={`/wave/${parseInt(waveNumber) - 1}`}
-                className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
-              >
-                <ArrowLeftIcon className="text-neutral-500 h-5 w-5" />
-              </Link>
-            ) : (
-              <span className="rounded-l-lg bg-neutral-100 transition-colors p-2">
-                <ArrowLeftIcon className="text-neutral-300 h-5 w-5" />
-              </span>
-            )}
-            <Link
-              href={
-                currentWaveId <= parseInt(waveNumber) + 1
-                  ? "/"
-                  : `/wave/${parseInt(waveNumber) + 1}`
-              }
-              className="rounded-r-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
-            >
-              <ArrowRightIcon className="text-neutral-500 h-5 w-5" />
-            </Link>
-          </div>
+    <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 flex flex-col bg-neutral-100">
+      <section className="container mx-auto pb-12 grid grid-cols-12 gap-6">
+        <div className="col-span-7">
+          <h2 className="polymath-disp font-bold text-2xl text-neutral-800 pt-4">
+            Submissions
+          </h2>
+          <Suspense
+            fallback={
+              <div className="mt-4">
+                <LoadingCard />
+              </div>
+            }
+          >
+            <IdeaList waveNumber={BigInt(waveNumber)} />
+          </Suspense>
         </div>
-
-        <div className="flex flex-col space-y-4 w-full mt-4">
-          <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
-            <span>Total yield</span>
-            <span className="h-1 border-b border-dotted border-neutral-400 flex-grow"></span>
-            <span>{formatUnits(BigInt(totalPooledEth), 18)} ETH</span>
-          </div>
-
-          <div className="flex flex-row justify-between text-neutral-400 items-center space-x-4">
-            <span>Total winners</span>
-            <span className="h-1 border-b border-dotted border-neutral-400 flex-grow"></span>
-            <span>
-              {winningIdeas?.length} idea{winningIdeas?.length !== 1 && "s"}
-            </span>
-          </div>
-        </div>
-      </section>
-      <section className="bg-neutral-100 py-8 grow flex-1">
-        <div className="w-[600px] mx-auto space-y-8">
-          {sortedIdeaTokens.length > 0 ? (
-            sortedIdeaTokens.map((ideaToken, idx) => {
-              return (
-                <div key={`idea-${idx}`}>
-                  <Link href={`/idea/${ideaToken.id}`}>
-                    <ExpandableIdeaCard ideaToken={ideaToken} archived={true} />
-                  </Link>
-                </div>
-              );
-            })
-          ) : (
-            <div className="text-center text-neutral-500">
-              There were no winning ideas in this wave.
-            </div>
-          )}
+        <div className="col-start-9 col-span-4 sticky top-4">
+          <Suspense fallback={<LoadingCard />}>
+            <WaveStats waveNumber={BigInt(waveNumber)} />
+          </Suspense>
+          <Suspense fallback={<LoadingCard />}>
+            <SupportList waveNumber={waveNumber} />
+          </Suspense>
         </div>
       </section>
     </div>
