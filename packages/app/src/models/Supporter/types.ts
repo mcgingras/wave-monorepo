@@ -11,7 +11,7 @@ export type Support = {
   id: string;
   tokenId: bigint;
   token: IdeaToken;
-  balance: bigint;
+  balance: string;
   isCreator: boolean;
   reason: string;
   supporterId: string;

@@ -87,10 +87,10 @@ const BadgeCard = ({ support }: { support: Support }) => {
               {support.token.title}
             </h3>
             <span className="bg-green-100 text-green-500 rounded-lg text-xs px-2 py-0.5 self-start">
-              + {formatUnits(support.balance, 18)} ETH
+              + {formatUnits(BigInt(support.balance), 18)} ETH
             </span>
           </div>
-          <p className="text-sm text-neutral-400 mt-4">"{support.reason}"</p>
+          <p className="text-sm text-neutral-400 mt-4">{support.reason}</p>
         </div>
       </a>
     </div>

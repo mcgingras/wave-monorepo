@@ -5,7 +5,11 @@ import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
-import { useReadContract } from "wagmi";
+import {
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { formatUnits } from "viem";
@@ -72,12 +76,40 @@ const DelegateDrawer = ({
     onClose();
   });
 
-  const { data: claimableYield } = useReadContract({
+  const { data: claimableYield, refetch: refetchClaimYield } = useReadContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
     functionName: "getClaimableYield",
     args: [delegateAddress],
   });
+
+  const {
+    data: hash,
+    writeContractAsync: claimYield,
+    isPending: isClaimYieldPending,
+  } = useWriteContract();
+
+  const { isFetching: isClaimYieldFetching, isFetched: isClaimYieldFetched } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  const claimYieldHelper = async () => {
+    await claimYield({
+      chainId: 84532,
+      address: configAddresses.IdeaTokenHub as `0x${string}`,
+      abi: IdeaTokenHubABI,
+      functionName: "claim",
+      args: [],
+    });
+  };
+
+  useEffect(() => {
+    if (isClaimYieldFetched) {
+      refetchClaimYield();
+      // any other callback we want to run
+    }
+  }, [isClaimYieldFetched]);
 
   const parsedYield = claimableYield ? formatUnits(claimableYield, 18) : 0;
 
@@ -142,9 +174,13 @@ const DelegateDrawer = ({
                         <div className="self-center">
                           <Button
                             type="primary"
-                            title="Claim"
-                            onClick={() => {
-                              // pass
+                            title={
+                              isClaimYieldFetching || isClaimYieldPending
+                                ? "Pending..."
+                                : "Claim"
+                            }
+                            onClick={async () => {
+                              claimYieldHelper();
                             }}
                           />
                         </div>

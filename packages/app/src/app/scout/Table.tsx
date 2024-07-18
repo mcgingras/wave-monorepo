@@ -67,12 +67,12 @@ const Table = ({ data }: { data: Supporter[] }) => {
           const original = info.row.original;
           const supportedIdeas = original.supportedIdeas.items;
           const amount = supportedIdeas.reduce(
-            (acc, item) => acc + item.balance,
-            BigInt(0)
+            (acc, item) => acc + parseInt(item.balance),
+            0
           );
           return (
             <span className="text-neutral-700">
-              {formatUnits(amount, 18)} ETH
+              {formatUnits(BigInt(amount), 18)} ETH
             </span>
           );
         },
@@ -86,14 +86,12 @@ const Table = ({ data }: { data: Supporter[] }) => {
     data,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(), //client-side sorting
-    // onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
-    // state: {
-    //   sorting,
-    // },
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const rows = table.getRowModel().rows;
+
+  console.log(rows);
 
   return (
     <>
