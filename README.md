@@ -1,11 +1,9 @@
 # Wave protocol
 
 todo:
-- figure out yield claiming
 - add nounsProposalStatus + index this data
-- QA delegating + undelegating
 - clean up repo by removing dead code
-
-
-
-REMINDER TO CHANGE ALL VIEM CLIENTS TO MAINNET WHEN WE GO LIVE
+- mobile styling
+- support modal min bid amount
+- hide support button if wave is over
+- REMINDER TO CHANGE ALL VIEM CLIENTS TO MAINNET WHEN WE GO LIVE
