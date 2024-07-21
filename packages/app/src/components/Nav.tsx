@@ -28,7 +28,7 @@ const Nav = () => {
   if (parseFloat(parsedYield) < 0.001) parsedYield = "< 0.001";
 
   return (
-    <div className="border-b fixed top-0 left-0 w-full bg-white z-10">
+    <div className="border-b fixed top-0 left-0 w-full bg-white z-10 px-4">
       {address && (
         <DelegateDrawer
           delegateAddress={address}
