@@ -7,7 +7,7 @@ import { formatUnits } from "viem";
 import EnsImage from "@/app/scout/[address]/EnsImage";
 import EnsName from "@/app/scout/[address]/EnsName";
 import IdeaNFT from "@/components/IdeaNFT";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 
@@ -62,6 +62,7 @@ const getIdea = async (id: bigint) => {
 };
 
 const getWaveStatus = async () => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
@@ -99,7 +100,7 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
   );
 
   return (
-    <Drawer ideaToken={ideaToken}>
+    <Drawer ideaToken={ideaToken} active={waveStatus.active}>
       <section className="px-4">
         <div className="flex flex-row items-center space-x-2">
           <span className="text-neutral-500 bg-neutral-100 rounded-lg text-sm px-4 py-1 flex items-center justify-center mt-1">

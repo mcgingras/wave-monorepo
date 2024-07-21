@@ -2,7 +2,7 @@ import { StaticCountdown } from "@/components/ui/Counter";
 import { WAVELENGTH, configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { formatUnits } from "viem";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { IdeaToken } from "@/models/IdeaToken/types";
 
 const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
@@ -66,6 +66,7 @@ const getDelegates = async () => {
 };
 
 const getCurrentWaveInfo = async () => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
@@ -76,6 +77,7 @@ const getCurrentWaveInfo = async () => {
 };
 
 const getRemainingTime = async (endingBlock: number) => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
   const blockNumber = await client.getBlockNumber();
   const difference = parseInt(blockNumber?.toString()) - endingBlock;
   const remainingBlocks = WAVELENGTH - difference;

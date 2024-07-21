@@ -1,12 +1,13 @@
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { configAddresses } from "@/lib/constants";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 
 export const useFinalizeWave = () => {
   const { data: hash, writeContractAsync, error } = useWriteContract();
 
   const finalizeWave = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const [, , winningIds] = await client.readContract({
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,

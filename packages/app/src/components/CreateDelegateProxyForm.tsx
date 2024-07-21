@@ -10,7 +10,7 @@ import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { NounsTokenABI } from "@/abi/NounsToken";
 import { WaveHarnessABI } from "@/abi/WaveHarness";
 import Button from "./ui/Button";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import revalidate from "@/actions/revalidatePath";
 
@@ -129,6 +129,7 @@ const CreateDelegateProxyForm = ({
     });
   };
   const registerHelper = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const delegateId = await client.readContract({
       address: configAddresses.Wave as `0x${string}`,
       abi: WaveHarnessABI,

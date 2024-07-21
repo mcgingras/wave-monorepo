@@ -18,7 +18,7 @@ export const getClient = (chainId: number) => {
   switch (chainId) {
     case 1:
       return mainnetClient;
-    case 31337:
+    case 84532:
       return baseSepoliaClient;
     default:
       throw new Error("Unsupported chain");

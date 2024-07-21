@@ -1,4 +1,4 @@
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { IdeaToken } from "@/models/IdeaToken/types";
@@ -48,6 +48,7 @@ const getIdeas = async () => {
 };
 
 const getCurrentWaveInfo = async () => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
   const waveInfo = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
@@ -58,6 +59,7 @@ const getCurrentWaveInfo = async () => {
 };
 
 const getRemainingTime = async (startBlock: number) => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
   const blockNumber = await client.getBlockNumber();
   const timeElapsed = parseInt(blockNumber?.toString()) - startBlock;
   const remainingBlocks = WAVELENGTH - timeElapsed;
