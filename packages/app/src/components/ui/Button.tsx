@@ -6,6 +6,7 @@ const Button = ({
   onClick,
   fullWidth,
   isSubmit = false,
+  isDisabled = false,
   children,
 }: {
   title?: string;
@@ -13,10 +14,12 @@ const Button = ({
   onClick?: (e?: any) => void;
   fullWidth?: boolean;
   isSubmit?: boolean;
+  isDisabled?: boolean;
   children?: React.ReactNode;
 }) => {
   return (
     <button
+      disabled={isDisabled}
       type={isSubmit ? "submit" : "button"}
       onClick={onClick}
       className={cn(

@@ -7,6 +7,9 @@ import { formatUnits } from "viem";
 import EnsImage from "@/app/scout/[address]/EnsImage";
 import EnsName from "@/app/scout/[address]/EnsName";
 import IdeaNFT from "@/components/IdeaNFT";
+import { client } from "@/lib/viem";
+import { configAddresses, WAVELENGTH } from "@/lib/constants";
+import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -58,9 +61,27 @@ const getIdea = async (id: bigint) => {
   }
 };
 
+const getWaveStatus = async () => {
+  const waveInfo = await client.readContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "getCurrentWaveInfo",
+  });
+
+  const startBlock = waveInfo[1].startBlock;
+  const blockNumber = await client.getBlockNumber();
+  const blocksElapsed = parseInt(blockNumber?.toString()) - startBlock;
+  const remainingBlocks = WAVELENGTH - blocksElapsed;
+
+  return {
+    active: remainingBlocks > 0 ? true : false,
+  };
+};
+
 const Page = async ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaId } = params;
   const ideaToken = (await getIdea(ideaId)) as IdeaToken;
+  const waveStatus = await getWaveStatus();
   const supports = ideaToken.supports.items;
   const actions = JSON.parse(ideaToken.actions);
   const parsedActions = parse(actions, { chainId: 1 });

@@ -2,17 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Button from "../ui/Button";
-import {
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useReadContract,
-} from "wagmi";
-import { configAddresses } from "@/lib/constants";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { configAddresses, MIN_SPONSOR_AMOUNT } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
-import { parseEther } from "viem";
+import { parseEther, formatEther } from "viem";
 import Modal from "../ui/Modal";
-import Image from "next/image";
 import revalidate from "@/actions/revalidatePath";
+import IdeaNFT from "@/components/ClientIdeaNFT";
 
 const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
   const [amount, setAmount] = useState<number>(0);
@@ -42,27 +38,17 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
     }
   }, [isConfirmed, ideaId]);
 
-  const { data: badgeSVG, error: blah } = useReadContract({
-    address: configAddresses.IdeaTokenHub as `0x${string}`,
-    abi: IdeaTokenHubABI,
-    functionName: "uri",
-    args: [BigInt(ideaId.toString())],
-  });
+  const formatedMin = formatEther(BigInt(MIN_SPONSOR_AMOUNT));
 
   return (
     <>
       <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
         <h2 className="font-bold ">Support idea</h2>
         <p className="text-neutral-500 text-sm">
-          Supporting the idea blah blah this is a description...
+          Show your support for this idea by minting an NFT.
         </p>
         <section className="mt-4 flex items-center justify-center">
-          <Image
-            src="/badge.svg"
-            alt="temporary nft image"
-            width={200}
-            height={200}
-          />
+          <IdeaNFT id={ideaId} className="h-[150px] w-[150px]" />
         </section>
         <div className="col-span-full my-4">
           <label
@@ -71,6 +57,7 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
           >
             Support amount (ETH)
           </label>
+
           <div className="mt-1">
             <input
               value={amount}
@@ -83,6 +70,9 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
               min={0.001}
               step={0.001}
             />
+            <span className="text-xs text-neutral-500">
+              The minimum sponsor amount is {formatedMin}
+            </span>
           </div>
         </div>
         <div className="col-span-full my-4">
@@ -105,7 +95,8 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
           </div>
         </div>
         <Button
-          type="primary"
+          isDisabled={amount < parseFloat(formatedMin)}
+          type={amount < parseFloat(formatedMin) ? "muted" : "primary"}
           title={isConfirming ? "Confirming..." : "Support"}
           fullWidth={true}
           onClick={() => {

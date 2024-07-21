@@ -5,3 +5,4 @@ export const configAddresses = {
 };
 
 export const WAVELENGTH = 150;
+export const MIN_SPONSOR_AMOUNT = 1;
