@@ -10,7 +10,7 @@ import { PropLotHarnessABI } from "@/abi/PropLotHarness";
 import { NounsTokenABI } from "@/abi/NounsToken";
 import { WaveHarnessABI } from "@/abi/WaveHarness";
 import Button from "./ui/Button";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import revalidate from "@/actions/revalidatePath";
 
@@ -121,7 +121,7 @@ const CreateDelegateProxyForm = ({
 
   const delegateHelper = async () => {
     await delegateTo({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.NounsTokenHarness as `0x${string}`,
       abi: NounsTokenABI,
       functionName: "delegate",
@@ -129,6 +129,7 @@ const CreateDelegateProxyForm = ({
     });
   };
   const registerHelper = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const delegateId = await client.readContract({
       address: configAddresses.Wave as `0x${string}`,
       abi: WaveHarnessABI,
@@ -137,7 +138,7 @@ const CreateDelegateProxyForm = ({
     });
 
     await registerDelegate({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.Wave as `0x${string}`,
       abi: PropLotHarnessABI,
       functionName: "registerDelegation",

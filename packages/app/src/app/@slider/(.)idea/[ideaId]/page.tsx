@@ -7,6 +7,9 @@ import { formatUnits } from "viem";
 import EnsImage from "@/app/scout/[address]/EnsImage";
 import EnsName from "@/app/scout/[address]/EnsName";
 import IdeaNFT from "@/components/IdeaNFT";
+import { getClient } from "@/lib/viem";
+import { configAddresses, WAVELENGTH } from "@/lib/constants";
+import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -58,9 +61,28 @@ const getIdea = async (id: bigint) => {
   }
 };
 
+const getWaveStatus = async () => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
+  const waveInfo = await client.readContract({
+    address: configAddresses.IdeaTokenHub as `0x${string}`,
+    abi: IdeaTokenHubABI,
+    functionName: "getCurrentWaveInfo",
+  });
+
+  const startBlock = waveInfo[1].startBlock;
+  const blockNumber = await client.getBlockNumber();
+  const blocksElapsed = parseInt(blockNumber?.toString()) - startBlock;
+  const remainingBlocks = WAVELENGTH - blocksElapsed;
+
+  return {
+    active: remainingBlocks > 0 ? true : false,
+  };
+};
+
 const Page = async ({ params }: { params: { ideaId: bigint } }) => {
   const { ideaId } = params;
   const ideaToken = (await getIdea(ideaId)) as IdeaToken;
+  const waveStatus = await getWaveStatus();
   const supports = ideaToken.supports.items;
   const actions = JSON.parse(ideaToken.actions);
   const parsedActions = parse(actions, { chainId: 1 });
@@ -78,7 +100,7 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
   );
 
   return (
-    <Drawer ideaToken={ideaToken}>
+    <Drawer ideaToken={ideaToken} active={waveStatus.active}>
       <section className="px-4">
         <div className="flex flex-row items-center space-x-2">
           <span className="text-neutral-500 bg-neutral-100 rounded-lg text-sm px-4 py-1 flex items-center justify-center mt-1">

@@ -50,9 +50,9 @@ const FullIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
         </p>
       </div>
       <div className="flex flex-row items-center space-x-4 mt-4">
-        <span className="text-neutral-500">Actions</span>
+        <span className="text-neutral-500 self-start">Actions</span>
         <span className="h-1 border-b border-dotted flex-1 border-neutral-300"></span>
-        <div>
+        <div className="flex flex-wrap gap-2">
           {parsedActions.map((action: any, idx: number) => {
             return (
               <TransactionPill key={`action-${idx}`} transaction={action} />

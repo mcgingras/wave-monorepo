@@ -57,9 +57,11 @@ export function useClickAway(cb: any) {
 
 const Drawer = ({
   ideaToken,
+  active,
   children,
 }: {
   ideaToken: IdeaToken;
+  active: boolean;
   children: React.ReactElement;
 }) => {
   const [open, setOpen] = useState(true);
@@ -124,7 +126,7 @@ const Drawer = ({
                             title="Idea page"
                           />
 
-                          {!ideaToken.isArchived && (
+                          {!ideaToken.isArchived && active && (
                             <SupportButton ideaId={ideaToken.id} />
                           )}
                         </div>

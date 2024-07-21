@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { PropLotHarnessABI } from "@/abi/PropLotHarness";
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { Idea } from "./types";
 
 export const useEstimatedYield = (address: `0x${string}` | undefined) => {
   const [estimatedYield, setEstimatedYield] = useState<number | null>(null);
 
   const getEstimatedYield = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const yieldInfo = await client.readContract({
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
@@ -30,6 +31,7 @@ export const useIdeaData = (ideaId: number) => {
   const [idea, setIdea] = useState<Idea | null>(null);
 
   const getIdea = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const ideaInfo = await client.readContract({
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
@@ -59,6 +61,7 @@ export const useTokenHubData = () => {
   // Returns the following:
   // minRequriedVotes: number
   const getCurrentMinRequiredVotes = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const minRequiredVotes = await client.readContract({
       address: configAddresses.Wave as `0x${string}`,
       abi: PropLotHarnessABI,
@@ -72,6 +75,7 @@ export const useTokenHubData = () => {
   // minRequiredVotes: number
   // numEligibleProposerDelegates: number
   const getAllEligibleProposerDelegates = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const [minRequiredVotes, delegateAddresses] = await client.readContract({
       address: configAddresses.Wave as `0x${string}`,
       abi: PropLotHarnessABI,
@@ -89,6 +93,7 @@ export const useTokenHubData = () => {
   // winningIdeas: Idea[]
   // numWinners: number
   const getWinningIdeaIds = async () => {
+    const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
     const [minRequiredVotes, numWinners, winningIds] =
       await client.readContract({
         address: configAddresses.IdeaTokenHub as `0x${string}`,

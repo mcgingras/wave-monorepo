@@ -1,8 +1,8 @@
 import IdeaCardSkeleton from "@/components/IdeaCard/Skeleton";
-import BackButton from "@/app/components/BackButton";
 import FullIdeaCard from "@/components/IdeaCard/Full";
-import SupportButton from "@/components/IdeaCard/SupportButton";
 import SupportsList from "./SupportsList";
+import SupportForm from "@/components/IdeaCard/SupportForm";
+
 import { Suspense } from "react";
 
 // clears out next-js cache for viem calls
@@ -61,7 +61,6 @@ const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 bg-neutral-100 flex flex-col">
       <div className="container mx-auto pb-12">
-        <BackButton />
         <section className="grid grid-cols-8 gap-8 mt-4">
           <section className="col-span-5">
             {ideaToken ? (
@@ -72,7 +71,7 @@ const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
           </section>
           <section className="col-span-3">
             <div className="p-4 bg-white rounded-xl">
-              <SupportButton ideaId={ideaId} />
+              <SupportForm ideaId={ideaId} />
             </div>
             <Suspense fallback={<IdeaCardSkeleton />}>
               <SupportsList ideaId={ideaId} />

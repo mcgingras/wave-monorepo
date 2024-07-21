@@ -1,8 +1,9 @@
-import { client } from "@/lib/viem";
+import { getClient } from "@/lib/viem";
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 
 const getURI = async (id: BigInt) => {
+  const client = getClient(process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1);
   const svg = await client.readContract({
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,

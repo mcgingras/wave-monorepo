@@ -14,8 +14,6 @@ const decodeCalldataWithAbi = ({
       data: calldata,
     });
 
-    console.log(functionName, args);
-
     if (args == null) return { name: functionName, inputs: [] };
 
     const { inputs: inputTypes } = getAbiItem({

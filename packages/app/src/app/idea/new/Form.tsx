@@ -19,7 +19,10 @@ import { parseEventLogs } from "viem";
 import redirectAndRevalidate from "@/actions/redirectAndRevalidate";
 import Markdown from "react-markdown";
 import ActionList from "@/components/ActionList";
-import { resolveAction as resolveActionTransactions } from "@/lib/camp/transactions";
+import {
+  resolveAction as resolveActionTransactions,
+  unparse,
+} from "@/lib/camp/transactions";
 
 const NewIdeaForm = () => {
   const [showMarkdown, setShowMarkdown] = useState(false);
@@ -81,28 +84,46 @@ const NewIdeaForm = () => {
       return;
     }
 
-    const transactions = actions.flatMap((a) =>
-      resolveActionTransactions(a, { chainId: 1 })
-    );
+    const transactions = actions.flatMap((a) => {
+      // @ts-ignore
+      return unparse(resolveActionTransactions(a, { chainId: 1 }), {
+        chainId: 1,
+      });
+    });
+
+    const joinedTransactions = {
+      targets: [],
+      values: [],
+      signatures: [],
+      calldatas: [],
+    } as any;
+
+    transactions.forEach((transaction) => {
+      joinedTransactions.targets = [
+        ...joinedTransactions.targets,
+        ...transaction.targets,
+      ];
+      joinedTransactions.values = [
+        ...joinedTransactions.values,
+        ...transaction.values,
+      ];
+      joinedTransactions.signatures = [
+        ...joinedTransactions.signatures,
+        ...transaction.signatures,
+      ];
+      joinedTransactions.calldatas = [
+        ...joinedTransactions.calldatas,
+        ...transaction.calldatas,
+      ];
+    });
 
     const id = await writeContractAsync({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       functionName: "createIdea",
-      // TODO: replace with default minimum value
       value: parseEther(".001"),
-      args: [
-        {
-          targets: transactions.map((t) => t.target) as `0x${string}`[],
-          values: transactions.map((t) => t.value) as bigint[],
-          signatures: transactions.map((t) => t.signature || "") as string[],
-          calldatas: transactions.map(
-            (t) => t.calldata || "0x"
-          ) as `0x${string}`[],
-        },
-        `${data.title}\n\n${data.description}`,
-      ],
+      args: [joinedTransactions, `${data.title}\n\n${data.description}`],
     });
   };
 

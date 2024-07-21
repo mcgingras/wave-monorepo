@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { OnChainProvider } from "@/components/OnChainProvider";
+import { Toaster } from "react-hot-toast";
+import MobilePlaceholder from "@/components/MobilePlaceholder";
 import Nav from "@/components/Nav";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "The Wave Protocol",
@@ -21,14 +22,16 @@ export default function RootLayout({
     <html lang="en">
       <body className="polymath-text">
         <OnChainProvider>
-          <>
-            <Toaster />
-            <div className="flex flex-col min-h-screen">
-              <Nav />
-              {children}
-              {slider}
-            </div>
-          </>
+          <MobilePlaceholder>
+            <>
+              <Toaster />
+              <div className="flex flex-col min-h-screen">
+                <Nav />
+                {children}
+                {slider}
+              </div>
+            </>
+          </MobilePlaceholder>
         </OnChainProvider>
       </body>
     </html>

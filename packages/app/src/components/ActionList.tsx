@@ -124,7 +124,7 @@ export const TransactionExplanation = ({
             day: "numeric",
             month: "short",
             year: "numeric",
-          })}
+          })}{" "}
           (
           {
             /* get difference in months */
