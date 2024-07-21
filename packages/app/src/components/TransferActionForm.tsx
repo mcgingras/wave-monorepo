@@ -36,10 +36,6 @@ const TransferActionForm = () => {
           Receiver
         </label>
         <AddressInput name="receiver" />
-        <input type="hidden" {...register("active--target")} />
-        <input type="hidden" {...register("active--value")} />
-        <input type="hidden" {...register("active--signature")} />
-        <input type="hidden" {...register("active--calldata")} />
       </div>
     </>
   );

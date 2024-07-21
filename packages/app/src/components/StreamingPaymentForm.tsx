@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 const StreamingPaymentForm = () => {
   const methods = useFormContext();
+
+  useEffect(() => {
+    methods.setValue("currency", "weth");
+  }, []);
 
   return (
     <div className="flex flex-col space-y-4">

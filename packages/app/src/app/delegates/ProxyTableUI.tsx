@@ -53,7 +53,6 @@ const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
         accessorKey: "Status",
         header: () => <span>Status</span>,
         cell: (info) => {
-          console.log(info);
           const votingPower = info.getValue();
           const isActive = parseInt(String(votingPower)) > 2;
           if (isActive) {

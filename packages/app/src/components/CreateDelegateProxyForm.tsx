@@ -121,7 +121,7 @@ const CreateDelegateProxyForm = ({
 
   const delegateHelper = async () => {
     await delegateTo({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.NounsTokenHarness as `0x${string}`,
       abi: NounsTokenABI,
       functionName: "delegate",
@@ -138,7 +138,7 @@ const CreateDelegateProxyForm = ({
     });
 
     await registerDelegate({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.Wave as `0x${string}`,
       abi: PropLotHarnessABI,
       functionName: "registerDelegation",

@@ -111,8 +111,6 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
     });
   }
 
-  console.log("direction", direction);
-
   const nounsBalance = await context.client.readContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
@@ -121,8 +119,6 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
       direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
     ],
   });
-
-  console.log(nounsBalance);
 
   for (let i = 0; i < nounsBalance; i++) {
     const nounId = await context.client.readContract({

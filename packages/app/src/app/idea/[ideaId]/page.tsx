@@ -61,7 +61,6 @@ const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
   return (
     <div className="min-h-[calc(100vh-72px)] mt-[72px] pt-12 bg-neutral-100 flex flex-col">
       <div className="container mx-auto pb-12">
-        <BackButton />
         <section className="grid grid-cols-8 gap-8 mt-4">
           <section className="col-span-5">
             {ideaToken ? (

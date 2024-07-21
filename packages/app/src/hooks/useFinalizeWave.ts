@@ -24,7 +24,7 @@ export const useFinalizeWave = () => {
       );
 
     const r = await writeContractAsync({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       functionName: "finalizeWave",

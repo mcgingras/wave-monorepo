@@ -91,8 +91,6 @@ const Table = ({ data }: { data: Supporter[] }) => {
 
   const rows = table.getRowModel().rows;
 
-  console.log(rows);
-
   return (
     <>
       <div className="mt-4 block max-w-full overflow-x-scroll overflow-y-hidden">

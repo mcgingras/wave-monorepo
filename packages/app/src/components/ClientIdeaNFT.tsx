@@ -6,7 +6,7 @@ import { useReadContract } from "wagmi";
 const IdeaNFT = ({ id, className }: { id: BigInt; className?: string }) => {
   const [svg, setSvg] = useState<string>("");
   const { data: badgeSVG } = useReadContract({
-    chainId: 84532,
+    chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
     address: configAddresses.IdeaTokenHub as `0x${string}`,
     abi: IdeaTokenHubABI,
     functionName: "uri",

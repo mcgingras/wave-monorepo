@@ -43,7 +43,7 @@ const ArgumentInputs = ({
 const renderInput = (input: any, inputValue: any, setInputValue: any) => {
   const labelContent =
     input.name == null ? null : (
-      <span>
+      <span className="block text-sm font-medium leading-6 text-neutral-500">
         <span>{input.internalType ?? input.type}</span> {input.name}
       </span>
     );
@@ -170,7 +170,7 @@ const renderInput = (input: any, inputValue: any, setInputValue: any) => {
           <div className="flex flex-col">
             <label>{labelContent}</label>
             <input
-              className="p-1 border"
+              className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
               type="number"
               min={min.toString()}
               max={max.toString()}
@@ -195,6 +195,7 @@ const renderInput = (input: any, inputValue: any, setInputValue: any) => {
           <div className="flex flex-col">
             <label>{labelContent}</label>
             <input
+              className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
               type="text"
               value={inputValue}
               onChange={(maybeAddress) => {
@@ -210,7 +211,7 @@ const renderInput = (input: any, inputValue: any, setInputValue: any) => {
           <div className="flex flex-col">
             <label>{labelContent}</label>
             <input
-              className="border p-1"
+              className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
               value={inputValue}
               // placeholder={getArgumentInputPlaceholder(input.type)}
               onChange={(e) => {
@@ -367,19 +368,10 @@ const CustomTransactionForm = () => {
     selectedContractCallAbiItem?.payable ??
     selectedContractCallAbiItem?.stateMutability === "payable";
 
-  console.log("signature", signature);
-  console.log(selectedContractCallAbiItem);
-
   return (
     <div className="flex flex-col space-y-4">
-      <div>
-        <p>
-          Helpful contract info for copy pasting...
-          0x6f3E6272A167e8AcCb32072d08E0957F9c79223d
-        </p>
-      </div>
       <div className="flex flex-col">
-        <label className="text-sm font-bold text-neutral-500 mb-1 ml-1">
+        <label className="block text-sm font-medium leading-6 text-neutral-900">
           Contract address
         </label>
         <Controller
@@ -387,17 +379,17 @@ const CustomTransactionForm = () => {
           name="target"
           render={({ field: { onChange } }) => (
             <input
+              className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
               onChange={(e: any) => {
                 onChange(e);
                 fetchContractData(e.target.value);
               }}
-              className="border p-1"
             />
           )}
         />
         {contractCallAbiItemOptions?.length > 0 ? (
           <div className="mt-4">
-            <label className="text-sm font-bold text-neutral-500 mb-1 ml-1">
+            <label className="block text-sm font-medium leading-6 text-neutral-900">
               Function to call
             </label>
             <Controller
@@ -405,7 +397,7 @@ const CustomTransactionForm = () => {
               name="signature"
               render={({ field: { onChange } }) => (
                 <select
-                  className="border p-1 w-full"
+                  className="block w-full rounded-md border-0 p-1.5 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                   onChange={(e: any) => {
                     onChange(e);
                     const targetOption = contractCallAbiItemOptions?.find(
@@ -432,7 +424,7 @@ const CustomTransactionForm = () => {
           {selectedContractCallAbiItem != null &&
             selectedContractCallAbiItem.inputs.length > 0 && (
               <div className="mt-4">
-                <label className="text-sm font-bold text-neutral-500 mb-1 ml-1">
+                <label className="block text-sm font-medium leading-6 text-neutral-900">
                   Arguments
                 </label>
                 <ArgumentInputs
@@ -448,7 +440,7 @@ const CustomTransactionForm = () => {
         </>
         {isPayableContractCall && (
           <div>
-            <label className="text-sm font-bold text-neutral-500 mb-1 ml-1">
+            <label className="block text-sm font-medium leading-6 text-neutral-900">
               Value
             </label>
             <input type="number" {...methods.register("ethValue")} />

@@ -1,7 +1,13 @@
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 const OneTimePaymentForm = () => {
   const methods = useFormContext();
+
+  useEffect(() => {
+    methods.setValue("currency", "eth");
+  }, []);
+
   return (
     <div className="flex flex-col space-y-4">
       <div className="flex flex-col">

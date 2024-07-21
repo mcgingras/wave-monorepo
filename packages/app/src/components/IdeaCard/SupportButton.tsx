@@ -22,7 +22,7 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
 
   const supportIdea = async (amount: number) => {
     writeContract({
-      chainId: 84532,
+      chainId: process.env.NEXT_PUBLIC_ENV === "dev" ? 84532 : 1,
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       value: parseEther(String(amount)),

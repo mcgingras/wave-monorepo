@@ -104,7 +104,6 @@ const ScoutPage = async ({
 }) => {
   const supporter = await getSupporter(params.address);
   const supportedIdeas = supporter.supportedIdeas.items;
-  console.log(supportedIdeas);
   const proposals = supportedIdeas.filter(
     (support: any) => support.token.nounsProposalId !== null
   );
