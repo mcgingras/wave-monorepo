@@ -4,5 +4,5 @@ export const configAddresses = {
   NounsTokenHarness: "0xE8b46D16107e1d562B62B5aA8d4bF9A60e6c51b4",
 };
 
-export const WAVELENGTH = 7200;
+export const WAVELENGTH = 43200;
 export const MIN_SPONSOR_AMOUNT = 1;
