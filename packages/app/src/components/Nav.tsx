@@ -25,7 +25,9 @@ const Nav = () => {
   });
 
   let parsedYield = claimableYield ? formatUnits(claimableYield, 18) : "0";
-  if (parseFloat(parsedYield) < 0.001) parsedYield = "< 0.001";
+  if (parseFloat(parsedYield) == 0) parsedYield = "0";
+  if (parseFloat(parsedYield) > 0 && parseFloat(parsedYield) < 0.001)
+    parsedYield = "< 0.001";
 
   return (
     <div className="border-b fixed top-0 left-0 w-full bg-white z-10 px-4">
@@ -45,15 +47,22 @@ const Nav = () => {
               </Link>
             </li>
             <li>
-              <Link href="/" className="text-blue-500">
+              <Link
+                href="/"
+                className={`hover:text-blue-500 transition-all ${
+                  pathname === "/" ? "text-blue-500" : "text-neutral-400"
+                }`}
+              >
                 Wave Protocol
               </Link>
             </li>
             <li>
               <Link
                 href="/delegates"
-                className={` text-neutral-400 border-0 hover:border-b transition-all ${
-                  pathname === "/delegates" ? "border-b pb-1" : "pb-1"
+                className={`hover:text-blue-500 transition-all ${
+                  pathname === "/delegates"
+                    ? "text-blue-500"
+                    : "text-neutral-400"
                 }`}
               >
                 Delegates
@@ -61,9 +70,11 @@ const Nav = () => {
             </li>
             <li>
               <Link
-                href="/scout"
-                className={`text-neutral-400 border-0 hover:border-b transition-all ${
-                  pathname.includes("scout") ? "border-b pb-1" : "pb-1"
+                href="/supporter"
+                className={`hover:text-blue-500 transition-all ${
+                  pathname.includes("supporter")
+                    ? "text-blue-500"
+                    : "text-neutral-400"
                 }`}
               >
                 Supporters

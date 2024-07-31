@@ -22,6 +22,9 @@ const Hero = ({ proxies }: { proxies: any }) => {
     args: [address as `0x${string}`],
   });
 
+  console.log("address", address);
+  console.log("balanceOf", nounsBalance);
+
   const { data: delegatedTo } = useReadContract({
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
@@ -51,7 +54,7 @@ const Hero = ({ proxies }: { proxies: any }) => {
         nounsBalance !== BigInt(1) && "s"
       } to delegate`,
       description:
-        "Nouns delegated to Wave are used to turn ideas into proposals, and in turn earn a reward! Delegate your Noun to start earning.",
+        "Nouns delegated to Wave are used to turn ideas into proposals, and in turn earn a reward! If you have a noun, delegate to start earning.",
       buttonText: "Get started",
       onClick: () => {
         setIsDelegateModalOpen(true);
@@ -103,17 +106,19 @@ const Hero = ({ proxies }: { proxies: any }) => {
           id={4}
           className="h-16 w-16 rounded-full data-[fallback]:bg-neutral-300"
         />
-        {!!nounsBalance && (
+        {nounsBalance !== undefined && (
           <p className="text-2xl font-bold mt-6">{stageConfig[stage].title}</p>
         )}
         <p className="text-center text-neutral-500 text-sm mb-4 mt-2">
           {stageConfig[stage].description}
         </p>
-        <Button
-          title={stageConfig[stage].buttonText}
-          type="primary"
-          onClick={stageConfig[stage].onClick}
-        />
+        {nounsBalance !== undefined && nounsBalance > BigInt(0) && (
+          <Button
+            title={stageConfig[stage].buttonText}
+            type="primary"
+            onClick={stageConfig[stage].onClick}
+          />
+        )}
       </div>
     </section>
   );

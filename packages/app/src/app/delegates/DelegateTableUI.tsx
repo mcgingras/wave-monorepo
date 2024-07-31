@@ -36,12 +36,6 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
           );
         },
       },
-      //   {
-      //     accessorFn: (row) => 0,
-      //     accessorKey: "Yield earned",
-      //     header: () => <span>Yield earned</span>,
-      //     cell: (info) => info.getValue(),
-      //   },
     ],
     []
   );
@@ -49,7 +43,6 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
   const table = useReactTable({
     columns,
     data,
-    debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(), //client-side sorting
     // onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
@@ -116,7 +109,7 @@ const DelegateTableUI = ({ data }: { data: any[] }) => {
             return (
               <tr
                 key={row.id}
-                className="[&:not(:last-child)]:border-b cursor-pointer"
+                className="[&:not(:last-child)]:border-b"
                 onClick={() => {
                   // todo
                 }}

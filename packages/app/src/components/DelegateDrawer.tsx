@@ -13,8 +13,9 @@ import {
 import { configAddresses } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import { formatUnits } from "viem";
-import EnsImage from "@/app/scout/[address]/EnsImage";
-import EnsName from "@/app/scout/[address]/EnsName";
+import EnsImage from "@/app/supporter/[address]/EnsImage";
+import EnsName from "@/app/supporter/[address]/EnsName";
+import toast from "react-hot-toast";
 
 function hasParentWithId(element: HTMLElement | null, idName: string) {
   while (element) {
@@ -180,7 +181,14 @@ const DelegateDrawer = ({
                                 : "Claim"
                             }
                             onClick={async () => {
-                              claimYieldHelper();
+                              if (
+                                claimableYield !== undefined &&
+                                claimableYield === BigInt(0)
+                              ) {
+                                toast.error("No yield to claim");
+                              } else {
+                                claimYieldHelper();
+                              }
                             }}
                           />
                         </div>

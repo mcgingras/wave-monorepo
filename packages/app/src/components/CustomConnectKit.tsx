@@ -7,7 +7,6 @@ import { useDisconnect } from "wagmi";
 import { useRouter } from "next/navigation";
 import { truncateEthAddress } from "@/lib/utils";
 import { Transition } from "@headlessui/react";
-import Button from "./ui/Button";
 
 const CustomConnectKit = () => {
   const router = useRouter();
@@ -76,7 +75,7 @@ const CustomConnectKit = () => {
                   <li
                     className="cursor-pointer text-neutral-400 hover:text-neutral-500 transition-all"
                     onClick={() => {
-                      router.push(`/scout/${address}`);
+                      router.push(`/supporter/${address}`);
                       setShowDropdown(false);
                     }}
                   >

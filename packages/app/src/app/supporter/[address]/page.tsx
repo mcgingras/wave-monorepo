@@ -97,13 +97,13 @@ const BadgeCard = ({ support }: { support: Support }) => {
   );
 };
 
-const ScoutPage = async ({
+const SupporterPage = async ({
   params,
 }: {
   params: { address: `0x${string}` };
 }) => {
   const supporter = await getSupporter(params.address);
-  const supportedIdeas = supporter.supportedIdeas.items;
+  const supportedIdeas = supporter ? supporter.supportedIdeas.items : [];
   const proposals = supportedIdeas.filter(
     (support: any) => support.token.nounsProposalId !== null
   );
@@ -161,7 +161,9 @@ const ScoutPage = async ({
               })}
             </div>
           ) : (
-            <div className="text-center">No supported ideas</div>
+            <div className="text-center text-neutral-500 mt-4 border rounded p-12">
+              This supporter has not supported any ideas
+            </div>
           )}
         </section>
       </div>
@@ -169,4 +171,4 @@ const ScoutPage = async ({
   );
 };
 
-export default ScoutPage;
+export default SupporterPage;

@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="polymath-text">
+      <body className="polymath-text bg-neutral-100">
         <OnChainProvider>
           <MobilePlaceholder>
             <>

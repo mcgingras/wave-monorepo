@@ -4,8 +4,8 @@ import { parse, buildActions } from "@/lib/camp/transactions";
 import ActionListItems from "./ActionListItems";
 import SupportListUI from "@/app/components/SupportListUI";
 import { formatUnits } from "viem";
-import EnsImage from "@/app/scout/[address]/EnsImage";
-import EnsName from "@/app/scout/[address]/EnsName";
+import EnsImage from "@/app/supporter/[address]/EnsImage";
+import EnsName from "@/app/supporter/[address]/EnsName";
 import IdeaNFT from "@/components/IdeaNFT";
 import { getClient } from "@/lib/viem";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
@@ -136,7 +136,7 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
             {actions.targets.length} action{actions.targets.length !== 1 && "s"}
           </h3>
         </div>
-        <div className="py-2">
+        <div className="py-2 space-y-2">
           <ActionListItems builtActions={builtActions} />
         </div>
         <div className="border-b mt-4">

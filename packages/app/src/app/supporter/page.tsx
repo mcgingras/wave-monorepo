@@ -49,7 +49,7 @@ const getSupporters = async () => {
   }
 };
 
-const ScoutsPage = async () => {
+const SupportersPage = async () => {
   const supporters = await getSupporters();
 
   return (
@@ -64,4 +64,4 @@ const ScoutsPage = async () => {
   );
 };
 
-export default ScoutsPage;
+export default SupportersPage;

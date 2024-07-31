@@ -77,7 +77,6 @@ const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
   const table = useReactTable({
     columns,
     data,
-    debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });

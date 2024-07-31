@@ -9,10 +9,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import AvatarAddress from "@/components/ui/AvatarAddress";
-
 import { formatUnits } from "viem";
 import { useRouter } from "next/navigation";
 import { Supporter } from "@/models/Supporter/types";
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const Table = ({ data }: { data: Supporter[] }) => {
   const router = useRouter();
@@ -28,51 +28,57 @@ const Table = ({ data }: { data: Supporter[] }) => {
       {
         id: "Ideas",
         header: () => <span>Ideas supported</span>,
+        accessorFn: (row) => row.supportedIdeas.items.length,
         cell: (info) => {
-          const original = info.row.original;
-          const supportedIdeas = original.supportedIdeas.items;
           return (
-            <span className="text-neutral-700">{supportedIdeas.length}</span>
+            <span className="text-neutral-700">
+              {info.getValue() as string}
+            </span>
           );
         },
       },
       {
         id: "Proposals",
         header: () => <span>Proposals</span>,
-        cell: (info) => {
-          const original = info.row.original;
-          const supportedIdeas = original.supportedIdeas.items;
-          const proposals = supportedIdeas.filter(
+        accessorFn: (row) =>
+          row.supportedIdeas.items.filter(
             (item) => item.token.nounsProposalId !== null
+          ).length,
+        cell: (info) => {
+          return (
+            <span className="text-neutral-700">
+              {info.getValue() as string}
+            </span>
           );
-          return <span className="text-neutral-700">{proposals.length}</span>;
         },
       },
       {
         id: "Passed proposals",
         header: () => <span>Passed proposals</span>,
-        cell: (info) => {
-          const original = info.row.original;
-          const supportedIdeas = original.supportedIdeas.items;
-          const proposals = supportedIdeas.filter(
+        accessorFn: (row) =>
+          row.supportedIdeas.items.filter(
             (item) => item.token.nounsProposalStatus === "passed"
+          ).length,
+        cell: (info) => {
+          return (
+            <span className="text-neutral-700">
+              {info.getValue() as string}
+            </span>
           );
-          return <span className="text-neutral-700">{proposals.length}</span>;
         },
       },
       {
         id: "amount",
         header: () => <span>ETH contributed</span>,
-        cell: (info) => {
-          const original = info.row.original;
-          const supportedIdeas = original.supportedIdeas.items;
-          const amount = supportedIdeas.reduce(
+        accessorFn: (row) =>
+          row.supportedIdeas.items.reduce(
             (acc, item) => acc + parseInt(item.balance),
             0
-          );
+          ),
+        cell: (info) => {
           return (
             <span className="text-neutral-700">
-              {formatUnits(BigInt(amount), 18)} ETH
+              {formatUnits(BigInt(info.getValue() as number), 18)} ETH
             </span>
           );
         },
@@ -84,7 +90,6 @@ const Table = ({ data }: { data: Supporter[] }) => {
   const table = useReactTable({
     columns,
     data,
-    debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
@@ -110,7 +115,7 @@ const Table = ({ data }: { data: Supporter[] }) => {
                         <div
                           className={
                             header.column.getCanSort()
-                              ? "cursor-pointer select-none"
+                              ? "cursor-pointer select-none flex flex-row items-center"
                               : ""
                           }
                           onClick={header.column.getToggleSortingHandler()}
@@ -129,9 +134,11 @@ const Table = ({ data }: { data: Supporter[] }) => {
                             header.getContext()
                           )}
                           {{
-                            asc: " 🔼",
-                            desc: " 🔽",
-                          }[header.column.getIsSorted() as string] ?? null}
+                            asc: <ChevronUpIcon className="w-4 h-4" />,
+                            desc: <ChevronDownIcon className="w-4 h-4" />,
+                          }[header.column.getIsSorted() as string] ?? (
+                            <span className="w-4 h-4" />
+                          )}
                         </div>
                       )}
                     </th>
@@ -147,7 +154,7 @@ const Table = ({ data }: { data: Supporter[] }) => {
                   key={row.id}
                   className="[&:not(:last-child)]:border-b cursor-pointer"
                   onClick={() => {
-                    router.push(`/scout/${row.original.id}`);
+                    router.push(`/supporter/${row.original.id}`);
                   }}
                 >
                   {row.getVisibleCells().map((cell) => {
@@ -177,7 +184,7 @@ const Table = ({ data }: { data: Supporter[] }) => {
         </table>
         {rows.length === 0 && (
           <div className="text-center text-neutral-500 w-full bg-white p-4 rounded-lg">
-            No scouts found.
+            No supporters found.
           </div>
         )}
       </div>
