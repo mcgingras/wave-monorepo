@@ -15,7 +15,7 @@ const SupportButton = ({ ideaId }: { ideaId: BigInt }) => {
         <p className="text-neutral-500 text-sm">
           Show your support for this idea by minting an NFT.
         </p>
-        <SupportForm ideaId={ideaId} />
+        <SupportForm ideaId={ideaId} isArchived={false} />
       </Modal>
       <Button
         type="secondary"
