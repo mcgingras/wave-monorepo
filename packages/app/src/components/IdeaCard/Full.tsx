@@ -23,7 +23,12 @@ const FullIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   const parsedActions = parse(actions, { chainId: 1 });
 
   return (
-    <div className="bg-white rounded-2xl flex flex-col p-6 hover:shadow-[0_0_0_2px_rgba(229,229,229,1)] transition-all">
+    <div
+      className={`bg-white rounded-2xl flex flex-col p-6  ${
+        !ideaToken.isArchived &&
+        "hover:shadow-[0_0_0_2px_rgba(229,229,229,1)] transition-all"
+      }`}
+    >
       <div className="flex flex-row items-center space-x-2">
         <span className="text-neutral-500 bg-neutral-100 rounded-lg text-sm px-4 py-1 flex items-center justify-center">
           {ideaToken.id.toString()}

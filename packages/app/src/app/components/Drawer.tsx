@@ -130,20 +130,6 @@ const Drawer = ({
                             <SupportButton ideaId={ideaToken.id} />
                           )}
                         </div>
-                        <div className="flex flex-row space-x-1">
-                          <Link
-                            href={`/idea/${Number(ideaToken.id) - 1}`}
-                            className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
-                          >
-                            <ArrowUpIcon className="text-neutral-500 h-5 w-5" />
-                          </Link>
-                          <Link
-                            href={`/idea/${Number(ideaToken.id) + 1}`}
-                            className="rounded-r-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"
-                          >
-                            <ArrowDownIcon className="text-neutral-500 h-5 w-5" />
-                          </Link>
-                        </div>
                       </div>
                     </div>
                     <div className="relative mt-4 flex-1">{children}</div>

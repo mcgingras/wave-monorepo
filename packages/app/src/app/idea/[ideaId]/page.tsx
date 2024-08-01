@@ -71,7 +71,7 @@ const IdeaPage = async ({ params }: { params: { ideaId: bigint } }) => {
           </section>
           <section className="col-span-3">
             <div className="p-4 bg-white rounded-xl">
-              <SupportForm ideaId={ideaId} />
+              <SupportForm ideaId={ideaId} isArchived={ideaToken?.isArchived} />
             </div>
             <Suspense fallback={<IdeaCardSkeleton />}>
               <SupportsList ideaId={ideaId} />
