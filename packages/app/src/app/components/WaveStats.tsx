@@ -63,7 +63,7 @@ const getRemainingTime = async (startBlock: number) => {
   const blockNumber = await client.getBlockNumber();
   const timeElapsed = parseInt(blockNumber?.toString()) - startBlock;
   const remainingBlocks = WAVELENGTH - timeElapsed;
-  const remainingSeconds = remainingBlocks * 2;
+  const remainingSeconds = remainingBlocks * 12;
   const now = new Date();
   const remainingTime = new Date(
     now.getTime() + (remainingSeconds > 0 ? remainingSeconds : 0) * 1000
