@@ -10,8 +10,8 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { useForm, FormProvider } from "react-hook-form";
-import { configAddresses } from "@/lib/constants";
-import { parseEther } from "viem";
+import { configAddresses, MIN_SPONSOR_AMOUNT } from "@/lib/constants";
+import { parseEther, formatEther } from "viem";
 import { Action } from "@/lib/camp/types";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
@@ -122,7 +122,8 @@ const NewIdeaForm = () => {
       address: configAddresses.IdeaTokenHub as `0x${string}`,
       abi: IdeaTokenHubABI,
       functionName: "createIdea",
-      value: parseEther(".001"),
+      value: BigInt(MIN_SPONSOR_AMOUNT),
+
       args: [joinedTransactions, `${data.title}\n\n${data.description}`],
     });
   };

@@ -65,10 +65,10 @@ const SupportForm = ({
                 id="amount"
                 name="amount"
                 className="block w-full rounded-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-neutral-600 sm:text-sm sm:leading-6"
-                placeholder=".001"
+                placeholder={formatedMin}
                 type="number"
-                min={0.001}
-                step={0.001}
+                min={formatedMin}
+                step={0.000000001}
               />
               <span className="text-xs text-neutral-500">
                 The minimum sponsor amount is {formatedMin}
