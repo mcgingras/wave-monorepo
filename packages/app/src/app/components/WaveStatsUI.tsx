@@ -55,10 +55,11 @@ const WaveStatsUI = ({
     };
   });
 
-  const totalPooledEth = ideaTokensWithPooledEth?.reduce(
-    (acc, ideaToken) => acc + ideaToken.pooledEth,
-    0
-  );
+  const totalPooledEth =
+    ideaTokensWithPooledEth?.reduce(
+      (acc, ideaToken) => acc + ideaToken.pooledEth,
+      0
+    ) || BigInt(0);
 
   return (
     <div className="bg-white rounded-lg p-4">
@@ -96,7 +97,7 @@ const WaveStatsUI = ({
       <div className="flex flex-row space-x-2 mt-4">
         <div className="bg-neutral-100 rounded-lg p-4 flex-1 flex flex-col text-center">
           <span className="text-sm text-neutral-500">Submissions</span>
-          <span>{ideaTokens.length}</span>
+          <span>{ideaTokens?.length || 0}</span>
         </div>
         <div className="bg-neutral-100 rounded-lg p-4 flex-1 flex flex-col text-center">
           <span className="text-sm text-neutral-500">Total yield</span>
