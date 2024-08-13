@@ -10,6 +10,7 @@ import IdeaNFT from "@/components/IdeaNFT";
 import { getClient } from "@/lib/viem";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
+import Markdown from "react-markdown";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -142,7 +143,9 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
         <div className="border-b mt-4">
           <h3 className="text-sm text-neutral-500">Description</h3>
         </div>
-        <p className="mt-2 text-sm text-neutral-700">{ideaToken.description}</p>
+        <div className="prose text-sm text-neutral-700 mt-2">
+          <Markdown>{ideaToken.description}</Markdown>
+        </div>
 
         <SupportListUI
           supports={supports}

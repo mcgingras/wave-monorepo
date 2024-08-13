@@ -21,7 +21,7 @@ const MobilePlaceholder = ({ children }: { children: React.ReactNode }) => {
           <WaveIcon className="h-24 w-24" />
           <WaveIcon className="h-24 w-24" />
         </div>
-        <h1 className="text-6xl font-bold polymath-disp text-neutral-800">
+        <h1 className="text-6xl font-bold polymath-disp text-neutral-800 text-center">
           Wave Protocol
         </h1>
         <div className="text-sm inline-block rounded-full px-4 py-2 mt-12 bg-blue-100 text-blue-500">
