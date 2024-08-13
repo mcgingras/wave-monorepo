@@ -6,7 +6,9 @@ import { IdeaTokenHubABI } from "../abi/IdeaTokenHub";
 
 ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
   const { IdeaToken } = context.db;
-  const [title, description] = event.args.idea.description.split(`\n\n`);
+  //   const [title, description] = event.args.idea.description.split(`\n\n`);
+  const [title, ...description] = event.args.idea.description.split(`\n\n`);
+  const completeDescription = description.join(`\n\n`);
 
   const actions = JSON.stringify(event.args.idea.ideaTxs, (_, v) =>
     typeof v === "bigint" ? parseInt(v.toString()) : v
@@ -18,7 +20,7 @@ ponder.on("IdeaTokenHub:IdeaCreated", async ({ event, context }) => {
       author: event.args.creator,
       title: title || "",
       actions,
-      description: description || "",
+      description: completeDescription || "",
       createdAt: event.block.timestamp,
       isArchived: false,
     },
