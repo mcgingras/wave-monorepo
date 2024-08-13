@@ -124,7 +124,7 @@ const NewIdeaForm = () => {
       functionName: "createIdea",
       value: BigInt(MIN_SPONSOR_AMOUNT),
 
-      args: [joinedTransactions, `${data.title}\n\n${data.description}`],
+      args: [joinedTransactions, `#${data.title}\n\n${data.description}`],
     });
   };
 

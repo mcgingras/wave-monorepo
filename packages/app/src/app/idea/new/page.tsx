@@ -32,11 +32,9 @@ const getRemainingTime = async (endingBlock: number) => {
 };
 
 const NewIdeaPage = async () => {
-  //   const [_, waveInfo] = await getCurrentWaveInfo();
-  //   const { remainingSeconds } = await getRemainingTime(waveInfo.endBlock);
-
-  //   const isActive = remainingSeconds <= 0;
-  const isActive = true;
+  const [_, waveInfo] = await getCurrentWaveInfo();
+  const { remainingSeconds } = await getRemainingTime(waveInfo.endBlock);
+  const isActive = remainingSeconds <= 0;
 
   return (
     <section className="bg-neutral-100 min-h-[calc(100vh-72px)] mt-[72px]">

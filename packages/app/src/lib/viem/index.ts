@@ -1,5 +1,5 @@
 import { createPublicClient, http } from "viem";
-import { baseSepolia, mainnet } from "viem/chains";
+import { mainnet } from "viem/chains";
 
 const mainnetClient = createPublicClient({
   chain: mainnet,
@@ -9,23 +9,11 @@ const mainnetClient = createPublicClient({
   ),
 });
 
-const baseSepoliaClient = createPublicClient({
-  chain: baseSepolia,
-  transport: http(process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC!),
-});
-
 export const getClient = (chainId: number) => {
   switch (chainId) {
     case 1:
       return mainnetClient;
-    case 84532:
-      return baseSepoliaClient;
     default:
       throw new Error("Unsupported chain");
   }
 };
-
-export const client = createPublicClient({
-  chain: baseSepolia,
-  transport: http(process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC!),
-});
