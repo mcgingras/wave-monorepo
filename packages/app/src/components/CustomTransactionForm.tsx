@@ -152,7 +152,7 @@ const renderInput = (input: any, inputValue: any, setInputValue: any) => {
             <select
               value={inputValue}
               onChange={(value) => {
-                setInputValue(value);
+                setInputValue(value.target.value);
               }}
             >
               <option value="true">true</option>
@@ -199,7 +199,7 @@ const renderInput = (input: any, inputValue: any, setInputValue: any) => {
               type="text"
               value={inputValue}
               onChange={(maybeAddress) => {
-                setInputValue(maybeAddress);
+                setInputValue(maybeAddress.target.value);
               }}
               //   placeholder={getArgumentInputPlaceholder(input.type)}
             />
