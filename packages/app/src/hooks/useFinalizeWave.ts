@@ -20,7 +20,7 @@ export const useFinalizeWave = () => {
 
     const winningIdeaDescriptions =
       winningIdeaDescriptionsResponse.ideaTokens.items.map(
-        (idea: any) => idea.description
+        (idea: any) => `${idea.title}\n\n${idea.description}`
       );
 
     const r = await writeContractAsync({
@@ -51,6 +51,7 @@ const getIdeaDescriptions = async (ids: readonly bigint[]) => {
             ideaTokens(where: {id_in: $ideaTokenIds}) {
                 items {
                   description
+                  title
                }
             }
         }
