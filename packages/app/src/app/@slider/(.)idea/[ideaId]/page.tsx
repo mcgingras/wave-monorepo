@@ -11,6 +11,7 @@ import { getClient } from "@/lib/viem";
 import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import Markdown from "react-markdown";
+import { ideaOneFixed } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -100,6 +101,11 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
     0
   );
 
+  let resolvedDescription = ideaToken.description;
+  if (BigInt(ideaToken.id.toString()) === BigInt(1)) {
+    resolvedDescription = ideaOneFixed;
+  }
+
   return (
     <Drawer ideaToken={ideaToken} active={waveStatus.active}>
       <section className="px-4">
@@ -144,7 +150,7 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
           <h3 className="text-sm text-neutral-500">Description</h3>
         </div>
         <div className="prose text-sm text-neutral-700 mt-2">
-          <Markdown>{ideaToken.description}</Markdown>
+          <Markdown>{resolvedDescription}</Markdown>
         </div>
 
         <SupportListUI
