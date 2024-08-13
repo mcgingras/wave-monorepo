@@ -82,9 +82,7 @@ const FullIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   const parsedActions = parse(actions, { chainId: 1 });
 
   let resolvedDescription = ideaToken.description;
-  console.log('ideaToken.id:', ideaToken.id, 'Type:', typeof ideaToken.id);
-  console.log('Comparison with BigInt(1):', ideaToken.id === BigInt(1));
-  if (ideaToken.id === BigInt(1)) {
+  if (BigInt(ideaToken.id) === BigInt(1)) {
     resolvedDescription = ideaOneFixed;
   }
 
