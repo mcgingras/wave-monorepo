@@ -13,7 +13,6 @@ import NounAvatarGroup from "@/components/NounAvatarGroup";
 import { DelegateProxy } from "@/models/DelegateProxy/types";
 
 const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
-  console.log("Data", data);
   const columns = useMemo<ColumnDef<DelegateProxy>[]>(
     () => [
       {
@@ -34,13 +33,12 @@ const ProxyTableUI = ({ data }: { data: DelegateProxy[] }) => {
         cell: (info) => {
           const original = info.row.original;
           const ids = original.nouns.items.map((item: any) => item.id);
-          console.log(original);
           return (
             <div className="flex flex-row items-center space-x-2">
               {ids.length > 0 ? (
                 <NounAvatarGroup
                   ids={ids}
-                  max={3}
+                  max={ids.length}
                   // size="sm"
                 />
               ) : (

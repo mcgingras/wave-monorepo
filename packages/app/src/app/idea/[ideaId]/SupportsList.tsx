@@ -3,11 +3,11 @@ import { Support } from "@/models/Supporter/types";
 import { formatUnits } from "viem";
 import AvatarAddress from "@/components/ui/AvatarAddress";
 
-const getSupporters = async () => {
+const getSupporters = async (ideaId: bigint) => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
   const query = `
-  query GetSupporters {
-    ideaTokens(where: {isArchived: false}) {
+  query GetSupporters($ideaId: BigInt!) {
+    ideaTokens(where: {id: $ideaId}) {
       items {
         supports {
           items {
@@ -29,7 +29,7 @@ const getSupporters = async () => {
     },
     body: JSON.stringify({
       query,
-      variables: {},
+      variables: { ideaId: ideaId },
     }),
   };
 
@@ -44,7 +44,7 @@ const getSupporters = async () => {
 };
 
 const SupportsList = async ({ ideaId }: { ideaId: bigint }) => {
-  const ideaTokens = (await getSupporters()) as IdeaToken[];
+  const ideaTokens = (await getSupporters(ideaId)) as IdeaToken[];
   const supports = ideaTokens.reduce((acc, ideaToken) => {
     return acc.concat(ideaToken.supports.items);
   }, [] as Support[]);

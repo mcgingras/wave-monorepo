@@ -68,7 +68,7 @@ const WaveStatsUI = ({
           Wave {forWave}
         </h1>
         <div className="flex flex-row divide-x-2 divide-white">
-          {forWave > 1 ? (
+          {forWave >= 1 ? (
             <Link
               href={`/wave/${forWave - 1}`}
               className="rounded-l-lg bg-neutral-100 hover:bg-neutral-200 cursor-pointer transition-colors p-2"

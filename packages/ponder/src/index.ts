@@ -82,34 +82,35 @@ ponder.on("Wave:DelegateCreated", async ({ event, context }) => {
 
 ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
   let direction = "to";
+  const { toDelegate, fromDelegate, delegator } = event.args;
   const { DelegateProxy, Delegator } = context.db;
   const existingToDelegateProxy = await DelegateProxy.findUnique({
-    id: event.args.toDelegate,
+    id: toDelegate,
   });
 
   // someone is giving voting power to the proxy
   if (existingToDelegateProxy) {
     direction = "to";
     await Delegator.upsert({
-      id: event.args.delegator,
+      id: delegator,
       create: {
-        delegateProxyId: event.args.toDelegate,
+        delegateProxyId: toDelegate,
       },
       update: {
-        delegateProxyId: event.args.toDelegate,
+        delegateProxyId: toDelegate,
       },
     });
   }
 
   const existingFromDelegateProxy = await DelegateProxy.findUnique({
-    id: event.args.fromDelegate,
+    id: fromDelegate,
   });
 
   // someone is claiming their voting power back
   if (existingFromDelegateProxy) {
     direction = "from";
     await Delegator.delete({
-      id: event.args.toDelegate,
+      id: delegator,
     });
   }
 
@@ -117,9 +118,7 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
     address: configAddresses.NounsTokenHarness as `0x${string}`,
     abi: NounsTokenABI,
     functionName: "balanceOf",
-    args: [
-      direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
-    ],
+    args: [direction === "to" ? delegator : toDelegate],
   });
 
   for (let i = 0; i < nounsBalance; i++) {
@@ -127,22 +126,19 @@ ponder.on("NounsToken:DelegateChanged", async ({ event, context }) => {
       address: configAddresses.NounsTokenHarness as `0x${string}`,
       abi: NounsTokenABI,
       functionName: "tokenOfOwnerByIndex",
-      args: [
-        direction === "to" ? event.args.fromDelegate : event.args.toDelegate,
-        BigInt(i),
-      ],
+      args: [direction === "to" ? delegator : toDelegate, BigInt(i)],
     });
 
-    if (direction === "to") {
+    if (direction === "to" && existingToDelegateProxy) {
       await context.db.Noun.upsert({
         id: nounId,
         create: {
-          owner: event.args.fromDelegate,
-          delegateProxyId: event.args.toDelegate,
+          owner: delegator,
+          delegateProxyId: toDelegate,
         },
         update: {
-          owner: event.args.fromDelegate,
-          delegateProxyId: event.args.toDelegate,
+          owner: delegator,
+          delegateProxyId: toDelegate,
         },
       });
     } else {
