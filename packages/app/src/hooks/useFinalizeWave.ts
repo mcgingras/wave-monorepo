@@ -46,6 +46,9 @@ export const useFinalizeWave = () => {
 };
 
 const getIdeaDescriptions = async (ids: readonly bigint[]) => {
+  if (ids.length === 0) {
+    return { ideaTokens: { items: [] } };
+  }
   const query = `
      query GetIdeaTokensByIds($ideaTokenIds: [BigInt]!) {
             ideaTokens(where: {id_in: $ideaTokenIds}) {
