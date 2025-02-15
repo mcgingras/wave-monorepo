@@ -3,8 +3,7 @@ import { ContractInfo } from "../types";
 const etherscanRequest = (query: Record<any, any>) => {
   const searchParams = new URLSearchParams(query);
   return new Request(
-    `https://api.etherscan.io/api?apikey=ZDEGW8HVG972Z1G9IT75GT1T8JPXFM4CQ5&${searchParams}`
-    // `https://api.etherscan.io/api?apikey=${process.env.ETHERSCAN_API_KEY}&${searchParams}`
+    `https://api.etherscan.io/api?apikey=QCCTTU38PJP9SG7U3FBPBS7F15GMEJ4D8V&${searchParams}`
   );
 };
 
@@ -20,6 +19,7 @@ const fetchAbi = async (address: `0x${string}`) => {
   );
 
   const responseBody = await response.json();
+  console.log(responseBody);
 
   if (responseBody.status !== "1") {
     const error = new Error();
