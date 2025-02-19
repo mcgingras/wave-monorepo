@@ -12,6 +12,8 @@ import { configAddresses, WAVELENGTH } from "@/lib/constants";
 import { IdeaTokenHubABI } from "@/abi/IdeaTokenHub";
 import Markdown from "react-markdown";
 import { ideaOneFixed } from "@/lib/constants";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -150,7 +152,15 @@ const Page = async ({ params }: { params: { ideaId: bigint } }) => {
           <h3 className="text-sm text-neutral-500">Description</h3>
         </div>
         <div className="prose text-sm text-neutral-700 mt-2">
-          <Markdown>{resolvedDescription}</Markdown>
+          <Markdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+            urlTransform={(url) => {
+              return url;
+            }}
+          >
+            {resolvedDescription}
+          </Markdown>
         </div>
 
         <SupportListUI
