@@ -11,7 +11,6 @@ import {
 } from "wagmi";
 import { useForm, FormProvider } from "react-hook-form";
 import { configAddresses, MIN_SPONSOR_AMOUNT } from "@/lib/constants";
-import { parseEther, formatEther } from "viem";
 import { Action } from "@/lib/camp/types";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
@@ -23,6 +22,8 @@ import {
   resolveAction as resolveActionTransactions,
   unparse,
 } from "@/lib/camp/transactions";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 const NewIdeaForm = () => {
   const [showMarkdown, setShowMarkdown] = useState(false);
@@ -175,7 +176,15 @@ const NewIdeaForm = () => {
                   <div className="mt-1">
                     {showMarkdown ? (
                       <div className="bg-neutral-100 p-2 rounded-md prose text-sm text-neutral-500">
-                        <Markdown>{methods.watch("description")}</Markdown>
+                        <Markdown
+                          remarkPlugins={[remarkGfm]}
+                          rehypePlugins={[rehypeRaw]}
+                          urlTransform={(url) => {
+                            return url;
+                          }}
+                        >
+                          {methods.watch("description")}
+                        </Markdown>
                       </div>
                     ) : (
                       <textarea

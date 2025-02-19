@@ -8,6 +8,8 @@ import { formatUnits } from "viem";
 import { TransactionPill } from "../ActionList";
 import { parse } from "@/lib/camp/transactions";
 import { ideaOneFixed } from "@/lib/constants";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 const FullIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
   const ensName = useEnsName({
@@ -71,7 +73,15 @@ const FullIdeaCard = ({ ideaToken }: { ideaToken: IdeaToken }) => {
 
       <span className="font-bold mt-6 text-neutral-700">Description</span>
       <div className="bg-neutral-100 p-2 rounded-md prose text-sm text-neutral-500 mt-2">
-        <Markdown>{resolvedDescription}</Markdown>
+        <Markdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          urlTransform={(url) => {
+            return url;
+          }}
+        >
+          {resolvedDescription}
+        </Markdown>
       </div>
     </div>
   );
